@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "238565293652",
+    "firebase_url": "https://cmput301bookfriends.firebaseio.com",
+    "project_id": "cmput301bookfriends",
+    "storage_bucket": "cmput301bookfriends.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:238565293652:android:9bb989ee87e5eb63ec77c1",
+        "android_client_info": {
+          "package_name": "com.example.book_friends"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "238565293652-adqdtb54b8knk62l0sv7i0rhkvqs2bjg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfrTociN9vCxXesVwkuFkeMh2VGwE7DMA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "238565293652-adqdtb54b8knk62l0sv7i0rhkvqs2bjg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
