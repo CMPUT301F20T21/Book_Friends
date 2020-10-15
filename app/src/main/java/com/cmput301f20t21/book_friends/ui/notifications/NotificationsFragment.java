@@ -1,4 +1,4 @@
-package com.example.book_friends.ui.notifications;
+package com.cmput301f20t21.book_friends.ui.notifications;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.book_friends.R;
+import com.cmput301f20t21.book_friends.R;
 
 public class NotificationsFragment extends Fragment {
 

@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:238565293652:android:9bb989ee87e5eb63ec77c1",
+        "mobilesdk_app_id": "1:238565293652:android:a5c986499d96b07fec77c1",
         "android_client_info": {
-          "package_name": "com.example.book_friends"
+          "package_name": "com.cmput301f20t21.bookfriends"
         }
       },
       "oauth_client": [
