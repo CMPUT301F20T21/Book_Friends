@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.book_friends">
+    package="com.cmput301f20t21.book_friends">
 
     <application
         android:allowBackup="true"

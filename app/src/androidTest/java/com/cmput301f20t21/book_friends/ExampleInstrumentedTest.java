@@ -1,4 +1,4 @@
-package com.example.book_friends;
+package com.cmput301f20t21.book_friends;
 
 import android.content.Context;
 
