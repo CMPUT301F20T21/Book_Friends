@@ -3,23 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_library">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.cmput301f20t21.bookfriends.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/navigation_library"
+        android:name="com.cmput301f20t21.bookfriends.ui.library.LibraryFragment"
+        android:label="@string/title_library"
+        tools:layout="@layout/fragment_library" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.cmput301f20t21.bookfriends.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_borrow"
+        android:name="com.cmput301f20t21.bookfriends.ui.borrow.BorrowFragment"
+        android:label="@string/title_borrow"
+        tools:layout="@layout/fragment_borrow" />
 
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.cmput301f20t21.bookfriends.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.cmput301f20t21.bookfriends.ui.profile.ProfileFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>
