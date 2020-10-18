@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Book_Friends</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
+    <string name="title_library">Your Library</string>
+    <string name="title_borrow">Borrow</string>
+    <string name="title_profile">Me</string>
     <string name="title_notifications">Notifications</string>
     <string name="login_error_message">Failed to login due to unexpected error, please try again</string>
     <string name="login_title_description">Book Friends Title</string>
