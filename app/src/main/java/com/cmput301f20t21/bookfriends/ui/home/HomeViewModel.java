@@ -1,4 +1,4 @@
-package com.cmput301f20t21.book_friends.ui.home;
+package com.cmput301f20t21.bookfriends.ui.home;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

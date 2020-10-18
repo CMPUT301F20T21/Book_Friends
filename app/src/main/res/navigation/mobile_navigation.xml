@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.cmput301f20t21.book_friends.ui.home.HomeFragment"
+        android:name="com.cmput301f20t21.bookfriends.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.cmput301f20t21.book_friends.ui.dashboard.DashboardFragment"
+        android:name="com.cmput301f20t21.bookfriends.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.cmput301f20t21.book_friends.ui.notifications.NotificationsFragment"
+        android:name="com.cmput301f20t21.bookfriends.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
 </navigation>

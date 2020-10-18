@@ -1,4 +1,4 @@
-package com.cmput301f20t21.book_friends;
+package com.cmput301f20t21.bookfriends;
 
 import org.junit.Test;
 
