@@ -9,12 +9,14 @@
 
 package com.cmput301f20t21.bookfriends.ui.login;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cmput301f20t21.bookfriends.MainActivity;
 import com.cmput301f20t21.bookfriends.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -37,6 +39,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // TODO: Check if the user is already logged in, redirect to mainActivity if true
+
         this.getSupportActionBar().hide();
         // hides the status bar, deprecated in API 30
         View decorView = this.getWindow().getDecorView();
@@ -112,8 +117,10 @@ public class LoginActivity extends AppCompatActivity {
               * if user passed the authentication, grab all the user information
               * and store it in the userIntent and pass to the main activity
               */
-//            setResult(RESULT_OK, userIntent);
-            finish();
+            Intent mainIntent = new Intent(this, MainActivity.class);
+            // TODO: put User class to the intent
+            // mainIntent.putExtra();
+            startActivity(mainIntent);
         }
     }
 }
