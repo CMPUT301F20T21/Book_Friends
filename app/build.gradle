@@ -6,7 +6,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.cmput301f20t21.book_friends"
+        applicationId "com.cmput301f20t21.bookfriends"
         minSdkVersion 16
         targetSdkVersion 30
         versionCode 1
