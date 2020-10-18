@@ -7,7 +7,7 @@
  * github URL: https://github.com/CMPUT301F20T21/Book_Friends
  */
 
-package com.cmput301f20t21.bookfriends.login;
+package com.cmput301f20t21.bookfriends.ui.login;
 
 import android.text.Editable;
 import android.text.TextWatcher;

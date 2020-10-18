@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.cmput301f20t21.bookfriends.login.LoginActivity"
+            android:name="com.cmput301f20t21.bookfriends.ui.login.LoginActivity"
             android:windowSoftInputMode="adjustNothing"
             android:parentActivityName=".MainActivity" >
         </activity>

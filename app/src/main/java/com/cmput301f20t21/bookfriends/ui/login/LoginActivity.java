@@ -1,10 +1,8 @@
-package com.cmput301f20t21.bookfriends.login;
+package com.cmput301f20t21.bookfriends.ui.login;
 
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,18 +10,24 @@ import com.cmput301f20t21.bookfriends.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+/**
+ * Activity that will display the login page and handle user inputs
+ */
 public class LoginActivity extends AppCompatActivity {
-    TextInputLayout usernameLayout;
-    TextInputLayout passwordLayout;
-    TextInputEditText usernameField;
-    TextInputEditText passwordField;
-    Button loginButton;
+    private TextInputLayout usernameLayout;
+    private TextInputLayout passwordLayout;
+    private TextInputEditText usernameField;
+    private TextInputEditText passwordField;
 
+    /**
+     * android lifecycle method, grab the Layout and EditText fields
+     * as well as adding a simple textChangedListener
+     * @param savedInstanceState - the saved objects, should contain nothing for this activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        loginButton = findViewById(R.id.login_button);
         usernameLayout = findViewById(R.id.login_username_layout);
         usernameField = findViewById(R.id.login_username_field);
         usernameField.addTextChangedListener(new AfterTextChangedWatcher() {
@@ -44,6 +48,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * check the username field for emptiness, adding error message if field is empty
+     * @param username - the username that the user entered
+     * @return true if the username is not empty, false if username is empty
+     */
     private boolean checkUsername(String username) {
         boolean isUsernameEmpty = username.isEmpty();
         if (isUsernameEmpty) {
@@ -54,6 +63,11 @@ public class LoginActivity extends AppCompatActivity {
         return !isUsernameEmpty;
     }
 
+    /**
+     * check the username field for emptiness, adding error message if field is empty
+     * @param password - the password that the user entered
+     * @return true if the password is not empty, false if password is empty
+     */
     private boolean checkPassword(String password) {
         boolean isPasswordEmpty = password.isEmpty();
         if (isPasswordEmpty) {
@@ -64,10 +78,21 @@ public class LoginActivity extends AppCompatActivity {
         return !isPasswordEmpty;
     }
 
+    /**
+     * TODO: fill out javadoc comments once finished
+     * @param view
+     */
     public void onCreateAccountClicked(View view) {
-
+        // start the activity here, no result is needed
+        // created user will be stored directly to firestore
     }
 
+    /**
+     * method called when user clicked the "login" button
+     * the function will validate the inputs and authenticate the user
+     * user will be redirected to the main screen if authentication is successful
+     * @param view - the view associated with the button
+     */
     public void onLoginClicked(View view) {
         Editable usernameText = usernameField.getText();
         Editable passwordText = passwordField.getText();
@@ -82,8 +107,12 @@ public class LoginActivity extends AppCompatActivity {
         String username = usernameText.toString();
         String password = passwordText.toString();
         if (checkUsername(username) && checkPassword(password)) {
-            // create a User entity object and call UserService to authenticate user
-            finish();
+             /* TODO: create a User entity object and call UserService to authenticate user
+              * if user passed the authentication, grab all the user information
+              * and store it in the userIntent and pass to the main activity
+              */
+//            setResult(RESULT_OK, userIntent);
+//            finish();
         }
     }
 }
