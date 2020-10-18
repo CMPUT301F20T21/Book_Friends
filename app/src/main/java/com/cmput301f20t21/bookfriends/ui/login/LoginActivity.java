@@ -37,22 +37,28 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        this.getSupportActionBar().hide();
+        // hides the status bar, deprecated in API 30
+        View decorView = this.getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+
         usernameLayout = findViewById(R.id.login_username_layout);
-        usernameField = findViewById(R.id.login_username_field);
+        usernameField = (TextInputEditText) usernameLayout.getEditText();
         usernameField.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
             public void afterTextChanged(Editable usernameString) {
-                String username = usernameString.toString();
-                checkUsername(username); // return value not needed
+                // remove the error if any exist
+                usernameLayout.setError(null);
             }
         });
         passwordLayout = findViewById(R.id.login_password_layout);
-        passwordField = findViewById(R.id.login_password_field);
+        passwordField = (TextInputEditText) passwordLayout.getEditText();
         passwordField.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
             public void afterTextChanged(Editable passwordString) {
-                String password = passwordString.toString();
-                checkPassword(password); // return value not needed
+                // remove the error if any exist
+                passwordLayout.setError(null);
             }
         });
     }
@@ -66,14 +72,12 @@ public class LoginActivity extends AppCompatActivity {
         boolean isUsernameEmpty = username.isEmpty();
         if (isUsernameEmpty) {
             usernameLayout.setError(getString(R.string.username_empty_error));
-        } else {
-            usernameLayout.setError(null);
         }
         return !isUsernameEmpty;
     }
 
     /**
-     * check the username field for emptiness, adding error message if field is empty
+     * check the password field for emptiness, adding error message if field is empty
      * @param password - the password that the user entered
      * @return true if the password is not empty, false if password is empty
      */
@@ -81,8 +85,6 @@ public class LoginActivity extends AppCompatActivity {
         boolean isPasswordEmpty = password.isEmpty();
         if (isPasswordEmpty) {
             passwordLayout.setError(getString(R.string.password_empty_error));
-        } else {
-            passwordLayout.setError(null);
         }
         return !isPasswordEmpty;
     }
@@ -103,25 +105,15 @@ public class LoginActivity extends AppCompatActivity {
      * @param view - the view associated with the button
      */
     public void onLoginClicked(View view) {
-        Editable usernameText = usernameField.getText();
-        Editable passwordText = passwordField.getText();
-        // getText() should never return null, error handling just for safety
-        if (usernameText == null || passwordText == null) {
-            String nullErrorMessage = getString(R.string.login_error_message);
-            usernameLayout.setError(nullErrorMessage);
-            passwordLayout.setError(nullErrorMessage);
-            return;
-        }
-
-        String username = usernameText.toString();
-        String password = passwordText.toString();
+        String username = usernameField.getText().toString();
+        String password = passwordField.getText().toString();
         if (checkUsername(username) && checkPassword(password)) {
              /* TODO: create a User entity object and call UserService to authenticate user
               * if user passed the authentication, grab all the user information
               * and store it in the userIntent and pass to the main activity
               */
 //            setResult(RESULT_OK, userIntent);
-//            finish();
+            finish();
         }
     }
 }
