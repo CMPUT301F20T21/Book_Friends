@@ -15,10 +15,10 @@ import com.cmput301f20t21.bookfriends.R;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class AddEditActivity extends AppCompatActivity {
-    Button cancelButton;
-    Button scanButton;
-    Button saveButton;
-    Button viewRequestButton;
+    private Button cancelButton;
+    private Button scanButton;
+    private Button saveButton;
+    private Button viewRequestButton;
 
     private ImageView bookImage;
 
