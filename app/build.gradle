@@ -2,13 +2,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 29
     buildToolsVersion "30.0.2"
 
     defaultConfig {
         applicationId "com.cmput301f20t21.bookfriends"
         minSdkVersion 16
-        targetSdkVersion 30
+        targetSdkVersion 29
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
 
@@ -35,6 +36,8 @@ dependencies {
 
 
     implementation platform('com.google.firebase:firebase-bom:25.12.0')
+    implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.android.support:multidex:1.0.3'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
