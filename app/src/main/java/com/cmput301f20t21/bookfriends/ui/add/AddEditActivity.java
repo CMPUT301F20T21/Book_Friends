@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -19,6 +20,8 @@ public class AddEditActivity extends AppCompatActivity {
     Button saveButton;
     Button viewRequestButton;
 
+    private ImageView bookImage;
+
     private TextView titleTextView;
     private TextView isbnTextView;
     private TextView authorTextView;
@@ -31,6 +34,7 @@ public class AddEditActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_edit_activity);
+        bookImage = findViewById(R.id.imageView); // will be replaced with actual image
         titleTextView = findViewById(R.id.title_text_view);
         isbnTextView = findViewById(R.id.isbn_text_view);
         authorTextView = findViewById(R.id.author_text_view);
@@ -68,16 +72,26 @@ public class AddEditActivity extends AppCompatActivity {
         viewRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // TODO: implement view all requests
                 // open new activity
             }
         });
     }
 
+    /**
+     * when cancel button is clicked, go back to the home screen
+     */
     public void backToHome() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Users should be able to manually fill in or user the scanner to retrieve the information
+     * for the book they want to add
+     * After checking all required fields, save button is clicked
+     * TODO: this is just a placeholder
+     */
     public void saveInformation() {
         if (isbnEditText.getEditText().getText().length() == 0) {
             isbnEditText.setError("Cannot be empty");
@@ -111,6 +125,6 @@ public class AddEditActivity extends AppCompatActivity {
     }
 
     public void openScanner() {
-
+        // TODO: implement the scanner
     }
 }
