@@ -1,11 +1,14 @@
 package com.cmput301f20t21.bookfriends.ui.login;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cmput301f20t21.bookfriends.MainActivity;
 import com.cmput301f20t21.bookfriends.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -15,11 +18,18 @@ public class CreateAccountActivity extends AppCompatActivity {
     private TextInputLayout passwordLayout;
     private TextInputEditText usernameField;
     private TextInputEditText passwordField;
+    private TextInputLayout confirmLayout;
+    private TextInputEditText confirmField;
+    private TextInputLayout emailLayout;
+    private TextInputEditText emailField;
+    private TextInputLayout phoneLayout;
+    private TextInputEditText phoneField;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
-
         this.getSupportActionBar().hide();
         // hides the status bar, deprecated in API 30
         View decorView = this.getWindow().getDecorView();
@@ -46,6 +56,101 @@ public class CreateAccountActivity extends AppCompatActivity {
             }
         });
 
+        confirmLayout  = findViewById(R.id.Comfirm_Password_Layout);
+        confirmField = (TextInputEditText)confirmLayout.getEditText();
+        confirmField.addTextChangedListener(new AfterTextChangedWatcher() {
+            @Override
+            public void afterTextChanged(Editable comfirmString) {
+                // remove the error if any exist
+                confirmLayout.setError(null);
+            }
+        });
+
+        emailLayout = findViewById(R.id.email_layout);
+        emailField = (TextInputEditText)emailLayout.getEditText();
+        emailField.addTextChangedListener(new AfterTextChangedWatcher() {
+            @Override
+            public void afterTextChanged(Editable emailString) {
+                // remove the error if any exist
+                emailLayout.setError(null);
+            }
+        });
+
+        phoneLayout  = findViewById(R.id.phone_layout);
+        phoneField = (TextInputEditText) phoneLayout.getEditText();
+        phoneField.addTextChangedListener(new AfterTextChangedWatcher() {
+            @Override
+            public void afterTextChanged(Editable phoneNumber) {
+                // remove the error if any exist
+                phoneLayout.setError(null);
+            }
+        });
 
     }
+    /**
+     * check the username field for emptiness, adding error message if field is empty
+     * @param username - the username that the user entered
+     * @return true if the username is not empty, false if username is empty
+     */
+    private boolean checkUsername(String username) {
+        boolean isUsernameEmpty = username.isEmpty();
+        if (isUsernameEmpty) {
+            usernameLayout.setError("Username can not be empty");
+        }
+        return !isUsernameEmpty;
+    }
+    /**
+     * check the password field for emptiness, adding error message if field is empty
+     * @param password - the password that the user entered
+     * @return true if the password is not empty, false if password is empty
+     */
+    private boolean checkPassword(String password) {
+        boolean isPasswordEmpty = password.isEmpty();
+        if (isPasswordEmpty) {
+            passwordLayout.setError("Password can not be Empty");
+        }
+        return !isPasswordEmpty;
+    }
+    private boolean checkConfirm(String ConfirmPassword) {
+        boolean isConfirmPasswordEmpty = ConfirmPassword.isEmpty();
+        if (isConfirmPasswordEmpty) {
+            confirmLayout.setError("Confirm password can not be Empty");
+        }
+        return !isConfirmPasswordEmpty;
+    }
+    private boolean checkEmail(String email) {
+        boolean isEmailEmpty = email.isEmpty();
+        if (isEmailEmpty) {
+            emailLayout.setError("Email can not be Empty");
+        }
+        return !isEmailEmpty;
+    }
+    private final boolean checkPhone(String phone) {
+        boolean isPhoneEmpty = phone.isEmpty();
+        if (isPhoneEmpty) {
+            phoneLayout.setError("Phone number can not be Empty");
+        }
+        return !isPhoneEmpty;
+    }
+    public void onCancelClicked(View view) {
+        finish();
+
+    }
+    public void onCreateClicked(View view){
+        String username = usernameField.getText().toString();
+        String password = passwordField.getText().toString();
+        String ConfirmPassword = confirmField.getText().toString();
+        String email = emailField.getText().toString();
+        String phone = phoneField.getText().toString();
+
+        if (checkUsername(username) && checkPassword(password) && checkConfirm(ConfirmPassword) && checkEmail(email) && checkPhone(phone)) {
+            finish();
+        }
+
+    }
+
+
+
+
+
 }
