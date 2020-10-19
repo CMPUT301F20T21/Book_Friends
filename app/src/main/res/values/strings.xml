@@ -12,4 +12,15 @@
     <string name="string_login">Login</string>
     <string name="string_username">Username</string>
     <string name="string_password">Password</string>
+    <string name="string_logout">Logout</string>
+    <string name="icon_email">icon_email</string>
+    <string name="icon_phone">icon_phone</string>
+    <string name="profile_edit">profile_edit</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="edit_email">Edit Email</string>
+    <string name="edit_phone">Edit Phone Number</string>
+    <string name="title_edit_profile">Edit Contact Information</string>
+    <string name="edit_cancel">CANCEL</string>
+    <string name="edit_confirm">CONFIRM</string>
 </resources>
