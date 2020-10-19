@@ -101,6 +101,8 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreateAccountClicked(View view) {
         // start the activity here, no result is needed
         // created user will be stored directly to firestore
+        Intent createAccountIntent = new Intent(this, CreateAccountActivity.class);
+        startActivity(createAccountIntent);
     }
 
     /**
