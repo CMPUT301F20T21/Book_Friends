@@ -1,42 +1,38 @@
 package com.cmput301f20t21.bookfriends.services;
 
-import com.cmput301f20t21.bookfriends.entities.User;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
 
 public class UserService {
-    private FirebaseAuth mAuth;
+    private CollectionReference userCollection;
+
     private static final UserService instance = new UserService();
 
     private UserService() {
-        mAuth = FirebaseAuth.getInstance();
+        userCollection = FirebaseFirestore.getInstance().collection("users");
     }
 
     public static UserService getInstance() {
         return instance;
     }
 
-    public User getCurrentUser() {
-        FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        return new User(
-                firebaseUser.getUid(),
-                firebaseUser.getDisplayName(),
-                firebaseUser.getEmail(),
-                firebaseUser.getPhoneNumber()
-        );
+    public Task<Void> add(String username, String email) {
+        HashMap<String, String> data = new HashMap<>();
+        data.put("email", email);
+        return userCollection.document(username).set(data);
     }
 
-    public Task<AuthResult> createUser(String email, String password) {
-        return mAuth.createUserWithEmailAndPassword(email, password);
+    public Task<QuerySnapshot> getUserByEmail(String email) {
+        return userCollection.whereEqualTo("email", email).get();
     }
 
-    public Task<AuthResult> signIn(String email, String password) {
-        return mAuth.signInWithEmailAndPassword(email, password);
+    public Task<DocumentSnapshot> getEmailByUsername(String username) {
+        return userCollection.document(username).get();
     }
 
-    public void signOut() {
-        mAuth.signOut();
-    }
 }
