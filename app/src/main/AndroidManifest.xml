@@ -12,6 +12,11 @@
         <activity
             android:name="com.cmput301f20t21.bookfriends.MainActivity"
             android:label="@string/app_name">
+        </activity>
+        <activity
+            android:name="com.cmput301f20t21.bookfriends.ui.login.LoginActivity"
+            android:windowSoftInputMode="adjustNothing"
+            android:parentActivityName=".MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,7 +1,9 @@
 package com.cmput301f20t21.bookfriends;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.cmput301f20t21.bookfriends.ui.login.LoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +13,20 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity {
+
+    // saved for later when MainActivity is starting another activity
+//    public enum ActivityRequestCode {
+//
+//        private final int requestCode;
+//
+//        ActivityRequestCode(int requestCode) {
+//            this.requestCode = requestCode;
+//        }
+//
+//        public int getRequestCode() {
+//            return this.requestCode;
+//        }
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
-    }
 
+        // this intent should contain the user class that is used to log in?
+        // Intent userIntent = getIntent();
+    }
 }
