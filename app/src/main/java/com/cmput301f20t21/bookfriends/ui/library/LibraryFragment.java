@@ -43,7 +43,7 @@ public class LibraryFragment extends Fragment {
     /**
      * function allows user to jump into the add/edit screen when click on the floating button
      */
-    public void openAddEditActivity() {
+    private void openAddEditActivity() {
         Intent intent = new Intent(this.getActivity(), AddEditActivity.class);
         startActivity(intent);
     }

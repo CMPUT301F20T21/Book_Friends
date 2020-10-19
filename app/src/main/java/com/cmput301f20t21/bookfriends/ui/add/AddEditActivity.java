@@ -93,29 +93,24 @@ public class AddEditActivity extends AppCompatActivity {
      * TODO: this is just a placeholder
      */
     public void saveInformation() {
-        if (isbnEditText.getEditText().getText().length() == 0) {
+        String isbn = isbnEditText.getEditText().getText().toString();
+        String title = titleEditText.getEditText().getText().toString();
+        String author = authorEditText.getEditText().getText().toString();
+        if (isbn.length() == 0) {
             isbnEditText.setError("Cannot be empty");
         }
 
-        if (titleEditText.getEditText().getText().length() == 0) {
+        if (title.length() == 0) {
             titleEditText.setError("Cannot be empty");
         }
 
-        if (authorEditText.getEditText().getText().length() == 0) {
+        if (author.length() == 0) {
             authorEditText.setError("Cannot be empty");
         }
 
-        if (isbnEditText.getEditText().getText().length() != 0
-            && titleEditText.getEditText().getText().length() != 0
-            && authorEditText.getEditText().getText().length() != 0) {
-
-            String isbn = isbnEditText.getEditText().getText().toString();
+        if (isbn.length() != 0 && title.length() != 0 && author.length() != 0) {
             isbnTextView.setText(isbn);
-
-            String title = titleEditText.getEditText().getText().toString();
             titleTextView.setText(title);
-
-            String author = authorEditText.getEditText().getText().toString();
             authorTextView.setText(author);
 
             // eventually, we will go back to home screen after saving all information
