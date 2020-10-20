@@ -18,17 +18,19 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.cmput301f20t21.bookfriends.MainActivity;
 import com.cmput301f20t21.bookfriends.R;
+import com.cmput301f20t21.bookfriends.controller.LogInController;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 /**
  * Activity that will display the login page and handle user inputs
  */
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements LogInController.ILogInListener {
     private TextInputLayout usernameLayout;
     private TextInputLayout passwordLayout;
     private TextInputEditText usernameField;
     private TextInputEditText passwordField;
+    private LogInController logInController;
 
     /**
      * android lifecycle method, grab the Layout and EditText fields
@@ -41,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         // TODO: Check if the user is already logged in, redirect to mainActivity if true
+        logInController = new LogInController(this);
 
         this.getSupportActionBar().hide();
         // hides the status bar, deprecated in API 30
@@ -113,14 +116,21 @@ public class LoginActivity extends AppCompatActivity {
         String username = usernameField.getText().toString();
         String password = passwordField.getText().toString();
         if (checkUsername(username) && checkPassword(password)) {
-             /* TODO: create a User entity object and call UserService to authenticate user
-              * if user passed the authentication, grab all the user information
-              * and store it in the userIntent and pass to the main activity
-              */
-            Intent mainIntent = new Intent(this, MainActivity.class);
-            // TODO: put User class to the intent
-            // mainIntent.putExtra();
-            startActivity(mainIntent);
+             logInController.handleLogIn(username, password);
         }
+    }
+
+    @Override
+    public void onLogInSuccess() {
+        Intent mainIntent = new Intent(this, MainActivity.class);
+        // TODO: put User class to the intent
+        // mainIntent.putExtra();
+        startActivity(mainIntent);
+    }
+
+    @Override
+    public void onLogInFail() {
+        // TODO: handle login fail
+        usernameLayout.setError("Error");
     }
 }
