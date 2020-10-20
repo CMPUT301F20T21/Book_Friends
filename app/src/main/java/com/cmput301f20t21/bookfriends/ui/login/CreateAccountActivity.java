@@ -1,14 +1,9 @@
 package com.cmput301f20t21.bookfriends.ui.login;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
-import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.cmput301f20t21.bookfriends.MainActivity;
 import com.cmput301f20t21.bookfriends.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -24,7 +19,6 @@ public class CreateAccountActivity extends AppCompatActivity {
     private TextInputEditText emailField;
     private TextInputLayout phoneLayout;
     private TextInputEditText phoneField;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,13 +105,26 @@ public class CreateAccountActivity extends AppCompatActivity {
         }
         return !isPasswordEmpty;
     }
+
+    /**
+     * check the confirmed password for emptiness, adding error message if field is empty
+     * @param ConfirmPassword - the confirmed password that the user entered
+     * @return true if the confirmed password is not empty, false if confirmed password is empty
+     */
     private boolean checkConfirm(String ConfirmPassword) {
         boolean isConfirmPasswordEmpty = ConfirmPassword.isEmpty();
         if (isConfirmPasswordEmpty) {
             confirmLayout.setError("Confirm password can not be Empty");
         }
         return !isConfirmPasswordEmpty;
+
     }
+
+    /**
+     * check the email address for emptiness, adding error message if field is empty
+     * @param email - the email address that the user entered
+     * @return true if the email address is not empty, false if email is empty
+     */
     private boolean checkEmail(String email) {
         boolean isEmailEmpty = email.isEmpty();
         if (isEmailEmpty) {
@@ -125,6 +132,12 @@ public class CreateAccountActivity extends AppCompatActivity {
         }
         return !isEmailEmpty;
     }
+
+    /**
+     * check the phone number for emptiness, adding error message if field is empty
+     * @param phone - the phone number that the user entered
+     * @return true if the phone numnber is not empty, false if the email is empty
+     */
     private final boolean checkPhone(String phone) {
         boolean isPhoneEmpty = phone.isEmpty();
         if (isPhoneEmpty) {
@@ -132,6 +145,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         }
         return !isPhoneEmpty;
     }
+
     public void onCancelClicked(View view) {
         finish();
 
@@ -142,8 +156,13 @@ public class CreateAccountActivity extends AppCompatActivity {
         String ConfirmPassword = confirmField.getText().toString();
         String email = emailField.getText().toString();
         String phone = phoneField.getText().toString();
+        if(!ConfirmPassword.equals(password)){
+            confirmLayout.setError("password does not match");
 
-        if (checkUsername(username) && checkPassword(password) && checkConfirm(ConfirmPassword) && checkEmail(email) && checkPhone(phone)) {
+        }
+        else if (checkUsername(username) && checkPassword(password) &&
+                checkConfirm(ConfirmPassword) && checkEmail(email) &&
+                checkPhone(phone)) {
             finish();
         }
 
