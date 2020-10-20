@@ -12,4 +12,8 @@
     <string name="string_login">Login</string>
     <string name="string_username">Username</string>
     <string name="string_password">Password</string>
+    <string name="string_isbn">ISBN:</string>
+    <string name="string_title">Title:</string>
+    <string name="string_author">Author:</string>
+    <string name="string_description">Description (Optional):</string>
 </resources>

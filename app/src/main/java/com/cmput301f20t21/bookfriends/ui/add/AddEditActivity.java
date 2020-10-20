@@ -82,8 +82,7 @@ public class AddEditActivity extends AppCompatActivity {
      * when cancel button is clicked, go back to the home screen
      */
     public void backToHome() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        finish();
     }
 
     /**
@@ -114,8 +113,7 @@ public class AddEditActivity extends AppCompatActivity {
             authorTextView.setText(author);
 
             // eventually, we will go back to home screen after saving all information
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+            finish();
         }
     }
 
