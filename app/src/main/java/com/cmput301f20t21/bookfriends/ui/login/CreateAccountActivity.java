@@ -50,7 +50,7 @@ public class CreateAccountActivity extends AppCompatActivity {
             }
         });
 
-        confirmLayout  = findViewById(R.id.Confirm_Password_Layout);
+        confirmLayout = findViewById(R.id.confirm_password_layout);
         confirmField = (TextInputEditText)confirmLayout.getEditText();
         confirmField.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
@@ -70,7 +70,7 @@ public class CreateAccountActivity extends AppCompatActivity {
             }
         });
 
-        phoneLayout  = findViewById(R.id.phone_layout);
+        phoneLayout = findViewById(R.id.phone_layout);
         phoneField = (TextInputEditText) phoneLayout.getEditText();
         phoneField.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
@@ -83,7 +83,7 @@ public class CreateAccountActivity extends AppCompatActivity {
     }
     /**
      * check the username field for emptiness, adding error message if field is empty
-     * @param username - the username that the user entered
+     * @param username the username that the user entered
      * @return true if the username is not empty, false if username is empty
      */
     private boolean checkUsername(String username) {
@@ -95,16 +95,17 @@ public class CreateAccountActivity extends AppCompatActivity {
         }
         return !isUsernameEmpty;
     }
+
     /**
      * check the password field for emptiness, adding error message if field is empty
-     * @param password - the password that the user entered
+     * @param password the password that the user entered
      * @return true if the password is not empty, false if password is empty
      */
     private boolean checkPassword(String password) {
         boolean isPasswordEmpty = password.isEmpty();
         if (isPasswordEmpty) {
             passwordLayout.setError(
-                    getString(R.string.string_password) + getString(R.string.password_empty_error)
+                    getString(R.string.string_password) + getString(R.string.empty_error)
             );
         }
         return !isPasswordEmpty;
@@ -112,14 +113,14 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     /**
      * check the confirmed password for emptiness, adding error message if field is empty
-     * @param confirmPassword - the confirmed password that the user entered
+     * @param confirmPassword the confirmed password that the user entered
      * @return true if the confirmed password is not empty, false if confirmed password is empty
      */
     private boolean checkConfirm(String confirmPassword) {
         boolean isConfirmPasswordEmpty = confirmPassword.isEmpty();
         if (isConfirmPasswordEmpty) {
             confirmLayout.setError(
-                    getString(R.string.string_confirm_password) + getString(R.string.password_empty_error)
+                    getString(R.string.string_confirm_password) + getString(R.string.empty_error)
             );
         }
         return !isConfirmPasswordEmpty;
@@ -128,14 +129,14 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     /**
      * check the email address for emptiness, adding error message if field is empty
-     * @param email - the email address that the user entered
+     * @param email the email address that the user entered
      * @return true if the email address is not empty, false if email is empty
      */
     private boolean checkEmail(String email) {
         boolean isEmailEmpty = email.isEmpty();
         if (isEmailEmpty) {
             emailLayout.setError(
-                    getString(R.string.string_email) + getString(R.string.password_empty_error)
+                    getString(R.string.string_email) + getString(R.string.empty_error)
             );
         }
         return !isEmailEmpty;
@@ -143,14 +144,14 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     /**
      * check the phone number for emptiness, adding error message if field is empty
-     * @param phone - the phone number that the user entered
-     * @return true if the phone numnber is not empty, false if the email is empty
+     * @param phone the phone number that the user entered
+     * @return true if the phone [number] is not empty and false if [phone number] is empty
      */
-    private final boolean checkPhone(String phone) {
+    private boolean checkPhone(String phone) {
         boolean isPhoneEmpty = phone.isEmpty();
         if (isPhoneEmpty) {
             phoneLayout.setError(
-                     getString(R.string.string_email) + getString(R.string.password_empty_error)
+                     getString(R.string.string_phone_number) + getString(R.string.empty_error)
             );
         }
         return !isPhoneEmpty;
@@ -158,8 +159,8 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     public void onCancelClicked(View view) {
         finish();
-
     }
+
     public void onCreateClicked(View view){
         String username = usernameField.getText().toString();
         String password = passwordField.getText().toString();
