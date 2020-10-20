@@ -50,7 +50,7 @@ public class CreateAccountActivity extends AppCompatActivity {
             }
         });
 
-        confirmLayout  = findViewById(R.id.Comfirm_Password_Layout);
+        confirmLayout  = findViewById(R.id.Confirm_Password_Layout);
         confirmField = (TextInputEditText)confirmLayout.getEditText();
         confirmField.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
@@ -89,7 +89,9 @@ public class CreateAccountActivity extends AppCompatActivity {
     private boolean checkUsername(String username) {
         boolean isUsernameEmpty = username.isEmpty();
         if (isUsernameEmpty) {
-            usernameLayout.setError("Username can not be empty");
+            usernameLayout.setError(
+                    getString(R.string.string_username) + getString(R.string.empty_error)
+            );
         }
         return !isUsernameEmpty;
     }
@@ -101,20 +103,24 @@ public class CreateAccountActivity extends AppCompatActivity {
     private boolean checkPassword(String password) {
         boolean isPasswordEmpty = password.isEmpty();
         if (isPasswordEmpty) {
-            passwordLayout.setError("Password can not be Empty");
+            passwordLayout.setError(
+                    getString(R.string.string_password) + getString(R.string.password_empty_error)
+            );
         }
         return !isPasswordEmpty;
     }
 
     /**
      * check the confirmed password for emptiness, adding error message if field is empty
-     * @param ConfirmPassword - the confirmed password that the user entered
+     * @param confirmPassword - the confirmed password that the user entered
      * @return true if the confirmed password is not empty, false if confirmed password is empty
      */
-    private boolean checkConfirm(String ConfirmPassword) {
-        boolean isConfirmPasswordEmpty = ConfirmPassword.isEmpty();
+    private boolean checkConfirm(String confirmPassword) {
+        boolean isConfirmPasswordEmpty = confirmPassword.isEmpty();
         if (isConfirmPasswordEmpty) {
-            confirmLayout.setError("Confirm password can not be Empty");
+            confirmLayout.setError(
+                    getString(R.string.string_confirm_password) + getString(R.string.password_empty_error)
+            );
         }
         return !isConfirmPasswordEmpty;
 
@@ -128,7 +134,9 @@ public class CreateAccountActivity extends AppCompatActivity {
     private boolean checkEmail(String email) {
         boolean isEmailEmpty = email.isEmpty();
         if (isEmailEmpty) {
-            emailLayout.setError("Email can not be Empty");
+            emailLayout.setError(
+                    getString(R.string.string_email) + getString(R.string.password_empty_error)
+            );
         }
         return !isEmailEmpty;
     }
@@ -141,7 +149,9 @@ public class CreateAccountActivity extends AppCompatActivity {
     private final boolean checkPhone(String phone) {
         boolean isPhoneEmpty = phone.isEmpty();
         if (isPhoneEmpty) {
-            phoneLayout.setError("Phone number can not be Empty");
+            phoneLayout.setError(
+                     getString(R.string.string_email) + getString(R.string.password_empty_error)
+            );
         }
         return !isPhoneEmpty;
     }
@@ -153,23 +163,17 @@ public class CreateAccountActivity extends AppCompatActivity {
     public void onCreateClicked(View view){
         String username = usernameField.getText().toString();
         String password = passwordField.getText().toString();
-        String ConfirmPassword = confirmField.getText().toString();
+        String confirmPassword = confirmField.getText().toString();
         String email = emailField.getText().toString();
         String phone = phoneField.getText().toString();
-        if(!ConfirmPassword.equals(password)){
-            confirmLayout.setError("password does not match");
+        if(!confirmPassword.equals(password)){
+            confirmLayout.setError(getString(R.string.password_match_error));
 
         }
         else if (checkUsername(username) && checkPassword(password) &&
-                checkConfirm(ConfirmPassword) && checkEmail(email) &&
+                checkConfirm(confirmPassword) && checkEmail(email) &&
                 checkPhone(phone)) {
             finish();
         }
-
-    }
-
-
-
-
-
+  }
 }
