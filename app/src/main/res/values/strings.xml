@@ -16,4 +16,8 @@
     <string name="string_title">Title:</string>
     <string name="string_author">Author:</string>
     <string name="string_description">Description (Optional):</string>
+    <string name="back">Back</string>
+    <string name="save">Save</string>
+    <string name="scan_add">Scan and autofill</string>
+    <string name="upload_img">Upload cover image</string>
 </resources>
