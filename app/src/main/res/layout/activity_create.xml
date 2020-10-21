@@ -96,7 +96,7 @@
             android:id="@+id/confirm_password_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/string_password"
+            android:hint="@string/string_confirm_password"
             android:inputType="textPassword"
             android:maxLength="30"
             android:singleLine="true" />
