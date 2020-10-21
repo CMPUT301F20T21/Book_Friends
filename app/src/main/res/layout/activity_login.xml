@@ -37,7 +37,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/login_username_field"
+            android:id="@+id/login_password_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/string_username"
@@ -62,7 +62,7 @@
         app:layout_constraintTop_toBottomOf="@+id/login_username_layout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/login_password_field"
+            android:id="@+id/password_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/string_password"

@@ -4,7 +4,6 @@
     <string name="title_borrow">Borrow</string>
     <string name="title_profile">Me</string>
     <string name="title_notifications">Notifications</string>
-    <string name="login_error_message">Failed to login due to unexpected error, please try again</string>
     <string name="login_title_description">Book Friends Title</string>
     <string name="username_empty_error">Username cannot be empty</string>
     <string name="password_empty_error">Password cannot be empty</string>
@@ -12,4 +11,12 @@
     <string name="string_login">Login</string>
     <string name="string_username">Username</string>
     <string name="string_password">Password</string>
+    <string name ="string_confirm_password">Confirm Password</string>
+    <string name="string_email">Email</string>
+    <string name="string_phone_number">Phone Number</string>
+    <string name="create">Create</string>
+    <string name="cancel">Cancel</string>
+    <string name="empty_error"> cannot be empty</string>
+    <string name="password_match_error">password does not match</string>
+
 </resources>

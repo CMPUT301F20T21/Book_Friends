@@ -25,6 +25,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.cmput301f20t21.bookfriends.ui.login.CreateAccountActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:parentActivityName="com.cmput301f20t21.bookfriends.ui.login.LoginActivity" >
+        </activity>
     </application>
 
 </manifest>
