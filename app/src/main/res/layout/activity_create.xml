@@ -21,7 +21,7 @@
         app:srcCompat="@drawable/book_friends_title" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/login_username_layout"
+        android:id="@+id/signup_username_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -37,7 +37,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/user_field"
+            android:id="@+id/signup_username_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -48,7 +48,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/login_password_layout"
+        android:id="@+id/signup_password_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -62,10 +62,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_username_layout">
+        app:layout_constraintTop_toBottomOf="@+id/signup_username_layout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/login_password_field"
+            android:id="@+id/signup_password_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/string_password"
@@ -90,7 +90,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_password_layout">
+        app:layout_constraintTop_toBottomOf="@+id/signup_password_layout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/confirm_password_field"

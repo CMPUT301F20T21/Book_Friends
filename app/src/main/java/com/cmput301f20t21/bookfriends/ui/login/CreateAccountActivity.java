@@ -6,17 +6,16 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import com.cmput301f20t21.bookfriends.R;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class CreateAccountActivity extends AppCompatActivity {
     private TextInputLayout usernameLayout;
     private TextInputLayout passwordLayout;
+    private TextInputLayout confirmLayout;
+    private TextInputLayout emailLayout;
     private EditText usernameField;
     private EditText passwordField;
-    private TextInputLayout confirmLayout;
     private EditText confirmField;
-    private TextInputLayout emailLayout;
     private EditText emailField;
 
 
@@ -30,7 +29,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
 
-        usernameLayout = findViewById(R.id.login_username_layout);
+        usernameLayout = findViewById(R.id.signup_username_layout);
         usernameField = usernameLayout.getEditText();
         usernameField.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
@@ -40,7 +39,7 @@ public class CreateAccountActivity extends AppCompatActivity {
             }
         });
 
-        passwordLayout = findViewById(R.id.login_password_layout);
+        passwordLayout = findViewById(R.id.signup_password_layout);
         passwordField = passwordLayout.getEditText();
         passwordField.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
