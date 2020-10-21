@@ -1,9 +1,7 @@
-package com.cmput301f20t21.bookfriends.controller;
-
-import android.os.Debug;
-import android.util.Log;
+package com.cmput301f20t21.bookfriends.ui.login;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
 
 import com.cmput301f20t21.bookfriends.services.AuthService;
 import com.cmput301f20t21.bookfriends.services.UserService;
@@ -11,9 +9,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
-public class LogInController {
+public class LoginViewModel extends ViewModel {
     /**
      * interface for callback lambda function
      * will/should be called by request-related handlers when async request succeeded
@@ -26,22 +23,17 @@ public class LogInController {
         void run();
     }
 
-    private AuthService authService;
-    private UserService userService;
-
-    public LogInController() {
-        authService = AuthService.getInstance();
-        userService = UserService.getInstance();
-    }
+    private final AuthService authService = AuthService.getInstance();
+    private final UserService userService = UserService.getInstance();
 
     public void handleLogIn(final String username, final String password, final OnSuccessCallback successCallback, final OnFailCallback failureCallback) {
         userService.getEmailByUsername(username).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    String email = task.getResult().get("email").toString();
-                    if (!email.isEmpty()) {
-                        authService.signIn(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    Object email = task.getResult().get("email");
+                    if (email != null) {
+                        authService.signIn(email.toString(), password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
