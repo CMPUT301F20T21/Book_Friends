@@ -14,22 +14,27 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 public class LogInController {
+    /**
+     * interface for callback lambda function
+     * will/should be called by request-related handlers when async request succeeded
+     */
+    public interface OnSuccessCallback {
+        void run();
+    }
+    /** called by handlers when async request failed */
+    public interface OnFailCallback {
+        void run();
+    }
+
     private AuthService authService;
     private UserService userService;
-    private ILogInListener listener;
 
-    public interface ILogInListener {
-        void onLogInSuccess();
-        void onLogInFail();
-    }
-
-    public LogInController(ILogInListener listener) {
+    public LogInController() {
         authService = AuthService.getInstance();
         userService = UserService.getInstance();
-        this.listener = listener;
     }
 
-    public void handleLogIn(final String username, final String password) {
+    public void handleLogIn(final String username, final String password, final OnSuccessCallback successCallback, final OnFailCallback failureCallback) {
         userService.getEmailByUsername(username).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -40,21 +45,21 @@ public class LogInController {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    listener.onLogInSuccess();
+                                    successCallback.run();
                                 } else {
-                                    listener.onLogInFail();
+                                    failureCallback.run();
                                 }
                             }
                         });
                     } else {
                         // empty email, should never happen
                         // TODO: handle error
-                        listener.onLogInFail();
+                        failureCallback.run();
                     }
                 } else {
                     // fail to get username
                     // TODO: handle error
-                    listener.onLogInFail();
+                    failureCallback.run();
                 }
             }
         });
