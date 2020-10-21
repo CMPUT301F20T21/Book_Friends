@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/username"
             android:layout_width="345dp"
             android:layout_height="56dp"
             android:layout_marginTop="120dp"
@@ -46,7 +46,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:layout_constraintTop_toBottomOf="@+id/username"
             app:layout_constraintVertical_bias="0.443"
             tools:src="@tools:sample/avatars"
             android:src="@drawable/ic_edit"
@@ -85,7 +85,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="6dp"
                 android:layout_weight="1"
-                android:text="TextView" />
+                 />
         </LinearLayout>
 
         <LinearLayout
@@ -120,7 +120,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="6dp"
                 android:layout_weight="1"
-                android:text="TextView" />
+                />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
