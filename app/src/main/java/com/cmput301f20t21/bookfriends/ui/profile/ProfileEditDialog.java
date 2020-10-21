@@ -50,8 +50,9 @@ public class ProfileEditDialog extends DialogFragment {
             public void onClick(View v) {
                 String inputEmail = editEmail.getText().toString();
                 String inputPhone = editPhone.getText().toString();
-
-                if (isEmailValid(inputEmail) && (isPhoneValid(inputPhone))){
+                boolean v1 = isEmailValid(inputEmail);
+                boolean v2 = isPhoneValid(inputPhone);
+                if (v1 && v2){
                     listener.editing(inputEmail, inputPhone);
                     getDialog().dismiss();
                 }
