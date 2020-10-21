@@ -26,8 +26,8 @@ import com.cmput301f20t21.bookfriends.ui.login.LoginActivity;
 public class ProfileFragment extends Fragment implements ProfileEditDialog.ProfileEditListener {
 
     private ProfileViewModel mViewModel;
-    public TextView Email;
-    public TextView Phone;
+    private TextView emailAddress;
+    private TextView phoneNumber;
     private ImageView editProfile;
 
     public static ProfileFragment newInstance() {
@@ -40,8 +40,8 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.Profi
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         // TODO for other profile just use .setVisibility(View.GONE); to hide login button and edit icon
-        Email = view.findViewById(R.id.email);
-        Phone = view.findViewById(R.id.phone);
+        emailAddress = view.findViewById(R.id.email);
+        phoneNumber = view.findViewById(R.id.phone);
         editProfile = view.findViewById(R.id.image_edit);
         //click on the logout button, bring back to the login activity
         Button logout = view.findViewById(R.id.logout_button);
@@ -68,8 +68,8 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.Profi
 
     @Override
     public void editing(String email, String phone) {
-        Email.setText(email);
-        Phone.setText(phone);
+        emailAddress.setText(email);
+        phoneNumber.setText(phone);
 
     }
 
