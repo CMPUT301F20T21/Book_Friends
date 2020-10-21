@@ -13,13 +13,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.cmput301f20t21.bookfriends.MainActivity;
 import com.cmput301f20t21.bookfriends.R;
-import com.cmput301f20t21.bookfriends.controller.LogInController;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 /**
@@ -28,10 +28,9 @@ import com.google.android.material.textfield.TextInputLayout;
 public class LoginActivity extends AppCompatActivity {
     private TextInputLayout usernameLayout;
     private TextInputLayout passwordLayout;
-    private TextInputEditText usernameField;
-    private TextInputEditText passwordField;
-    private LogInController logInController;
-
+    private EditText usernameField;
+    private EditText passwordField;
+    private LoginViewModel model;
     /**
      * android lifecycle method, grab the Layout and EditText fields
      * as well as adding a simple textChangedListener
@@ -44,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         // TODO: Check if the user is already logged in, redirect to mainActivity if true
-        logInController = new LogInController();
+        model = new ViewModelProvider(this).get(LoginViewModel.class);
 
         this.getSupportActionBar().hide();
         // hides the status bar, deprecated in API 30
@@ -53,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(uiOptions);
 
         usernameLayout = findViewById(R.id.login_username_layout);
-        usernameField = (TextInputEditText) usernameLayout.getEditText();
+        usernameField = usernameLayout.getEditText();
         usernameField.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
             public void afterTextChanged(Editable usernameString) {
@@ -62,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         passwordLayout = findViewById(R.id.login_password_layout);
-        passwordField = (TextInputEditText) passwordLayout.getEditText();
+        passwordField = passwordLayout.getEditText();
         passwordField.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
             public void afterTextChanged(Editable passwordString) {
@@ -121,15 +120,21 @@ public class LoginActivity extends AppCompatActivity {
         String username = usernameField.getText().toString();
         String password = passwordField.getText().toString();
         if (checkUsername(username) && checkPassword(password)) {
-            logInController.handleLogIn(username, password,
-                    // on success
-                    () -> {
-                        Intent mainIntent = new Intent(this, MainActivity.class);
-                        startActivity(mainIntent);
-                    },
-                    () -> usernameLayout.setError("Error") // on failure
+            model.handleLogIn(username, password,
+                    () -> onLoginSuccess(),
+                    () -> onLoginFail()
             );
         }
+    }
+
+    private void onLoginSuccess() {
+        Intent mainIntent = new Intent(this, MainActivity.class);
+        startActivity(mainIntent);
+        finish();
+    }
+
+    private void onLoginFail() {
+        usernameLayout.setError("Error"); // on failure
     }
 
 }
