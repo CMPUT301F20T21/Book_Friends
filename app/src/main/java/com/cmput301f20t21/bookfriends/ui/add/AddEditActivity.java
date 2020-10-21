@@ -1,7 +1,6 @@
 package com.cmput301f20t21.bookfriends.ui.add;
 
 import android.Manifest;
-import android.app.ActionBar;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -25,10 +24,10 @@ public class AddEditActivity extends AppCompatActivity {
     private Button scanButton;
     private Button uploadImgButton;
     private ImageView bookImage;
-    private TextInputLayout isbnEditText;
-    private TextInputLayout titleEditText;
-    private TextInputLayout authorEditText;
-    private TextInputLayout descriptionEditText;
+    private TextInputLayout isbnLayout;
+    private TextInputLayout titleLayout;
+    private TextInputLayout authorLayout;
+    private TextInputLayout descriptionLayout;
 
     private static final int IMAGE_PICK_CODE = 1000;
     private static final int PERMISSION_CODE = 1001;
@@ -40,11 +39,11 @@ public class AddEditActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.baseline_arrow_back_ios_black_18dp);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         uploadImgButton = findViewById(R.id.upload_pic);
-        bookImage = findViewById(R.id.imageView); // will be replaced with actual image
-        isbnEditText = findViewById(R.id.ISBN_layout);
-        titleEditText = findViewById(R.id.title_layout);
-        authorEditText = findViewById(R.id.author_layout);
-        descriptionEditText = findViewById(R.id.description_layout);
+        bookImage = findViewById(R.id.book_image_view); // will be replaced with actual image
+        isbnLayout = findViewById(R.id.ISBN_layout);
+        titleLayout = findViewById(R.id.title_layout);
+        authorLayout = findViewById(R.id.author_layout);
+        descriptionLayout = findViewById(R.id.description_layout);
         scanButton = findViewById(R.id.scanner_button);
 
         scanButton.setOnClickListener(new View.OnClickListener() {
@@ -101,19 +100,19 @@ public class AddEditActivity extends AppCompatActivity {
      * TODO: this is just a placeholder
      */
     public void saveInformation() {
-        String isbn = isbnEditText.getEditText().getText().toString();
-        String title = titleEditText.getEditText().getText().toString();
-        String author = authorEditText.getEditText().getText().toString();
+        String isbn = isbnLayout.getEditText().getText().toString();
+        String title = titleLayout.getEditText().getText().toString();
+        String author = authorLayout.getEditText().getText().toString();
         if (isbn.length() == 0) {
-            isbnEditText.setError("Cannot be empty");
+            isbnLayout.setError(getString(R.string.empty_error));
         }
 
         if (title.length() == 0) {
-            titleEditText.setError("Cannot be empty");
+            titleLayout.setError(getString(R.string.empty_error));
         }
 
         if (author.length() == 0) {
-            authorEditText.setError("Cannot be empty");
+            authorLayout.setError(getString(R.string.empty_error));
         }
 
         if (isbn.length() != 0 && title.length() != 0 && author.length() != 0) {
@@ -123,11 +122,11 @@ public class AddEditActivity extends AppCompatActivity {
         }
     }
 
-    public void openScanner() {
+    private void openScanner() {
         // TODO: implement the scanner
     }
 
-    public void uploadImg() {
+    private void uploadImg() {
         // TODO: implement the feature that allows user to upload cover image
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
@@ -148,7 +147,7 @@ public class AddEditActivity extends AppCompatActivity {
                     uploadImg();
                 } else {
                     // permission denied by user
-                    Toast.makeText(this, "Permission denied...!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_SHORT).show();
                 }
 
             }
