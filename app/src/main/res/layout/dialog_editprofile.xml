@@ -13,7 +13,7 @@
         android:layout_below="@id/edit_title"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="49dp"
-        android:autofillHints=""
+        android:autofillHints="email"
         android:hint="@string/edit_email"
         android:inputType="textEmailAddress" />
 
@@ -25,7 +25,7 @@
 
         android:layout_centerInParent="true"
         android:layout_marginTop="70dp"
-        android:autofillHints=""
+        android:autofillHints="phone"
         android:hint="@string/edit_phone"
         android:inputType="phone" />
 
@@ -65,7 +65,7 @@
         android:layout_marginTop="55dp"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:gravity="left"
+        android:gravity="start"
         android:text="@string/edit_cancel"
         android:textColor="#673AB7"
          />
