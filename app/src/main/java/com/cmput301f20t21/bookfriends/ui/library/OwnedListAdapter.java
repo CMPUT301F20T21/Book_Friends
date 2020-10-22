@@ -1,11 +1,15 @@
 package com.cmput301f20t21.bookfriends.ui.library;
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
@@ -20,11 +24,31 @@ public class OwnedListAdapter extends RecyclerView.Adapter<OwnedListAdapter.View
         TextView title;
         TextView owner;
         TextView isbn;
+        ImageButton moreBtn;
+
+        Book book;
         public ViewHolder(View v) {
             super(v);
             title = v.findViewById(R.id.item_book_title);
             owner = v.findViewById(R.id.item_book_owner);
             isbn = v.findViewById(R.id.item_book_isbn);
+            moreBtn = v.findViewById(R.id.item_book_more_btn);
+
+            moreBtn.setOnClickListener(view -> {
+                PopupMenu popup = new PopupMenu(view.getContext(), moreBtn);
+                MenuInflater inflater = popup.getMenuInflater();
+                inflater.inflate(R.menu.library_book_item_menu, popup.getMenu());
+                popup.setGravity(Gravity.END);
+                popup.show();
+            });
+        }
+
+        public void setBook(Book book) {
+            this.book = book;
+        }
+
+        private void showPopup() {
+
         }
     }
 
@@ -44,6 +68,7 @@ public class OwnedListAdapter extends RecyclerView.Adapter<OwnedListAdapter.View
         holder.title.setText(books.get(position).getTitle());
         holder.owner.setText(books.get(position).getOwner());
         holder.isbn.setText(books.get(position).getIsbn());
+        holder.setBook(books.get(position));
     }
 
 

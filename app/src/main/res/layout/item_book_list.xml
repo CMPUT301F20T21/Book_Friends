@@ -29,4 +29,14 @@
         android:id="@+id/item_book_isbn"
         app:layout_constraintTop_toBottomOf="@+id/item_book_owner"
         />
+
+    <ImageButton
+        android:id="@+id/item_book_more_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_more_vert_24"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@color/cardview_light_background"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
