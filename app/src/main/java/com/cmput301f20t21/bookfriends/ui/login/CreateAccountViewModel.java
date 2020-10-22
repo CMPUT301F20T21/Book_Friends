@@ -9,6 +9,7 @@ import com.cmput301f20t21.bookfriends.services.AuthService;
 import com.cmput301f20t21.bookfriends.services.UserService;
 
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseUser;
 
 public class CreateAccountViewModel extends ViewModel {
     /**
@@ -36,13 +37,17 @@ public class CreateAccountViewModel extends ViewModel {
                     // create authentication
                     authService.createUserAuth(email, password).addOnCompleteListener(authTask -> {
                         if (authTask.isSuccessful()) {
-                            String uid = authTask.getResult().getUser().getUid();
+                            FirebaseUser user = authTask.getResult().getUser();
                             // create username after create auth successful
-                            userService.add(uid, username, email).addOnCompleteListener(addUserTask -> {
+                            userService.add(user.getUid(), username, email).addOnCompleteListener(addUserTask -> {
                                 if (addUserTask.isSuccessful()) {
                                     successCallback.run();
                                 } else {
-                                    failCallback.run(SIGNUP_ERROR.UNEXPECTED);
+                                    // Clean up auth if we cannot create username
+                                    // This should never happen
+                                    user.delete().addOnCompleteListener(deleteAuthTask -> {
+                                        failCallback.run(SIGNUP_ERROR.UNEXPECTED);
+                                    });
                                 }
                             });
                         } else {
@@ -52,6 +57,7 @@ public class CreateAccountViewModel extends ViewModel {
                                 failCallback.run(SIGNUP_ERROR.EMAIL_EXISTS);
                             } catch (Exception e) {
                                 Log.e(TAG, e.getMessage());
+                                failCallback.run(SIGNUP_ERROR.UNEXPECTED);
                             }
                         }
                     });
