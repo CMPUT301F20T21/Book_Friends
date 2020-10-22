@@ -88,19 +88,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_password_layout" />
 
-    <Button
-        android:id="@+id/login_button"
-        style="@style/Widget.MaterialComponents.Button"
-        android:background="@drawable/button_round_corner"
-        android:layout_width="wrap_content"
+    <include
+        android:id="@+id/login_btn"
+        layout="@layout/progress_button_layout"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:onClick="onLoginClicked"
         android:text="@string/string_login"
-        android:textColor="@color/black"
+        android:textColor="#000000"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/create_account_button" />
 

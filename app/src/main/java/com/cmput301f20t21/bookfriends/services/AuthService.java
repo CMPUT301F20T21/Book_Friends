@@ -8,6 +8,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class AuthService {
     private FirebaseAuth mAuth;
+    private String username;
 
     private static final AuthService instance = new AuthService();
 
@@ -22,6 +23,7 @@ public class AuthService {
     public User getCurrentUser() {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         return new User(
+                username,
                 firebaseUser.getUid(),
                 firebaseUser.getDisplayName(),
                 firebaseUser.getEmail(),
@@ -33,8 +35,9 @@ public class AuthService {
         return mAuth.createUserWithEmailAndPassword(email, password);
     }
 
-    public Task<AuthResult> signIn(String email, String password) {
-        return mAuth.signInWithEmailAndPassword(email, password);
+    public Task<AuthResult> signIn(String username, String email, String password) {
+        return mAuth.signInWithEmailAndPassword(email, password)
+                .addOnSuccessListener(authResult -> this.username = username);
     }
 
     public void signOut() {
