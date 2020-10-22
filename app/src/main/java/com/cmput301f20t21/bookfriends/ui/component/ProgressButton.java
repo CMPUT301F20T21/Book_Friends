@@ -16,7 +16,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.cmput301f20t21.bookfriends.R;
 
 public class ProgressButton {
-    private CardView cardView;
+    private View view;
     private ConstraintLayout layout;
     private ProgressBar progressBar;
     private TextView textView;
@@ -30,10 +30,10 @@ public class ProgressButton {
         fadeIn = AnimationUtils.loadAnimation(context, R.anim.fade_in);
         fadeOut = AnimationUtils.loadAnimation(context, R.anim.fade_out);
 
-        cardView = view.findViewById(R.id.cardView);
-        layout = view.findViewById(R.id.constraint_layout);
-        progressBar = view.findViewById(R.id.progressBar);
-        textView = view.findViewById(R.id.textView);
+        this.view = view;
+        layout = view.findViewById(R.id.progress_button_layout);
+        progressBar = view.findViewById(R.id.progress_button_progress_bar);
+        textView = view.findViewById(R.id.progress_button_text_view);
         textView.setText(defaultText);
 
         this.defaultText = defaultText;
@@ -41,6 +41,9 @@ public class ProgressButton {
     }
 
     public void onClick() {
+        // prevent user from spamming the login button after it is clicked
+        view.setClickable(false);
+
         // set and start animation for text
         progressBar.setAnimation(fadeIn);
         textView.setAnimation(fadeOut);
@@ -89,5 +92,7 @@ public class ProgressButton {
         progressBar.setVisibility(View.GONE);
         textView.setText(defaultText);
         textView.setVisibility(View.VISIBLE);
+
+        view.setClickable(true);
     }
 }

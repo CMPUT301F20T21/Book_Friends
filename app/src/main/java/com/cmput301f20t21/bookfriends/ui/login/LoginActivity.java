@@ -142,9 +142,6 @@ public class LoginActivity extends AppCompatActivity {
                     () -> onLoginSuccess(),
                     () -> onLoginFail()
             );
-
-            // prevent user from spamming the login button after it is clicked
-            view.setClickable(false);
         }
     }
 
@@ -161,7 +158,6 @@ public class LoginActivity extends AppCompatActivity {
     private void onLoginFail() {
         progressButton.onError();
         usernameLayout.setError("Error"); // on failure
-        loginButton.setClickable(true);
     }
 
 }
