@@ -21,18 +21,14 @@ public class UserService {
         return instance;
     }
 
-    public Task<Void> add(String username, String email) {
+    public Task<Void> add(String uid, String username, String email) {
         HashMap<String, String> data = new HashMap<>();
+        data.put("username", username);
         data.put("email", email);
-        return userCollection.document(username).set(data);
+        return userCollection.document(uid).set(data);
     }
 
-    public Task<QuerySnapshot> getUserByEmail(String email) {
-        return userCollection.whereEqualTo("email", email).get();
+    public Task<QuerySnapshot> getByUsername(String username) {
+        return userCollection.whereEqualTo("username", username).get();
     }
-
-    public Task<DocumentSnapshot> getEmailByUsername(String username) {
-        return userCollection.document(username).get();
-    }
-
 }
