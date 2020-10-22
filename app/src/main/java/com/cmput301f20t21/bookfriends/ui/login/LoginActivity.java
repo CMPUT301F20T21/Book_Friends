@@ -13,28 +13,28 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.cmput301f20t21.bookfriends.MainActivity;
 import com.cmput301f20t21.bookfriends.R;
-import com.cmput301f20t21.bookfriends.controller.LogInController;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 /**
  * Activity that will display the login page and handle user inputs
  */
-public class LoginActivity extends AppCompatActivity implements LogInController.ILogInListener {
+public class LoginActivity extends AppCompatActivity {
     private TextInputLayout usernameLayout;
     private TextInputLayout passwordLayout;
-    private TextInputEditText usernameField;
-    private TextInputEditText passwordField;
-    private LogInController logInController;
-
+    private EditText usernameField;
+    private EditText passwordField;
+    private LoginViewModel model;
     /**
      * android lifecycle method, grab the Layout and EditText fields
      * as well as adding a simple textChangedListener
+     *
      * @param savedInstanceState - the saved objects, should contain nothing for this activity
      */
     @Override
@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity implements LogInController.
         setContentView(R.layout.activity_login);
 
         // TODO: Check if the user is already logged in, redirect to mainActivity if true
-        logInController = new LogInController(this);
+        model = new ViewModelProvider(this).get(LoginViewModel.class);
 
         this.getSupportActionBar().hide();
         // hides the status bar, deprecated in API 30
@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity implements LogInController.
         decorView.setSystemUiVisibility(uiOptions);
 
         usernameLayout = findViewById(R.id.login_username_layout);
-        usernameField = (TextInputEditText) usernameLayout.getEditText();
+        usernameField = usernameLayout.getEditText();
         usernameField.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
             public void afterTextChanged(Editable usernameString) {
@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity implements LogInController.
             }
         });
         passwordLayout = findViewById(R.id.login_password_layout);
-        passwordField = (TextInputEditText) passwordLayout.getEditText();
+        passwordField = passwordLayout.getEditText();
         passwordField.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
             public void afterTextChanged(Editable passwordString) {
@@ -73,6 +73,7 @@ public class LoginActivity extends AppCompatActivity implements LogInController.
 
     /**
      * check the username field for emptiness, adding error message if field is empty
+     *
      * @param username - the username that the user entered
      * @return true if the username is not empty, false if username is empty
      */
@@ -86,6 +87,7 @@ public class LoginActivity extends AppCompatActivity implements LogInController.
 
     /**
      * check the password field for emptiness, adding error message if field is empty
+     *
      * @param password - the password that the user entered
      * @return true if the password is not empty, false if password is empty
      */
@@ -99,6 +101,7 @@ public class LoginActivity extends AppCompatActivity implements LogInController.
 
     /**
      * TODO: fill out javadoc comments once finished
+     *
      * @param view
      */
     public void onCreateAccountClicked(View view) {
@@ -110,27 +113,28 @@ public class LoginActivity extends AppCompatActivity implements LogInController.
      * method called when user clicked the "login" button
      * the function will validate the inputs and authenticate the user
      * user will be redirected to the main screen if authentication is successful
+     *
      * @param view - the view associated with the button
      */
     public void onLoginClicked(View view) {
         String username = usernameField.getText().toString();
         String password = passwordField.getText().toString();
         if (checkUsername(username) && checkPassword(password)) {
-             logInController.handleLogIn(username, password);
+            model.handleLogIn(username, password,
+                    () -> onLoginSuccess(),
+                    () -> onLoginFail()
+            );
         }
     }
 
-    @Override
-    public void onLogInSuccess() {
+    private void onLoginSuccess() {
         Intent mainIntent = new Intent(this, MainActivity.class);
-        // TODO: put User class to the intent
-        // mainIntent.putExtra();
         startActivity(mainIntent);
+        finish();
     }
 
-    @Override
-    public void onLogInFail() {
-        // TODO: handle login fail
-        usernameLayout.setError("Error");
+    private void onLoginFail() {
+        usernameLayout.setError("Error"); // on failure
     }
+
 }
