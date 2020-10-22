@@ -28,6 +28,7 @@ public class BorrowFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_borrow, container, false);
     }
 
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
