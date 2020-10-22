@@ -23,4 +23,6 @@
     <string name="title_edit_profile">Edit Contact Information</string>
     <string name="edit_cancel">CANCEL</string>
     <string name="edit_confirm">CONFIRM</string>
+    <string name="m_not_valid_email">Email address is INVALID</string>
+    <string name="m_not_valid_phone">Phone number is INVALID</string>
 </resources>
