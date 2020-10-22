@@ -26,5 +26,7 @@
     <string name="string_phone_number">Phone Number</string>
     <string name="create">Create</string>
     <string name="cancel">Cancel</string>
-    <string name="password_match_error">password does not match</string>
+    <string name="password_match_error">Password does not match</string>
+    <string name="username_already_registered_error">Username already registered</string>
+    <string name="email_already_registered_error">Email already registered</string>
 </resources>
