@@ -1,6 +1,7 @@
 package com.cmput301f20t21.bookfriends.ui.library;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
 
-public class OwnedTabFragment extends Fragment {
-    private LibraryViewModel mViewModel;
+public class OwnedListFragment extends Fragment {
+    private OwnedViewModel vm;
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -25,7 +26,7 @@ public class OwnedTabFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mViewModel = new ViewModelProvider(this).get(LibraryViewModel.class);
+        vm = new ViewModelProvider(this).get(OwnedViewModel.class);
         return inflater.inflate(R.layout.list_book, container, false);
     }
 
@@ -33,6 +34,7 @@ public class OwnedTabFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_list_book);
 
+        Log.d("c2", "owned list craeted");
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         recyclerView.setHasFixedSize(true);
@@ -43,7 +45,7 @@ public class OwnedTabFragment extends Fragment {
 
 
         // specify an adapter (see also next example)
-        mAdapter = new OwnedBookRecyclerAdapter(mViewModel.getOwnedBooks());
+        mAdapter = new OwnedListAdapter(vm.getBooks());
         recyclerView.setAdapter(mAdapter);
     }
 }

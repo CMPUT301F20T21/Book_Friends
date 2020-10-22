@@ -13,32 +13,39 @@ import com.cmput301f20t21.bookfriends.entities.Book;
 
 import java.util.ArrayList;
 
-public class BorrowedBookRecyclerAdapter extends RecyclerView.Adapter<BorrowedBookRecyclerAdapter.ViewHolder>{
+public class OwnedListAdapter extends RecyclerView.Adapter<OwnedListAdapter.ViewHolder>{
     private ArrayList<Book> books;
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // TODO flesh out book view card
+        TextView title;
         TextView owner;
+        TextView isbn;
         public ViewHolder(View v) {
             super(v);
+            title = v.findViewById(R.id.item_book_title);
             owner = v.findViewById(R.id.item_book_owner);
+            isbn = v.findViewById(R.id.item_book_isbn);
         }
     }
 
-    public BorrowedBookRecyclerAdapter(ArrayList<Book> books) {
+    public OwnedListAdapter(ArrayList<Book> books) {
         this.books = books;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public OwnedListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_list, parent, false);
-        return new ViewHolder(itemView);
+        return new OwnedListAdapter.ViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.owner.setText(books.get(position).getOwnerId());
+    public void onBindViewHolder(@NonNull OwnedListAdapter.ViewHolder holder, int position) {
+        holder.title.setText(books.get(position).getTitle());
+        holder.owner.setText(books.get(position).getOwner());
+        holder.isbn.setText(books.get(position).getIsbn());
     }
+
 
     @Override
     public int getItemCount() {

@@ -6,7 +6,6 @@
     <string name="title_borrow">Borrow</string>
     <string name="title_profile">Me</string>
     <string name="title_notifications">Notifications</string>
-    <string name="login_error_message">Failed to login due to unexpected error, please try again</string>
     <string name="login_title_description">Book Friends Title</string>
     <string name="username_empty_error">Username cannot be empty</string>
     <string name="password_empty_error">Password cannot be empty</string>
@@ -14,4 +13,22 @@
     <string name="string_login">Login</string>
     <string name="string_username">Username</string>
     <string name="string_password">Password</string>
+    <string name="string_isbn">ISBN:</string>
+    <string name="string_title">Title:</string>
+    <string name="string_author">Author:</string>
+    <string name="string_description">Description (Optional):</string>
+    <string name="back">Back</string>
+    <string name="save">Save</string>
+    <string name="scan_add">Scan and autofill</string>
+    <string name="upload_img">Upload cover image</string>
+    <string name="empty_error">Cannot be empty</string>
+    <string name="permission_denied">Permission denied...!</string>
+    <string name ="string_confirm_password">Confirm Password</string>
+    <string name="string_email">Email</string>
+    <string name="string_phone_number">Phone Number</string>
+    <string name="create">Create</string>
+    <string name="cancel">Cancel</string>
+    <string name="password_match_error">Password does not match</string>
+    <string name="username_already_registered_error">Username already registered</string>
+    <string name="email_already_registered_error">Email already registered</string>
 </resources>

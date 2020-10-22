@@ -2,14 +2,31 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:background="@color/cardview_light_background"
+    >
 
     <TextView
-        android:id="@+id/item_book_owner"
+        android:id="@+id/item_book_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
         android:textSize="20sp"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:id="@+id/item_book_owner"
+        app:layout_constraintTop_toBottomOf="@+id/item_book_title"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:id="@+id/item_book_isbn"
+        app:layout_constraintTop_toBottomOf="@+id/item_book_owner"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

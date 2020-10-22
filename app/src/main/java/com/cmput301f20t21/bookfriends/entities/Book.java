@@ -1,19 +1,35 @@
 package com.cmput301f20t21.bookfriends.entities;
 
 public class Book {
-    private String ownerId;
+
+    // TODO not done
     private String isbn;
+    private String author;
 
-    public Book(String ownerId, String isbn) {
-        this.ownerId = ownerId;
-        this.isbn = isbn;
-    }
+    private String owner; // the owner User.id
+    private String title;
 
-    public String getOwnerId() {
-        return ownerId;
+    // TODO testing constructor, to be replaced
+    public Book(String title) {
+        this.isbn = "12345678";
+        this.author = "J.R.R. Tolkien";
+        this.owner = "lucas";
+        this.title = title;
     }
 
     public String getIsbn() {
         return isbn;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public String getTitle() {
+        return title;
     }
 }

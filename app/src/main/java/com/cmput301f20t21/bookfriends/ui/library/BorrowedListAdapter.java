@@ -11,20 +11,26 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
-public class OwnedBookRecyclerAdapter extends RecyclerView.Adapter<OwnedBookRecyclerAdapter.ViewHolder>{
+public class BorrowedListAdapter extends RecyclerView.Adapter<BorrowedListAdapter.ViewHolder>{
     private ArrayList<Book> books;
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // TODO flesh out book view card
+        TextView title;
         TextView owner;
+        TextView isbn;
         public ViewHolder(View v) {
             super(v);
+            title = v.findViewById(R.id.item_book_title);
             owner = v.findViewById(R.id.item_book_owner);
+            isbn = v.findViewById(R.id.item_book_isbn);
         }
     }
 
-    public OwnedBookRecyclerAdapter(ArrayList<Book> books) {
+    public BorrowedListAdapter(ArrayList<Book> books) {
         this.books = books;
     }
 
@@ -37,7 +43,9 @@ public class OwnedBookRecyclerAdapter extends RecyclerView.Adapter<OwnedBookRecy
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.owner.setText(books.get(position).getOwnerId());
+        holder.title.setText(books.get(position).getTitle());
+        holder.owner.setText(books.get(position).getOwner());
+        holder.isbn.setText(books.get(position).getIsbn());
     }
 
     @Override
