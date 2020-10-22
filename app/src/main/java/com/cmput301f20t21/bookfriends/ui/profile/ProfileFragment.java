@@ -49,6 +49,7 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.Profi
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
         });
