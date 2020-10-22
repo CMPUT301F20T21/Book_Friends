@@ -17,6 +17,7 @@ import com.cmput301f20t21.bookfriends.R;
 
 public class ProgressButton {
     private View view;
+    private CardView cardView;
     private ConstraintLayout layout;
     private ProgressBar progressBar;
     private TextView textView;
@@ -31,6 +32,7 @@ public class ProgressButton {
         fadeOut = AnimationUtils.loadAnimation(context, R.anim.fade_out);
 
         this.view = view;
+        cardView = view.findViewById(R.id.progress_button_card_view);
         layout = view.findViewById(R.id.progress_button_layout);
         progressBar = view.findViewById(R.id.progress_button_progress_bar);
         textView = view.findViewById(R.id.progress_button_text_view);
@@ -57,8 +59,8 @@ public class ProgressButton {
 
     public void onSuccess() {
         // background transition color for button
-        ColorDrawable[] color = {((ColorDrawable) layout.getBackground()),
-                new ColorDrawable(layout.getResources().getColor(R.color.green))};
+        ColorDrawable[] color = {new ColorDrawable(cardView.getCardBackgroundColor().getDefaultColor()),
+                new ColorDrawable(view.getResources().getColor(R.color.green))};
         TransitionDrawable trans = new TransitionDrawable(color);
 
         // set and start animation for text
