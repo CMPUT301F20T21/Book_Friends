@@ -30,4 +30,8 @@
     <string name="password_match_error">Password does not match</string>
     <string name="username_already_registered_error">Username already registered</string>
     <string name="email_already_registered_error">Email already registered</string>
+    <string name="space_error">No Spaces Allowed</string>
+    <string name= "alphanumeric_error">Only letters and numbers are allowed</string>
+    <string name="password_length_error">Password should be at least 6 characters</string>
+    <string name="email_format_error">Invalid Email</string>
 </resources>

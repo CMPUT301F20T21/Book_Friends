@@ -83,7 +83,7 @@ public class CreateAccountActivity extends AppCompatActivity {
      */
     private boolean checkEmpty(TextInputLayout layout) {
         EditText inputField = layout.getEditText();
-        String userInput  = inputField.getText().toString();
+        String userInput = inputField.getText().toString();
         String inputHint = inputField.getHint().toString();
         boolean isFieldEmpty = userInput.isEmpty();
 
@@ -93,18 +93,85 @@ public class CreateAccountActivity extends AppCompatActivity {
         return isFieldEmpty;
     }
 
+    private boolean checkSpace(TextInputLayout layout) {
+        EditText inputField = layout.getEditText();
+        String userInput = inputField.getText().toString();
+        boolean hasSpace = false;
+        if (userInput.contains(" ")) {
+            layout.setError(getString(R.string.space_error));
+            hasSpace = true;
+        }
+
+        return hasSpace;
+    }
+
+    private boolean checkUsername() {
+        EditText usernameField = usernameLayout.getEditText();
+        String username = usernameField.getText().toString();
+        boolean notAlphanumeric = false;
+
+        if (!username.matches("[a-zA-Z0-9]+")) {
+            usernameLayout.setError(getString(R.string.alphanumeric_error));
+            notAlphanumeric = true;
+        }
+        return notAlphanumeric;
+    }
+
+    private boolean checkPasswordLength() {
+        EditText passwordField = passwordLayout.getEditText();
+        String password = passwordField.getText().toString();
+        boolean isIncorrectLength = false;
+
+        if (password.length() < 6) {
+            passwordLayout.setError(getString(R.string.password_length_error));
+            isIncorrectLength = true;
+        }
+
+        return isIncorrectLength;
+    }
+
+    private boolean isEmailValid() {
+        EditText emailField = emailLayout.getEditText();
+        String validEmail = emailField.getText().toString();
+        boolean valid = android.util.Patterns.EMAIL_ADDRESS.matcher(validEmail).matches();
+        if(!valid){
+            emailLayout.setError(getString(R.string.email_format_error));
+        }
+        return valid;
+    }
+
+    private boolean checkPasswordMatch() {
+        EditText passwordField = passwordLayout.getEditText();
+        String password = passwordField.getText().toString();
+        EditText confirmPasswordField = confirmLayout.getEditText();
+        String confirmPassword  = confirmPasswordField.getText().toString();
+        boolean isPasswordMatch = false;
+        if(!confirmPassword.equals(password)) {
+            confirmLayout.setError(getString(R.string.password_match_error));
+            isPasswordMatch = true;
+        }
+        return isPasswordMatch;
+    }
+
     public void onCancelClicked(View view) {
         finish();
     }
 
     public void onCreateClicked(View view){
-        String confirmPassword = confirmField.getText().toString();
         String password = passwordField.getText().toString();
-        if(!confirmPassword.equals(password)){
-            confirmLayout.setError(getString(R.string.password_match_error));
-        }
-        else if (!checkEmpty(usernameLayout) && !checkEmpty(passwordLayout) &&
-                !checkEmpty(confirmLayout) && !checkEmpty(emailLayout)) {
+        boolean checkEmailValid = isEmailValid();
+        boolean checkPasswordLength = checkPasswordLength();
+        boolean checkUsername = checkUsername();
+        boolean checkUsernameSpace = checkSpace(usernameLayout);
+        boolean checkPasswordSpace = checkSpace(passwordLayout);
+        boolean checkUsernameEmpty = checkEmpty(usernameLayout);
+        boolean checkConfirmEmpty = checkEmpty(confirmLayout);
+        boolean checkPasswordEmpty = checkEmpty(passwordLayout);
+        boolean checkEmailEmpty = checkEmpty(emailLayout);
+        boolean checkPasswordMatch = checkPasswordMatch();
+        if (checkEmailValid&&!checkPasswordLength&&!checkUsername&&!checkUsernameSpace
+                &&!checkPasswordSpace&&!checkUsernameEmpty && !checkPasswordEmpty &&
+                !checkConfirmEmpty && !checkEmailEmpty&&!checkPasswordMatch) {
             String username = usernameField.getText().toString();
             String email = emailField.getText().toString();
             model.handleSignUp(username, email, password,
