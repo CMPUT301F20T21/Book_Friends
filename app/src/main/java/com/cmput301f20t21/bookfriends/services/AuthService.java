@@ -23,8 +23,8 @@ public class AuthService {
     public User getCurrentUser() {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         return new User(
-                username,
                 firebaseUser.getUid(),
+                username,
                 firebaseUser.getDisplayName(),
                 firebaseUser.getEmail(),
                 firebaseUser.getPhoneNumber()
