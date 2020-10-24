@@ -34,7 +34,6 @@ public class AddEditViewModel extends ViewModel {
 
     private final AuthService authService = AuthService.getInstance();
     private final BookService bookService = BookService.getInstance();
-    private final StorageReference imageStorageReference = FirebaseStorage.getInstance().getReference();
 
     public void handleAddBook(
             final String isbn, final String title, final String author, final String description,
@@ -48,8 +47,7 @@ public class AddEditViewModel extends ViewModel {
                         if (result != null) {
                             String bookId = result.getId();
                             if(imageUri != null) {
-                                StorageReference fileReference = imageStorageReference.child(bookId);
-                                fileReference.putFile(imageUri).addOnCompleteListener(
+                                bookService.addImage(bookId, imageUri).addOnCompleteListener(
                                         addImageTask -> {
                                             if (addImageTask.isSuccessful()) {
                                                 successCallback.run();
@@ -71,9 +69,8 @@ public class AddEditViewModel extends ViewModel {
         );
     }
 
-    public void getImageFromBookId(String id, OnGetImageSuccessCallback successCallback, OnFailCallback failCallback) {
-        StorageReference pathReference = imageStorageReference.child(id);
-        pathReference.getDownloadUrl().addOnCompleteListener(
+    public void getImageFromBookId(String bookId, OnGetImageSuccessCallback successCallback, OnFailCallback failCallback) {
+        bookService.getImage(bookId).addOnCompleteListener(
                 getImageTask -> {
                     if(getImageTask.isSuccessful()) {
                         successCallback.run(getImageTask.getResult());

@@ -20,6 +20,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class LibraryFragment extends Fragment {
 
+    public static final String BOOK_ACTION_KEY = "com.cmput301f20t21.bookfriends.BOOK_ACTION";
+
     private LibraryViewModel mViewModel;
 
     public static LibraryFragment newInstance() {
@@ -44,7 +46,7 @@ public class LibraryFragment extends Fragment {
     private void openAddEditActivity() {
         // TODO: Change the enum when calling the activity for editing
         Intent intent = new Intent(this.getActivity(), AddEditActivity.class);
-        intent.putExtra("BOOK_ACTION", BOOK_ACTION.ADD);
+        intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.ADD);
         startActivity(intent);
     }
 
