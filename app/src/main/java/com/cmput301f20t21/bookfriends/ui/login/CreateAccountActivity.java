@@ -23,6 +23,10 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     private CreateAccountViewModel model;
 
+    /**
+     * this function is used to display errors and set up the function for creating accounts
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,125 +81,104 @@ public class CreateAccountActivity extends AppCompatActivity {
     }
 
     /**
-     * check the input field for emptiness, adding error message if field is empty
-     * @param layout the input field layout that the user entered
-     * @return true if the field is empty, false if field is not empty
+     * back to the login in page when clicking cancel button
+     * @param view
      */
-    private boolean checkEmpty(TextInputLayout layout) {
-        EditText inputField = layout.getEditText();
-        String userInput = inputField.getText().toString();
-        String inputHint = inputField.getHint().toString();
-        boolean isFieldEmpty = userInput.isEmpty();
-
-        if (isFieldEmpty) {
-            layout.setError( inputHint + getString(R.string.empty_error));
-        }
-        return isFieldEmpty;
-    }
-
-    private boolean checkSpace(TextInputLayout layout) {
-        EditText inputField = layout.getEditText();
-        String userInput = inputField.getText().toString();
-        boolean hasSpace = false;
-        if (userInput.contains(" ")) {
-            layout.setError(getString(R.string.space_error));
-            hasSpace = true;
-        }
-
-        return hasSpace;
-    }
-
-    private boolean checkUsername() {
-        EditText usernameField = usernameLayout.getEditText();
-        String username = usernameField.getText().toString();
-        boolean notAlphanumeric = false;
-
-        if (!username.matches("[a-zA-Z0-9]+")) {
-            usernameLayout.setError(getString(R.string.alphanumeric_error));
-            notAlphanumeric = true;
-        }
-        return notAlphanumeric;
-    }
-
-    private boolean checkPasswordLength() {
-        EditText passwordField = passwordLayout.getEditText();
-        String password = passwordField.getText().toString();
-        boolean isIncorrectLength = false;
-
-        if (password.length() < 6) {
-            passwordLayout.setError(getString(R.string.password_length_error));
-            isIncorrectLength = true;
-        }
-
-        return isIncorrectLength;
-    }
-
-    private boolean isEmailValid() {
-        EditText emailField = emailLayout.getEditText();
-        String validEmail = emailField.getText().toString();
-        boolean valid = android.util.Patterns.EMAIL_ADDRESS.matcher(validEmail).matches();
-        if(!valid){
-            emailLayout.setError(getString(R.string.email_format_error));
-        }
-        return valid;
-    }
-
-    private boolean checkPasswordMatch() {
-        EditText passwordField = passwordLayout.getEditText();
-        String password = passwordField.getText().toString();
-        EditText confirmPasswordField = confirmLayout.getEditText();
-        String confirmPassword  = confirmPasswordField.getText().toString();
-        boolean isPasswordMatch = false;
-        if(!confirmPassword.equals(password)) {
-            confirmLayout.setError(getString(R.string.password_match_error));
-            isPasswordMatch = true;
-        }
-        return isPasswordMatch;
-    }
-
     public void onCancelClicked(View view) {
         finish();
     }
 
+    /**
+     * create the account if there's no input errors, or display errors
+     * @param view
+     */
     public void onCreateClicked(View view){
-        String password = passwordField.getText().toString();
-        boolean checkEmailValid = isEmailValid();
-        boolean checkPasswordLength = checkPasswordLength();
-        boolean checkUsername = checkUsername();
-        boolean checkUsernameSpace = checkSpace(usernameLayout);
-        boolean checkPasswordSpace = checkSpace(passwordLayout);
-        boolean checkUsernameEmpty = checkEmpty(usernameLayout);
-        boolean checkConfirmEmpty = checkEmpty(confirmLayout);
-        boolean checkPasswordEmpty = checkEmpty(passwordLayout);
-        boolean checkEmailEmpty = checkEmpty(emailLayout);
-        boolean checkPasswordMatch = checkPasswordMatch();
-        if (checkEmailValid&&!checkPasswordLength&&!checkUsername&&!checkUsernameSpace
-                &&!checkPasswordSpace&&!checkUsernameEmpty && !checkPasswordEmpty &&
-                !checkConfirmEmpty && !checkEmailEmpty&&!checkPasswordMatch) {
+        boolean isEmailValid = model.isEmailValid(emailLayout);
+        boolean correctPasswordLength = model.correctPasswordLength(passwordLayout);
+        boolean isUsernameValid = model.isUsernameValid(usernameLayout);
+        boolean usernameNoSpace = model.noSpace(usernameLayout);
+        boolean passwordNoSpace = model.noSpace(passwordLayout);
+        boolean usernameNotEmpty = model.notEmpty(usernameLayout);
+        boolean confirmNotEmpty = model.notEmpty(confirmLayout);
+        boolean passwordNotEmpty = model.notEmpty(passwordLayout);
+        boolean emailNotEmpty = model.notEmpty(emailLayout);
+        boolean isPasswordMatch = model.isPasswordMatch( passwordLayout, confirmLayout);
+        boolean allValid = true;
+        if (!isEmailValid) {
+            emailLayout.setError(getString(R.string.email_format_error));
+            allValid = false;
+        }
+        if(!correctPasswordLength){
+            passwordLayout.setError(getString(R.string.password_length_error));
+            allValid = false;
+        }
+        if(!isUsernameValid){
+            usernameLayout.setError(getString(R.string.alphanumeric_error));
+            allValid = false;
+        }
+        if(!usernameNoSpace){
+            usernameLayout.setError(getString(R.string.space_error));
+            allValid = false;
+        }
+        if(!passwordNoSpace){
+            passwordLayout.setError(getString(R.string.space_error));
+            allValid = false;
+        }
+        if(!usernameNotEmpty){
+            usernameLayout.setError(getString(R.string.empty_error));
+            allValid = false;
+        }
+        if(!confirmNotEmpty){
+            confirmLayout.setError(getString(R.string.empty_error));
+            allValid = false;
+        }
+        if(!passwordNotEmpty){
+            passwordLayout.setError(getString(R.string.empty_error));
+            allValid = false;
+        }
+        if(!emailNotEmpty){
+            emailLayout.setError(getString(R.string.empty_error));
+            allValid = false;
+        }
+        if(!isPasswordMatch){
+            confirmLayout.setError(getString(R.string.password_match_error));
+            allValid = false;
+        }
+        if (allValid) {
             String username = usernameField.getText().toString();
             String email = emailField.getText().toString();
+            String password = passwordField.getText().toString();
             model.handleSignUp(username, email, password,
                     () -> onSignUpSuccess(),
-                    (SIGNUP_ERROR error) -> onSignUpFail(error));
+                    (SIGNUP_ERROR error) -> onSignUpFail(error)
+            );
         }
   }
 
+    /**
+     * leave the page when sign up successfully
+     */
     public void onSignUpSuccess() {
         finish();
     }
 
+    /**
+     * display sign up errors
+     * @param error
+     */
     public void onSignUpFail(SIGNUP_ERROR error) {
         switch (error) {
             case EMAIL_EXISTS:
                 emailLayout.setError(getString(R.string.email_already_registered_error));
                 emailField.requestFocus();
                 return;
+
             case USERNAME_EXISTS:
                 usernameLayout.setError(getString(R.string.username_already_registered_error));
                 usernameField.requestFocus();
                 return;
+
             default:
-                // should display unexpected error here
                 return;
         }
     }
