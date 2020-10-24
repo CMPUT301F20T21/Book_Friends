@@ -4,6 +4,8 @@ import android.util.Log;
 
 import androidx.lifecycle.ViewModel;
 
+import com.cmput301f20t21.bookfriends.callbacks.OnFailCallbackWithMessage;
+import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallback;
 import com.cmput301f20t21.bookfriends.enums.SIGNUP_ERROR;
 import com.cmput301f20t21.bookfriends.services.AuthService;
 import com.cmput301f20t21.bookfriends.services.UserService;
@@ -12,24 +14,12 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
 public class CreateAccountViewModel extends ViewModel {
-    /**
-     * interface for callback lambda function
-     * will/should be called by request-related handlers when async request succeeded
-     */
-    public interface OnSuccessCallback {
-        void run();
-    }
-    /** called by handlers when async request failed */
-    public interface OnFailCallback {
-        void run(SIGNUP_ERROR error);
-    }
-
     private final AuthService authService = AuthService.getInstance();
     private final UserService userService = UserService.getInstance();
     private final String TAG = "SIGNUP_ERROR";
 
     public void handleSignUp(final String username, final String email, final String password,
-                             OnSuccessCallback successCallback, OnFailCallback failCallback) {
+                             OnSuccessCallback successCallback, OnFailCallbackWithMessage<SIGNUP_ERROR> failCallback) {
         // check if username is registered
         userService.getByUsername(username).addOnCompleteListener(usernameTask -> {
             if (usernameTask.isSuccessful()) {
