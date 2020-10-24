@@ -6,6 +6,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
@@ -30,9 +31,11 @@ public class BorrowedListAdapter extends BaseBookListAdapter {
 
     public static class ViewHolder extends BaseBookListAdapter.ViewHolder {
         final ImageButton moreBtn;
+        final TextView owner;
 
         public ViewHolder(View v) {
             super(v);
+            owner = v.findViewById(R.id.item_book_owner);
             moreBtn = v.findViewById(R.id.item_book_more_btn);
             moreBtn.setOnClickListener(this::showPopup);
         }
@@ -43,6 +46,12 @@ public class BorrowedListAdapter extends BaseBookListAdapter {
             inflater.inflate(R.menu.library_borrowed_book_item_menu, popup.getMenu());
             popup.setGravity(Gravity.END);
             popup.show();
+        }
+
+        @Override
+        public void onBind(Book book) {
+            super.onBind(book);
+            this.owner.setText(this.itemView.getResources().getString(R.string.book_list_item_owner, book.getOwner()));
         }
     }
 }

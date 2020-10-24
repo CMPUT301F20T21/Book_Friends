@@ -40,7 +40,6 @@ public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapte
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // TODO flesh out book view card
         final TextView title;
-        final TextView owner;
         final TextView author;
         final TextView isbn;
 
@@ -50,14 +49,12 @@ public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapte
             super(v);
             title = v.findViewById(R.id.item_book_title);
             author = v.findViewById(R.id.item_book_author);
-            owner = v.findViewById(R.id.item_book_owner);
             isbn = v.findViewById(R.id.item_book_isbn);
         }
 
         public void onBind(Book book) {
             this.title.setText(book.getTitle());
             this.author.setText(this.itemView.getResources().getString(R.string.book_list_item_author, book.getAuthor()));
-            this.owner.setText(this.itemView.getResources().getString(R.string.book_list_item_owner, book.getOwner()));
             this.isbn.setText(book.getIsbn());
             this.book = book;
         }

@@ -44,11 +44,5 @@ public class OwnedListAdapter extends BaseBookListAdapter {
             popup.setGravity(Gravity.END);
             popup.show();
         }
-
-        @Override
-        public void onBind(Book book) {
-            super.onBind(book);
-            this.owner.setText("");
-        }
     }
 }
