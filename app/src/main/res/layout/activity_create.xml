@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/login_background">
+    android:layout_height="match_parent" >
 
-    <ImageView
-        android:id="@+id/signup_title_image_view"
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="96dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
-        android:contentDescription="@string/login_title_description"
+        android:layout_marginTop="48dp"
+        android:fontFamily="@font/nunito_sans_bold"
+        android:text="@string/create_account_title"
+        android:textColor="@color/colorPrimary"
+        android:textSize="36sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/book_friends_title" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/signup_username_layout"
@@ -26,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="48dp"
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
         app:counterEnabled="true"
@@ -34,14 +33,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signup_title_image_view">
+        app:layout_constraintTop_toBottomOf="@+id/textView">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/signup_username_field"
-            android:background="@color/transparent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/transparent"
             android:hint="@string/string_username"
             android:maxLength="20"
             android:singleLine="true" />
@@ -83,7 +82,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
         app:counterEnabled="true"
@@ -96,9 +95,9 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/confirm_password_field"
-            android:background="@color/transparent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/transparent"
             android:hint="@string/string_confirm_password"
             android:inputType="textPassword"
             android:maxLength="30"
@@ -112,7 +111,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
-        android:layout_marginTop="268dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
         app:counterEnabled="true"
@@ -120,14 +119,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signup_title_image_view">
+        app:layout_constraintTop_toBottomOf="@+id/confirm_password_layout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/email_field"
-            android:background="@color/transparent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@color/transparent"
             android:ems="10"
             android:hint="@string/string_email"
             android:inputType="textEmailAddress" />
@@ -136,26 +135,42 @@
 
     <Button
         android:id="@+id/signup_create"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="48dp"
+        android:fontFamily="@font/nunito_sans_semibold"
         android:onClick="onCreateClicked"
         android:text="@string/create"
+        android:textAllCaps="false"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/signup_cancel"
-        app:layout_constraintHorizontal_bias="0.212"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email_layout" />
 
     <Button
         android:id="@+id/signup_cancel"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="44dp"
-        android:layout_marginRight="44dp"
-        android:text="@string/cancel"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:background="@color/transparent"
+        android:fontFamily="@font/nunito_sans_semibold"
         android:onClick="onCancelClicked"
+        android:text="@string/cancel"
+        android:textAllCaps="false"
+        android:textColor="@color/negative"
+        android:textSize="16sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/signup_create"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/signup_create" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
