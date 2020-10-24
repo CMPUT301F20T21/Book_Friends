@@ -14,10 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cmput301f20t21.bookfriends.R;
+import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.ui.add.AddEditActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class LibraryFragment extends Fragment {
+
+    public static final String BOOK_ACTION_KEY = "com.cmput301f20t21.bookfriends.BOOK_ACTION";
 
     private LibraryViewModel mViewModel;
 
@@ -31,12 +34,9 @@ public class LibraryFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_library, container, false);
         final FloatingActionButton addBookButton = root.findViewById(R.id.add_button);
 
-        addBookButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openAddEditActivity();
-            }
-        });
+        addBookButton.setOnClickListener(
+                view -> openAddEditActivity()
+        );
         return root;
     }
 
@@ -44,7 +44,9 @@ public class LibraryFragment extends Fragment {
      * function allows user to jump into the add/edit screen when click on the floating button
      */
     private void openAddEditActivity() {
+        // TODO: Change the enum when calling the activity for editing
         Intent intent = new Intent(this.getActivity(), AddEditActivity.class);
+        intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.ADD);
         startActivity(intent);
     }
 
