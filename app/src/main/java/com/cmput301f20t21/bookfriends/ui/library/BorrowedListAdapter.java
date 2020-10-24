@@ -37,15 +37,7 @@ public class BorrowedListAdapter extends BaseBookListAdapter {
             super(v);
             owner = v.findViewById(R.id.item_book_owner);
             moreBtn = v.findViewById(R.id.item_book_more_btn);
-            moreBtn.setOnClickListener(this::showPopup);
-        }
-
-        private void showPopup(View view) {
-            PopupMenu popup = new PopupMenu(view.getContext(), moreBtn);
-            MenuInflater inflater = popup.getMenuInflater();
-            inflater.inflate(R.menu.library_borrowed_book_item_menu, popup.getMenu());
-            popup.setGravity(Gravity.END);
-            popup.show();
+            moreBtn.setVisibility(View.GONE);
         }
 
         @Override
