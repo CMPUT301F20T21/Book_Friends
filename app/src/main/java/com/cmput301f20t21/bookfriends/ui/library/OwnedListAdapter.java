@@ -6,22 +6,18 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 
 import java.util.ArrayList;
 
-public class OwnedListAdapter extends RecyclerView.Adapter<OwnedListAdapter.ViewHolder> {
-    private ArrayList<Book> books;
-
+public class OwnedListAdapter extends BaseBookListAdapter {
     public OwnedListAdapter(ArrayList<Book> books) {
-        this.books = books;
+        super(books);
     }
 
     @NonNull
@@ -31,45 +27,30 @@ public class OwnedListAdapter extends RecyclerView.Adapter<OwnedListAdapter.View
         return new OwnedListAdapter.ViewHolder(itemView);
     }
 
+    /**
+     * This method will be called by the recycler when data updates
+     * due to inheritance, it only recognize the looser view holder class in base adapter
+     * but we passed to it a more specific one so the down-casting should always work
+     *
+     * @param holder   the view holder to bind/update, will be down-casted to child view holder type
+     * @param position the position of the item
+     */
     @Override
-    public void onBindViewHolder(@NonNull OwnedListAdapter.ViewHolder holder, int position) {
-        Book book = books.get(position);
-        holder.title.setText(book.getTitle());
-        holder.author.setText(holder.root.getResources().getString(R.string.book_list_item_author, book.getAuthor()));
-        holder.owner.setText("");
-        holder.isbn.setText(book.getIsbn());
-        holder.setBook(book);
+    public void onBindViewHolder(@NonNull BaseBookListAdapter.ViewHolder holder, int position) {
+        this.onBindViewHolder((OwnedListAdapter.ViewHolder) holder, position);
     }
 
-    @Override
-    public int getItemCount() {
-        return books.size();
+    private void onBindViewHolder(@NonNull OwnedListAdapter.ViewHolder holder, int position) {
+        holder.onBind(books.get(position));
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView title;
-        TextView author;
-        TextView owner;
-        TextView isbn;
-        ImageButton moreBtn;
-
-        Book book;
-        View root;
+    public static class ViewHolder extends BaseBookListAdapter.ViewHolder {
+        final ImageButton moreBtn;
 
         public ViewHolder(View v) {
             super(v);
-            root = v;
-            title = v.findViewById(R.id.item_book_title);
-            author = v.findViewById(R.id.item_book_author);
-            owner = v.findViewById(R.id.item_book_owner);
-            isbn = v.findViewById(R.id.item_book_isbn);
             moreBtn = v.findViewById(R.id.item_book_more_btn);
-
             moreBtn.setOnClickListener(this::showPopup);
-        }
-
-        public void setBook(Book book) {
-            this.book = book;
         }
 
         private void showPopup(View view) {
@@ -78,6 +59,12 @@ public class OwnedListAdapter extends RecyclerView.Adapter<OwnedListAdapter.View
             inflater.inflate(R.menu.library_owned_book_item_menu, popup.getMenu());
             popup.setGravity(Gravity.END);
             popup.show();
+        }
+
+        @Override
+        public void onBind(Book book) {
+            super.onBind(book);
+            this.owner.setText("");
         }
     }
 }
