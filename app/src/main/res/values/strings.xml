@@ -32,4 +32,8 @@
     <string name="password_match_error">Password does not match</string>
     <string name="username_already_registered_error">Username already registered</string>
     <string name="email_already_registered_error">Email already registered</string>
+    <string name="book_list_item_author">by %1$s</string>
+    <string name="book_list_item_owner">owner: %1$s</string>
+    <string name="book_item_menu_delete">Delete</string>
+    <string name="booK_item_menu_view_requests">View all requests</string>
 </resources>

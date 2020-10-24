@@ -1,7 +1,6 @@
 package com.cmput301f20t21.bookfriends.ui.library;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,8 +32,6 @@ public class BorrowedListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_list_book);
-
-        Log.d("c2", "borrowed list craeted");
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         recyclerView.setHasFixedSize(true);
@@ -42,7 +39,6 @@ public class BorrowedListFragment extends Fragment {
         // use a linear layout manager
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-
 
         // specify an adapter (see also next example)
         mAdapter = new BorrowedListAdapter(mViewModel.getBooks());
