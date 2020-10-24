@@ -11,6 +11,7 @@
     <string name="password_empty_error">Password cannot be empty</string>
     <string name="string_create_one">Create Account</string>
     <string name="string_login">Login</string>
+    <string name="string_logged_in">Logged in</string>
     <string name="string_username">Username</string>
     <string name="string_password">Password</string>
     <string name="string_isbn">ISBN:</string>

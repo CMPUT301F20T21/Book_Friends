@@ -11,6 +11,7 @@ package com.cmput301f20t21.bookfriends.ui.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.view.View;
 import android.widget.EditText;
@@ -20,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.cmput301f20t21.bookfriends.MainActivity;
 import com.cmput301f20t21.bookfriends.R;
+import com.cmput301f20t21.bookfriends.ui.component.ProgressButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 /**
@@ -30,6 +32,8 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputLayout passwordLayout;
     private EditText usernameField;
     private EditText passwordField;
+    private View loginButton;
+    private ProgressButton progressButton;
     private LoginViewModel model;
     /**
      * android lifecycle method, grab the Layout and EditText fields
@@ -67,6 +71,18 @@ public class LoginActivity extends AppCompatActivity {
             public void afterTextChanged(Editable passwordString) {
                 // remove the error if any exist
                 passwordLayout.setError(null);
+            }
+        });
+
+        loginButton = findViewById(R.id.login_btn);
+        progressButton = new ProgressButton(
+                this, loginButton,
+                getString(R.string.string_login),
+                getString(R.string.string_logged_in));
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onLoginClick(v);
             }
         });
     }
@@ -117,10 +133,11 @@ public class LoginActivity extends AppCompatActivity {
      *
      * @param view - the view associated with the button
      */
-    public void onLoginClicked(View view) {
+    public void onLoginClick(View view) {
         String username = usernameField.getText().toString();
         String password = passwordField.getText().toString();
         if (checkUsername(username) && checkPassword(password)) {
+            progressButton.onClick();
             model.handleLogIn(username, password,
                     () -> onLoginSuccess(),
                     () -> onLoginFail()
@@ -129,12 +146,17 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void onLoginSuccess() {
-        Intent mainIntent = new Intent(this, MainActivity.class);
-        startActivity(mainIntent);
-        finish();
+        progressButton.onSuccess();
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(mainIntent);
+            finish();
+        }, 500);
     }
 
     private void onLoginFail() {
+        progressButton.onError();
         usernameLayout.setError("Error"); // on failure
     }
 
