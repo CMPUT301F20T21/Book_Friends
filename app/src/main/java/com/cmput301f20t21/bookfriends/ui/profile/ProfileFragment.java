@@ -23,7 +23,7 @@ import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.ui.login.LoginActivity;
 
 
-public class ProfileFragment extends Fragment implements ProfileEditDialog.ProfileEditListener {
+public class ProfileFragment extends Fragment implements ProfileEditDialog.EditListener {
 
     private ProfileViewModel mViewModel;
     private TextView emailAddress;
@@ -59,8 +59,9 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.Profi
             @Override
             public void onClick(View v) {
                 ProfileEditDialog dialog = new ProfileEditDialog();
-                dialog.setTargetFragment(ProfileFragment.this,1);
-                dialog.show(getParentFragment().getChildFragmentManager(),"edit_profile");
+                dialog.setTargetFragment(ProfileFragment.this, 1
+                );
+                dialog.show(getParentFragment().getChildFragmentManager(), "edit_profile");
 
             }
         });
@@ -68,7 +69,7 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.Profi
     }
 
     @Override
-    public void editing(String email, String phone) {
+    public void onEdit(String email, String phone) {
         emailAddress.setText(email);
         phoneNumber.setText(phone);
 
