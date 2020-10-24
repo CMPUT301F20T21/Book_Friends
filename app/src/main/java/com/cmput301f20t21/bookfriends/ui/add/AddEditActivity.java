@@ -3,6 +3,7 @@ package com.cmput301f20t21.bookfriends.ui.add;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,18 +17,26 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.cmput301f20t21.bookfriends.R;
+import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
+import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class AddEditActivity extends AppCompatActivity {
     private Button scanButton;
     private Button uploadImgButton;
     private ImageView bookImage;
+    private Uri bookImageUri;
     private TextInputLayout isbnLayout;
     private TextInputLayout titleLayout;
     private TextInputLayout authorLayout;
     private TextInputLayout descriptionLayout;
+    private BOOK_ACTION action;
+
+    private AddEditViewModel model;
 
     private static final int IMAGE_PICK_CODE = 1000;
     private static final int PERMISSION_CODE = 1001;
@@ -45,6 +54,8 @@ public class AddEditActivity extends AppCompatActivity {
         authorLayout = findViewById(R.id.author_layout);
         descriptionLayout = findViewById(R.id.description_layout);
         scanButton = findViewById(R.id.scanner_button);
+
+        model = new ViewModelProvider(this).get(AddEditViewModel.class);
 
         scanButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +83,8 @@ public class AddEditActivity extends AppCompatActivity {
             }
         });
 
+        Intent intent = getIntent();
+        action = (BOOK_ACTION) intent.getSerializableExtra("BOOK_ACTION");
     }
 
     @Override
@@ -103,6 +116,8 @@ public class AddEditActivity extends AppCompatActivity {
         String isbn = isbnLayout.getEditText().getText().toString();
         String title = titleLayout.getEditText().getText().toString();
         String author = authorLayout.getEditText().getText().toString();
+        String description = descriptionLayout.getEditText().getText().toString();
+
         if (isbn.length() == 0) {
             isbnLayout.setError(getString(R.string.empty_error));
         }
@@ -116,11 +131,49 @@ public class AddEditActivity extends AppCompatActivity {
         }
 
         if (isbn.length() != 0 && title.length() != 0 && author.length() != 0) {
+            if (action == BOOK_ACTION.ADD) {
+                // if no image is attached, bookImageUri will be passed as null
+                model.handleAddBook(isbn, title, author, description, bookImageUri,
+                        this::onSuccess,
+                        this::onFailure
+                );
+            }
 
-            // eventually, we will go back to home screen after saving all information
-            finish();
         }
     }
+
+    public void onSuccess() {
+        if (action == BOOK_ACTION.ADD) {
+            Toast.makeText(this, getString(R.string.add_book_successful), Toast.LENGTH_SHORT).show();
+        } else if (action == BOOK_ACTION.EDIT) {
+            Toast.makeText(this, getString(R.string.edit_book_successful), Toast.LENGTH_SHORT).show();
+        }
+        finish();
+    }
+
+    public void onFailure(BOOK_ERROR error) {
+        String errorMessage;
+        switch (error) {
+            case FAIL_TO_ADD_BOOK:
+                errorMessage = getString(R.string.operation_failed);
+                break;
+            case FAIL_TO_ADD_IMAGE:
+                errorMessage = getString(R.string.fail_to_add_image);
+                break;
+            default:
+                errorMessage = getString(R.string.unexpected_error);
+        }
+        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
+    }
+
+    // TODO: This is an idea to load image to imageView from cloud storage if needed
+    //       delete this when no longer needed
+    //       also check getImageFromBookId() from AddEditViewModel
+//    public void onGetImageCallback(Uri imageUri) {
+//        if(imageUri != null) {
+//            Glide.with(this).load(imageUri).into(bookImage);
+//        }
+//    }
 
     private void openScanner() {
         // TODO: implement the scanner
@@ -165,7 +218,10 @@ public class AddEditActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE) {
             // set image to image view
-            bookImage.setImageURI(data.getData());
+            if (data != null) {
+                bookImageUri = data.getData();
+                bookImage.setImageURI(bookImageUri);
+            }
         }
     }
 }
