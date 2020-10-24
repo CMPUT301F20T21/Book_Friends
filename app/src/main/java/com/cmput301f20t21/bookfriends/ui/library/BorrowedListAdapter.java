@@ -28,23 +28,6 @@ public class BorrowedListAdapter extends BaseBookListAdapter {
         return new ViewHolder(itemView);
     }
 
-    /**
-     * This method will be called by the recycler when data updates
-     * due to inheritance, it only recognize the looser view holder class in base adapter
-     * but we passed to it a more specific one so the down-casting should always work
-     *
-     * @param holder   the view holder to bind/update, will be down-casted to child view holder type
-     * @param position the position of the item
-     */
-    @Override
-    public void onBindViewHolder(@NonNull BaseBookListAdapter.ViewHolder holder, int position) {
-        this.onBindViewHolder((ViewHolder) holder, position);
-    }
-
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.onBind(books.get(position));
-    }
-
     public static class ViewHolder extends BaseBookListAdapter.ViewHolder {
         final ImageButton moreBtn;
 
