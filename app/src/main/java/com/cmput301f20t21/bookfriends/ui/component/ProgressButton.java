@@ -60,7 +60,7 @@ public class ProgressButton {
     public void onSuccess() {
         // background transition color for button
         ColorDrawable[] color = {new ColorDrawable(cardView.getCardBackgroundColor().getDefaultColor()),
-                new ColorDrawable(view.getResources().getColor(R.color.green))};
+                new ColorDrawable(view.getResources().getColor(R.color.positive))};
         TransitionDrawable trans = new TransitionDrawable(color);
 
         // set and start animation for text

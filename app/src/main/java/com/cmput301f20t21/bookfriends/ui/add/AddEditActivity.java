@@ -46,9 +46,9 @@ public class AddEditActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_edit_activity);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.baseline_arrow_back_ios_black_18dp);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_white_18);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        uploadImgButton = findViewById(R.id.upload_pic);
+        uploadImgButton = findViewById(R.id.upload_cover_button);
         bookImage = findViewById(R.id.book_image_view); // will be replaced with actual image
         isbnLayout = findViewById(R.id.ISBN_layout);
         titleLayout = findViewById(R.id.title_layout);
