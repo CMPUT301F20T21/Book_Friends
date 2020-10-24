@@ -25,7 +25,7 @@ public class ProfileEditDialog extends DialogFragment {
     private TextView confirm;
     private TextView existEmail;
     private TextView existPhone;
-    public ProfileEditListener listener;
+    private EditListener listener;
 
     @NotNull
     @Override
@@ -52,8 +52,8 @@ public class ProfileEditDialog extends DialogFragment {
                 String inputPhone = editPhone.getText().toString();
                 isEmailValid(inputEmail);
                 isPhoneValid(inputPhone);
-                if (isEmailValid(inputEmail)&&isPhoneValid(inputPhone)){
-                    listener.editing(inputEmail, inputPhone);
+                if (isEmailValid(inputEmail) && isPhoneValid(inputPhone)){
+                    listener.onEdit(inputEmail, inputPhone);
                     getDialog().dismiss();
                 }
             }
@@ -66,43 +66,33 @@ public class ProfileEditDialog extends DialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try{
-            listener = (ProfileEditListener)getTargetFragment();
+            listener = (EditListener) getTargetFragment();
         }catch (ClassCastException e){
             throw new ClassCastException("Need Implement ProfileEditListener");
         }
     }
 
-    public interface ProfileEditListener{
-        void editing(String email, String phone);
+    public interface EditListener{
+        void onEdit(String email, String phone);
     }
 
     // check if entered email address is valid or not
     // if not, show message
     boolean isEmailValid(CharSequence email) {
-        String mInvalidEmail = getString(R.string.m_not_valid_email);
         boolean valid =  android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
         if (!valid && email.length()!= 0){
-            editEmail.setError(mInvalidEmail);
-            return false;
+            editEmail.setError(getString(R.string.m_not_valid_email));
         }
-        else{
-            editEmail.setError(null);
-            return true;
-        }
+        return valid;
     }
     /// check if entered phone number is valid or not
     // if not, show message
     boolean isPhoneValid(String phone) {
-        String mInvalidPhone = getString(R.string.m_not_valid_phone);
         boolean valid =  android.util.Patterns.PHONE.matcher(phone).matches();
         if (!valid && phone.length()!=0){
-            editPhone.setError(mInvalidPhone);
-            return false;
+            editPhone.setError(getString(R.string.m_not_valid_phone));
         }
-        else{
-            editEmail.setError(null);
-            return true;
-        }
+        return valid;
     }
 
 }
