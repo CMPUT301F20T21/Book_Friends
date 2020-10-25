@@ -39,4 +39,5 @@
     <string name="cancel">Cancel</string>
     <string name="password_match_error">password does not match</string>
     <string name="user_name">username</string>
+    <string name="empty_email">Email adress cannot be empty</string>
 </resources>
