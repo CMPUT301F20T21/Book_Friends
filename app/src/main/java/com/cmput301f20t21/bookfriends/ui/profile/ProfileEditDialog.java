@@ -79,14 +79,16 @@ public class ProfileEditDialog extends DialogFragment {
     // check if entered email address is valid or not
     // if not, show message
     boolean isEmailValid(CharSequence email) {
-        if (email.length()!= 0){
+        if (email.length() == 0){
             editEmail.setError(getString(R.string.empty_email));
+            return false;
         }
         boolean valid =  android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
         if (!valid){
             editEmail.setError(getString(R.string.m_not_valid_email));
+            return false;
         }
-        return valid;
+        return true;
     }
     /// check if entered phone number is valid or not
     // if not, show message
