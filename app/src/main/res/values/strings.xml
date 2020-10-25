@@ -9,6 +9,7 @@
     <string name="password_empty_error">Password cannot be empty</string>
     <string name="string_create_one">Create Account</string>
     <string name="string_login">Login</string>
+    <string name="string_logged_in">Logged in</string>
     <string name="string_username">Username</string>
     <string name="string_password">Password</string>
     <string name="string_logout">Logout</string>
@@ -37,7 +38,9 @@
     <string name="string_phone_number">Phone Number</string>
     <string name="create">Create</string>
     <string name="cancel">Cancel</string>
-    <string name="password_match_error">password does not match</string>
     <string name="user_name">username</string>
     <string name="empty_email">Email adress cannot be empty</string>
+    <string name="password_match_error">Password does not match</string>
+    <string name="username_already_registered_error">Username already registered</string>
+    <string name="email_already_registered_error">Email already registered</string>
 </resources>

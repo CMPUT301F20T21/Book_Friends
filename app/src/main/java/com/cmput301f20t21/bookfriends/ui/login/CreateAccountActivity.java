@@ -5,7 +5,10 @@ import android.view.View;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.cmput301f20t21.bookfriends.R;
+import com.cmput301f20t21.bookfriends.enums.SIGNUP_ERROR;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class CreateAccountActivity extends AppCompatActivity {
@@ -18,6 +21,7 @@ public class CreateAccountActivity extends AppCompatActivity {
     private EditText confirmField;
     private EditText emailField;
 
+    private CreateAccountViewModel model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +32,8 @@ public class CreateAccountActivity extends AppCompatActivity {
         View decorView = this.getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
+
+        model = new ViewModelProvider(this).get(CreateAccountViewModel.class);
 
         usernameLayout = findViewById(R.id.signup_username_layout);
         usernameField = usernameLayout.getEditText();
@@ -99,7 +105,31 @@ public class CreateAccountActivity extends AppCompatActivity {
         }
         else if (!checkEmpty(usernameLayout) && !checkEmpty(passwordLayout) &&
                 !checkEmpty(confirmLayout) && !checkEmpty(emailLayout)) {
-            finish();
+            String username = usernameField.getText().toString();
+            String email = emailField.getText().toString();
+            model.handleSignUp(username, email, password,
+                    () -> onSignUpSuccess(),
+                    (SIGNUP_ERROR error) -> onSignUpFail(error));
         }
   }
+
+    public void onSignUpSuccess() {
+        finish();
+    }
+
+    public void onSignUpFail(SIGNUP_ERROR error) {
+        switch (error) {
+            case EMAIL_EXISTS:
+                emailLayout.setError(getString(R.string.email_already_registered_error));
+                emailField.requestFocus();
+                return;
+            case USERNAME_EXISTS:
+                usernameLayout.setError(getString(R.string.username_already_registered_error));
+                usernameField.requestFocus();
+                return;
+            default:
+                // should display unexpected error here
+                return;
+        }
+    }
 }
