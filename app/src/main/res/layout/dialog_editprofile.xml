@@ -52,7 +52,7 @@
         android:layout_marginRight="10dp"
         android:gravity="right"
         android:text="@string/edit_confirm"
-        android:textColor="#673AB7" />
+        android:textColor="@color/colorPrimary" />
 
     <TextView
         android:id="@+id/text_cancel"
@@ -67,6 +67,6 @@
         android:layout_marginLeft="10dp"
         android:gravity="start"
         android:text="@string/edit_cancel"
-        android:textColor="#673AB7"
+        android:textColor="@color/colorPrimary"
          />
 </RelativeLayout>
