@@ -93,11 +93,14 @@ public class ProfileEditDialog extends DialogFragment {
     /// check if entered phone number is valid or not
     // if not, show message
     boolean isPhoneValid(String phone) {
+        if (phone.length() == 0){
+            return true;
+        }
         boolean valid =  android.util.Patterns.PHONE.matcher(phone).matches();
         if (!valid){
             editPhone.setError(getString(R.string.m_not_valid_phone));
         }
-        return valid;
+        return true;
     }
 
 }
