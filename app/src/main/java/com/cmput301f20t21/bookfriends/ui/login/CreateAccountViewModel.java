@@ -36,11 +36,10 @@ public class CreateAccountViewModel extends ViewModel {
      * @param layout the input field layout that the user entered
      * @return true if the field is empty, false if field is not empty
      */
-    protected boolean notEmpty(TextInputLayout layout) {
+    protected boolean isEmpty(TextInputLayout layout) {
         EditText inputField = layout.getEditText();
         String userInput = inputField.getText().toString();
-        //layout.setError( inputHint + getString(R.string.empty_error));
-        return !userInput.isEmpty();
+        return userInput.isEmpty();
     }
 
     /**
@@ -51,7 +50,6 @@ public class CreateAccountViewModel extends ViewModel {
     protected boolean noSpace(TextInputLayout layout) {
         EditText inputField = layout.getEditText();
         String userInput = inputField.getText().toString();
-        // layout.setError(getString(R.string.space_error));
         return !userInput.contains(" ");
     }
 
@@ -85,7 +83,6 @@ public class CreateAccountViewModel extends ViewModel {
     protected boolean isEmailValid(TextInputLayout emailLayout) {
         EditText emailField = emailLayout.getEditText();
         String validEmail = emailField.getText().toString();
-        // emailLayout.setError(getString(R.string.email_format_error));
         return android.util.Patterns.EMAIL_ADDRESS.matcher(validEmail).matches();
     }
 

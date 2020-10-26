@@ -93,54 +93,36 @@ public class CreateAccountActivity extends AppCompatActivity {
      * @param view
      */
     public void onCreateClicked(View view){
-        boolean isEmailValid = model.isEmailValid(emailLayout);
-        boolean correctPasswordLength = model.correctPasswordLength(passwordLayout);
-        boolean isUsernameValid = model.isUsernameValid(usernameLayout);
-        boolean usernameNoSpace = model.noSpace(usernameLayout);
-        boolean passwordNoSpace = model.noSpace(passwordLayout);
-        boolean usernameNotEmpty = model.notEmpty(usernameLayout);
-        boolean confirmNotEmpty = model.notEmpty(confirmLayout);
-        boolean passwordNotEmpty = model.notEmpty(passwordLayout);
-        boolean emailNotEmpty = model.notEmpty(emailLayout);
-        boolean isPasswordMatch = model.isPasswordMatch( passwordLayout, confirmLayout);
         boolean allValid = true;
-        if (!isEmailValid) {
+        if (!model.isEmailValid(emailLayout)) {
             emailLayout.setError(getString(R.string.email_format_error));
             allValid = false;
         }
-        if(!correctPasswordLength){
+        if(!model.correctPasswordLength(passwordLayout)){
             passwordLayout.setError(getString(R.string.password_length_error));
             allValid = false;
         }
-        if(!isUsernameValid){
+        if(!model.isUsernameValid(usernameLayout)){
             usernameLayout.setError(getString(R.string.alphanumeric_error));
             allValid = false;
         }
-        if(!usernameNoSpace){
-            usernameLayout.setError(getString(R.string.space_error));
-            allValid = false;
-        }
-        if(!passwordNoSpace){
-            passwordLayout.setError(getString(R.string.space_error));
-            allValid = false;
-        }
-        if(!usernameNotEmpty){
+        if(model.isEmpty(usernameLayout)){
             usernameLayout.setError(getString(R.string.empty_error));
             allValid = false;
         }
-        if(!confirmNotEmpty){
+        if(model.isEmpty(confirmLayout)){
             confirmLayout.setError(getString(R.string.empty_error));
             allValid = false;
         }
-        if(!passwordNotEmpty){
+        if(model.isEmpty(passwordLayout)){
             passwordLayout.setError(getString(R.string.empty_error));
             allValid = false;
         }
-        if(!emailNotEmpty){
+        if(model.isEmpty(emailLayout)){
             emailLayout.setError(getString(R.string.empty_error));
             allValid = false;
         }
-        if(!isPasswordMatch){
+        if(!model.isPasswordMatch( passwordLayout, confirmLayout)){
             confirmLayout.setError(getString(R.string.password_match_error));
             allValid = false;
         }
