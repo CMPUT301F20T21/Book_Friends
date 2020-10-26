@@ -31,7 +31,7 @@
             android:background="@drawable/button_round_corner"
             android:backgroundTint="@color/colorAccent"
             android:text="@string/string_logout"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/white"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
