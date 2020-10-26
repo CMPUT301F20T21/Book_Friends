@@ -99,6 +99,7 @@ public class ProfileEditDialog extends DialogFragment {
         boolean valid =  android.util.Patterns.PHONE.matcher(phone).matches();
         if (!valid){
             editPhone.setError(getString(R.string.m_not_valid_phone));
+            return false;
         }
         return true;
     }
