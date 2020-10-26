@@ -1,22 +1,20 @@
 package com.cmput301f20t21.bookfriends.ui.login;
-
 import android.util.Log;
 import android.widget.EditText;
-
 import androidx.lifecycle.ViewModel;
-
-import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.enums.SIGNUP_ERROR;
 import com.cmput301f20t21.bookfriends.services.AuthService;
 import com.cmput301f20t21.bookfriends.services.UserService;
-
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
-import org.w3c.dom.Text;
+
 
 public class CreateAccountViewModel extends ViewModel {
+    private final AuthService authService = AuthService.getInstance();
+    private final UserService userService = UserService.getInstance();
+    private final String TAG = "SIGNUP_ERROR";
 
     /**
      *
@@ -40,17 +38,6 @@ public class CreateAccountViewModel extends ViewModel {
         EditText inputField = layout.getEditText();
         String userInput = inputField.getText().toString();
         return userInput.isEmpty();
-    }
-
-    /**
-     * check if the input field has space or not
-     * @param layout
-     * @return true if the field has space, false if field has no space
-     */
-    protected boolean noSpace(TextInputLayout layout) {
-        EditText inputField = layout.getEditText();
-        String userInput = inputField.getText().toString();
-        return !userInput.contains(" ");
     }
 
     /**
@@ -99,13 +86,8 @@ public class CreateAccountViewModel extends ViewModel {
         String confirmPassword  = confirmPasswordField.getText().toString();
         return confirmPassword.equals(password);
     }
-
-    private final AuthService authService = AuthService.getInstance();
-    private final UserService userService = UserService.getInstance();
-    private final String TAG = "SIGNUP_ERROR";
-
     /**
-     * handle sign up errors
+     * handle sign up
      * @param username
      * @param email
      * @param password
