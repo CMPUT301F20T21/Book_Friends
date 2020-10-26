@@ -39,7 +39,7 @@
     <string name="create">Create</string>
     <string name="cancel">Cancel</string>
     <string name="user_name">username</string>
-    <string name="empty_email">Email adress cannot be empty</string>
+    <string name="empty_email">Email address cannot be empty</string>
     <string name="password_match_error">Password does not match</string>
     <string name="username_already_registered_error">Username already registered</string>
     <string name="email_already_registered_error">Email already registered</string>
