@@ -14,6 +14,17 @@
     <string name="string_logged_in">Logged in</string>
     <string name="string_username">Username</string>
     <string name="string_password">Password</string>
+    <string name="string_logout">Logout</string>
+    <string name="icon_email">icon_email</string>
+    <string name="icon_phone">icon_phone</string>
+    <string name="profile_edit">profile_edit</string>
+    <string name="edit_email">Edit Email</string>
+    <string name="edit_phone">Edit Phone Number</string>
+    <string name="title_edit_profile">Edit Contact Information</string>
+    <string name="edit_cancel">CANCEL</string>
+    <string name="edit_confirm">CONFIRM</string>
+    <string name="m_not_valid_email">Email address is INVALID</string>
+    <string name="m_not_valid_phone">Phone number is INVALID</string>
     <string name="string_isbn">ISBN:</string>
     <string name="string_title">Title:</string>
     <string name="string_author">Author:</string>
@@ -29,6 +40,8 @@
     <string name="string_phone_number">Phone Number</string>
     <string name="create">Create</string>
     <string name="cancel">Cancel</string>
+    <string name="user_name">username</string>
+    <string name="empty_email">Email address cannot be empty</string>
     <string name="password_match_error">Password does not match</string>
     <string name="username_already_registered_error">Username already registered</string>
     <string name="email_already_registered_error">Email already registered</string>
