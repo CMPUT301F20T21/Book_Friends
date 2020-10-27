@@ -31,8 +31,21 @@ public class RequestActivity extends AppCompatActivity {
         requestDataList.add(new RequestItem("Test1"));
         requestDataList.add(new RequestItem("Test2"));
         requestDataList.add(new RequestItem("Test3"));
+        requestDataList.add(new RequestItem("Test4"));
+        requestDataList.add(new RequestItem("Test5"));
+        requestDataList.add(new RequestItem("Test6"));
+        requestDataList.add(new RequestItem("Test7"));
+        requestDataList.add(new RequestItem("Test8"));
+        requestDataList.add(new RequestItem("Test9"));
+        requestDataList.add(new RequestItem("Test10"));
+        requestDataList.add(new RequestItem("Test11"));
+        requestDataList.add(new RequestItem("Test12"));
+        requestDataList.add(new RequestItem("Test13"));
     }
 
+    /**
+     * Function to set view by ID, set adapter and build recycler view
+     */
     public void buildRecyclerView() {
         recyclerView = findViewById(R.id.request_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -49,17 +62,29 @@ public class RequestActivity extends AppCompatActivity {
 
             @Override
             public void onAcceptClick(int position) {
-
+                acceptItem(position);
             }
         });
     }
 
+    /**
+     * function to remove an item when we click on Reject button
+     * @param position that needs removing
+     */
     public void removeItem(int position) {
         requestDataList.remove(position);
         requestAdapter.notifyItemRemoved(position);
     }
 
+    /**
+     * function to accept one item and remove all other items when click on Accept button
+     * @param position that we accept the item
+     */
     public void acceptItem(int position) {
-
+        int size = requestDataList.size();
+        if (size > 0) {
+            requestDataList.subList(0, size).clear();
+            requestAdapter.notifyItemRangeRemoved(0, size);
+        }
     }
 }
