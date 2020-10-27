@@ -1,7 +1,9 @@
 package com.cmput301f20t21.bookfriends.ui.request;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -9,38 +11,79 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
 
+import java.util.ArrayList;
+
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestHolder> {
-    private String[] dataSet;
+    private ArrayList<RequestItem> requestItems;
+    private OnItemClickListener listener;
+    public interface OnItemClickListener{
+        void onRejectClick(int position);
+        void onAcceptClick(int position);
+    }
+
+    public void setOnItemClickLisener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
     public static class RequestHolder extends RecyclerView.ViewHolder {
         public TextView textView;
-        public RequestHolder(TextView v) {
+        public Button acceptButton;
+        public Button rejectButton;
+        public RequestHolder(View v, final OnItemClickListener listener) {
             super(v);
-            textView = v;
+            textView = v.findViewById(R.id.request_text_view);
+            acceptButton = v.findViewById(R.id.accept_button);
+            rejectButton = v.findViewById(R.id.reject_button);
+
+            acceptButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onAcceptClick(position);
+                        }
+                    }
+                }
+            });
+
+            rejectButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onRejectClick(position);
+                        }
+                    }
+                }
+            });
         }
     }
 
-    public RequestAdapter(String[] myData) {
-        dataSet = myData;
+    public RequestAdapter(ArrayList<RequestItem> requestItems) {
+        this.requestItems = requestItems;
     }
 
     @NonNull
     @Override
     public RequestHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // create a new view
-        TextView v = (TextView) LayoutInflater.from(parent.getContext())
+        View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.request_item, parent, false);
 
-        RequestHolder r = new RequestHolder(v);
+        RequestHolder r = new RequestHolder(v, listener);
         return r;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RequestHolder holder, int position) {
-        holder.textView.setText(dataSet[position]);
+        RequestItem currentItem = requestItems.get(position);
+        holder.textView.setText(currentItem.getTextRequest());
     }
 
     @Override
     public int getItemCount() {
-        return dataSet.length;
+        return requestItems.size();
     }
 }
