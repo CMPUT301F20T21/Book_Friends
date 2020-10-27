@@ -25,7 +25,7 @@ public class OwnedListFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    private ArrayList<Book> books = new ArrayList<>();
+    private ArrayList<Book> books;
 
     @Nullable
     @Override
