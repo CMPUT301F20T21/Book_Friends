@@ -73,23 +73,10 @@ public class RequestService {
      */
     public Task<Void> batchDeny(List<String> ids) {
         WriteBatch batch = FirebaseFirestore.getInstance().batch();
-        for (String id: ids) {
+        for (String id : ids) {
             DocumentReference request = requestCollection.document(id);
             batch.update(request, "status", REQUEST_STATUS.DENIED.toString());
         }
         return batch.commit();
-    }
-
-    /**
-     * get request that unavailable.
-     * unavailable requests have status: ACCEPTED, BORROWED
-     * @param bookId
-     * @return Task QuerySnapshot for unavailable request
-     */
-    public Task<QuerySnapshot> getUnavailableRequest(String bookId) {
-        return requestCollection.whereEqualTo("bookId", bookId)
-                .whereIn("status", Arrays.asList(
-                        REQUEST_STATUS.ACCEPTED.toString(),
-                        REQUEST_STATUS.BORROWED.toString())).get();
     }
 }
