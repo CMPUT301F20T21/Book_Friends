@@ -35,26 +35,20 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestH
             acceptButton = v.findViewById(R.id.accept_button);
             rejectButton = v.findViewById(R.id.reject_button);
 
-            acceptButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (listener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onAcceptClick(position);
-                        }
+            acceptButton.setOnClickListener(view -> {
+                if (listener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        listener.onAcceptClick(position);
                     }
                 }
             });
 
-            rejectButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (listener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onRejectClick(position);
-                        }
+            rejectButton.setOnClickListener(view -> {
+                if (listener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        listener.onRejectClick(position);
                     }
                 }
             });

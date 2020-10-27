@@ -12,7 +12,7 @@ import com.cmput301f20t21.bookfriends.R;
 
 import java.util.ArrayList;
 
-public class RequestActivity extends AppCompatActivity {
+public class RequestActivity extends AppCompatActivity implements ConfirmDialog.ConfirmDialogListener {
     private RecyclerView recyclerView;
     private RequestAdapter requestAdapter;
     private ArrayList<RequestItem> requestDataList;
@@ -62,7 +62,7 @@ public class RequestActivity extends AppCompatActivity {
 
             @Override
             public void onAcceptClick(int position) {
-                acceptItem(position);
+                openDialog(position);
             }
         });
     }
@@ -77,10 +77,22 @@ public class RequestActivity extends AppCompatActivity {
     }
 
     /**
-     * function to accept one item and remove all other items when click on Accept button
+     * When user click on the accept button
+     * popup a dialog to prompt user about their action:
+     * accept one item and remove all other items
      * @param position that we accept the item
      */
-    public void acceptItem(int position) {
+    public void openDialog(int position) {
+        ConfirmDialog confirmDialog = new ConfirmDialog();
+        confirmDialog.show(getSupportFragmentManager(), "Confirm Dialog");
+    }
+
+    /**
+     * function is called whenever the user confirms to accept a request
+     * remove all other requests
+     */
+    @Override
+    public void setConfirm() {
         int size = requestDataList.size();
         if (size > 0) {
             requestDataList.subList(0, size).clear();
