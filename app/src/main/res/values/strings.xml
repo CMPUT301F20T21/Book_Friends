@@ -51,6 +51,10 @@
     <string name="book_list_item_owner">owner: %1$s</string>
     <string name="book_item_menu_delete">Delete</string>
     <string name="book_item_menu_view_requests">View all requests</string>
+    <string name="space_error">No Spaces Allowed</string>
+    <string name= "alphanumeric_error">Only letters and numbers are allowed</string>
+    <string name="password_length_error">Password should be at least 6 characters</string>
+    <string name="email_format_error">Invalid Email</string>
     <string name="add_book_successful">Book Successfully Added</string>
     <string name="edit_book_successful">Book Successfully Edited</string>
     <string name="operation_failed">Operation failed, Please try again</string>
