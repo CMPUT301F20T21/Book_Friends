@@ -1,13 +1,16 @@
 package com.cmput301f20t21.bookfriends.ui.library;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 
@@ -29,7 +32,12 @@ public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.onBind(books.get(position));
+        Book book = books.get(position);
+        holder.onBind(book);
+        Uri imageUri = book.getImageUri();
+        if (imageUri != null) {
+            Glide.with(holder.holderView).load(imageUri).into(holder.bookImage);
+        }
     }
 
     @Override
@@ -42,14 +50,17 @@ public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapte
         final TextView title;
         final TextView author;
         final TextView isbn;
-
+        final ImageView bookImage;
+        View holderView;
         Book book;
 
         public ViewHolder(View v) {
             super(v);
+            holderView = v;
             title = v.findViewById(R.id.item_book_title);
             author = v.findViewById(R.id.item_book_author);
             isbn = v.findViewById(R.id.item_book_isbn);
+            bookImage = v.findViewById(R.id.booklist_image_view);
         }
 
         public void onBind(Book book) {
