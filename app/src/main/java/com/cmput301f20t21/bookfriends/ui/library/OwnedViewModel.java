@@ -4,6 +4,8 @@ import android.net.Uri;
 
 import androidx.lifecycle.ViewModel;
 
+import com.cmput301f20t21.bookfriends.callbacks.OnFailCallback;
+import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.services.AuthService;
 import com.cmput301f20t21.bookfriends.services.BookService;
@@ -13,29 +15,26 @@ import com.google.firebase.storage.StorageException;
 import java.util.ArrayList;
 
 public class OwnedViewModel extends ViewModel {
-    public interface OnSuccessCallback {
-        void run(ArrayList<Book> books);
-    }
-
     public interface OnGetImageSuccessCallback {
         void run(Book book, Uri imageUri);
-    }
-
-    public interface OnFailCallback {
-        void run();
     }
 
     private final AuthService authService = AuthService.getInstance();
     private final BookService bookService = BookService.getInstance();
 
-    public void getBooks(OnSuccessCallback successCallback, OnFailCallback failCallback) {
+    public void getBooks(OnSuccessCallbackWithMessage<ArrayList<Book>> successCallback, OnFailCallback failCallback) {
         String currentUsername = authService.getCurrentUser().getUsername();
         bookService.getBooksOfOwnerId(currentUsername).addOnCompleteListener(
                 getBookTask -> {
                     if (getBookTask.isSuccessful()) {
                         QuerySnapshot result = getBookTask.getResult();
-                        ArrayList<Book> books = bookService.getBooksOnResult(result);
-                        successCallback.run(books);
+                        if (result != null) {
+                            ArrayList<Book> books = bookService.getBooksOnResult(result);
+                            successCallback.run(books);
+                        } else {
+                            // should never happen
+                            failCallback.run();
+                        }
                     } else {
                         failCallback.run();
                     }
