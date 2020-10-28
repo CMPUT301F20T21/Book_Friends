@@ -26,8 +26,6 @@ public class LibraryFragment extends Fragment {
     private LibraryTabCollectionAdapter tabsAdapter;
     private ViewPager2 viewPager;
     private TabLayout tabLayout;
-    public static final String BOOK_ACTION_KEY = "com.cmput301f20t21.bookfriends.BOOK_ACTION";
-
 
     public static LibraryFragment newInstance() {
         return new LibraryFragment();
@@ -36,23 +34,7 @@ public class LibraryFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_library, container, false);
-        final FloatingActionButton addBookButton = root.findViewById(R.id.add_button);
-
-        addBookButton.setOnClickListener(
-                view -> openAddEditActivity()
-        );
-        return root;
-    }
-
-    /**
-     * function allows user to jump into the add/edit screen when click on the floating button
-     */
-    private void openAddEditActivity() {
-        // TODO: Change the enum when calling the activity for editing
-        Intent intent = new Intent(this.getActivity(), AddEditActivity.class);
-        intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.ADD);
-        startActivity(intent);
+        return inflater.inflate(R.layout.fragment_library, container, false);
     }
 
     @Override
