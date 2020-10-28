@@ -22,7 +22,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
-import com.cmput301f20t21.bookfriends.ui.library.LibraryFragment;
+import com.cmput301f20t21.bookfriends.ui.library.OwnedListFragment;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class AddEditActivity extends AppCompatActivity {
@@ -84,7 +84,7 @@ public class AddEditActivity extends AppCompatActivity {
         });
 
         Intent intent = getIntent();
-        action = (BOOK_ACTION) intent.getSerializableExtra(LibraryFragment.BOOK_ACTION_KEY);
+        action = (BOOK_ACTION) intent.getSerializableExtra(OwnedListFragment.BOOK_ACTION_KEY);
     }
 
     @Override
