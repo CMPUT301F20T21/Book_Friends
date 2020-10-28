@@ -29,21 +29,12 @@ import com.cmput301f20t21.bookfriends.ui.login.LoginActivity;
 
 
 public class ProfileFragment extends Fragment implements ProfileEditDialog.EditListener {
-
-    private ProfileViewModel mViewModel;
-
     private TextView emailAddress;
     private TextView phoneNumber;
     private ImageView editProfile;
 
-    private SearchView searchView;
     private ProfileSearchFragment searchedUserListFragment;
     private FragmentManager fragmentManager;
-    private FragmentContainerView searchContainer;
-
-    public static ProfileFragment newInstance() {
-        return new ProfileFragment();
-    }
 
     @Nullable
     @Override
@@ -51,13 +42,11 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.EditL
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        // TODO for other profile just use .setVisibility(View.GONE); to hide login button and edit icon
+        inflateSearchedList();
+
         emailAddress = view.findViewById(R.id.email);
         phoneNumber = view.findViewById(R.id.phone);
         editProfile = view.findViewById(R.id.image_edit);
-        searchContainer = view.findViewById(R.id.profile_search_list_container_fragment);
-
-        inflateSearchedList();
 
         //click on the logout button, bring back to the login activity
         Button logout = view.findViewById(R.id.logout_button);
@@ -105,42 +94,4 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.EditL
                 .add(R.id.profile_search_list_container_fragment, searchedUserListFragment)
                 .commit();
     }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.profile_search_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-
-        searchView = (SearchView) menu.findItem(R.id.profile_search_bar).getActionView();
-        // show or hide the searched user list fragment (container)
-        searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
-                searchContainer.setVisibility(View.VISIBLE);
-            } else {
-                searchContainer.setVisibility(View.GONE);
-            }
-        });
-
-        // whenever the input update, let's search users
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                mViewModel.updateSearchQuery(query);
-                return false;
-            }
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                mViewModel.updateSearchQuery(newText);
-                return false;
-            }
-        });
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(getActivity()).get(ProfileViewModel.class); // using getActivity because want to share one vm
-    }
-
-
 }
