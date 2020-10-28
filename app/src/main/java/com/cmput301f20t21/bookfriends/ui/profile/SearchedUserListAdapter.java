@@ -34,7 +34,7 @@ public class SearchedUserListAdapter extends RecyclerView.Adapter<SearchedUserLi
     @Override
     public SearchedUserListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_searched_user, parent, false);
-        return new ViewHolder(itemView, parent);
+        return new ViewHolder(itemView);
     }
 
     @Override
@@ -50,15 +50,13 @@ public class SearchedUserListAdapter extends RecyclerView.Adapter<SearchedUserLi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         final TextView usernameView;
-        final ViewGroup parent;
         private User user;
 
-        public ViewHolder(View v, ViewGroup parent) {
+        public ViewHolder(View v) {
             super(v);
-            this.parent = parent;
             this.usernameView = v.findViewById(R.id.searched_user_username);
             v.setOnClickListener(itemView -> {
-                Intent intent = new Intent(parent.getContext(), ProfileViewUserActivity.class);
+                Intent intent = new Intent(context, ProfileViewUserActivity.class);
                 intent.putExtra(ProfileViewUserActivity.UID_KEY, user.getUid());
                 context.startActivity(intent);
             });
