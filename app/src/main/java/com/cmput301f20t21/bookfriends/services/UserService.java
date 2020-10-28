@@ -1,5 +1,7 @@
 package com.cmput301f20t21.bookfriends.services;
 
+import android.util.Log;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -30,5 +32,16 @@ public class UserService {
 
     public Task<QuerySnapshot> getByUsername(String username) {
         return userCollection.whereEqualTo("username", username).get();
+    }
+
+    public Task<QuerySnapshot> getByUsernameStartWith(String username) {
+        if (username.length() == 0) {
+            return userCollection.whereEqualTo("username", "@").get();
+        }
+        // return a list if
+        return userCollection
+                .whereGreaterThanOrEqualTo("username", username)
+                .whereLessThan("username", username.concat("~"))
+                .limit(10).get();
     }
 }

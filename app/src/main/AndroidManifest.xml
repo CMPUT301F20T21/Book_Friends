@@ -21,11 +21,6 @@
             android:name="com.cmput301f20t21.bookfriends.ui.login.LoginActivity"
             android:windowSoftInputMode="adjustNothing"
             android:parentActivityName=".MainActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".ui.add.AddEditActivity"
             android:label="Add/Edit a Book">
