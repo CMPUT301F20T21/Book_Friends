@@ -81,9 +81,7 @@ public class OwnedListFragment extends Fragment {
         mAdapter = new OwnedListAdapter(this.books);
         recyclerView.setAdapter(mAdapter);
         for (Book book : books) {
-            if (book.getIsImageAttached()) {
-                vm.getBookImage(book, this::onGetImageSuccess);
-            }
+            vm.getBookImage(book, this::onGetImageSuccess);
         }
     }
 
