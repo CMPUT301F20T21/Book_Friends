@@ -1,6 +1,7 @@
 package com.cmput301f20t21.bookfriends.entities;
 
 public class Book {
+
     // TODO not done
     private String isbn;
     private String author;
