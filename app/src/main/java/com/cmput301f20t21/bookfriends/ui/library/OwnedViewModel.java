@@ -5,12 +5,10 @@ import android.net.Uri;
 import androidx.lifecycle.ViewModel;
 
 import com.cmput301f20t21.bookfriends.entities.Book;
-import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.services.AuthService;
 import com.cmput301f20t21.bookfriends.services.BookService;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.StorageException;
 
 import java.util.ArrayList;
 
@@ -45,18 +43,23 @@ public class OwnedViewModel extends ViewModel {
         );
     }
 
-    public void getBooksImage(Book book, OnGetImageSuccessCallback successCallback) {
+    public void getBookImage(Book book, OnGetImageSuccessCallback successCallback) {
         bookService.getImage(book.getId()).addOnCompleteListener(
                 getImageTask -> {
                     if (getImageTask.isSuccessful()) {
                         Uri imageUri = getImageTask.getResult();
                         successCallback.run(book, imageUri);
                     } else {
-                        // TODO: one book fail to obtain the image
-                        //       display some error message?
+                        Exception error = getImageTask.getException();
+                        if (error instanceof StorageException &&
+                                ((StorageException) error).getErrorCode() == StorageException.ERROR_OBJECT_NOT_FOUND
+                        ) {
+                            // book image does not exist
+                        }
                     }
                 }
         );
+
     }
 
 }

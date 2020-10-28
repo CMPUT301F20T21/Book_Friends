@@ -32,12 +32,7 @@ public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Book book = books.get(position);
-        holder.onBind(book);
-        Uri imageUri = book.getImageUri();
-        if (imageUri != null) {
-            Glide.with(holder.holderView).load(imageUri).into(holder.bookImage);
-        }
+        holder.onBind(books.get(position));
     }
 
     @Override
@@ -68,6 +63,14 @@ public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapte
             this.author.setText(this.itemView.getResources().getString(R.string.book_list_item_author, book.getAuthor()));
             this.isbn.setText(book.getIsbn());
             this.book = book;
+            Uri imageUri = book.getImageUri();
+            if (imageUri != null) {
+                Glide.with(holderView).load(imageUri).into(bookImage);
+            } else {
+                // there is a bug that one image is loaded into multiple imageViews
+                // must set the image to something default for each imageView if no image exist
+                Glide.with(holderView).load(R.drawable.no_image).into(bookImage);
+            }
         }
     }
 }

@@ -25,7 +25,7 @@ public class OwnedListFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    private ArrayList<Book> books;
+    private ArrayList<Book> books = new ArrayList<>();
 
     @Nullable
     @Override
@@ -48,14 +48,20 @@ public class OwnedListFragment extends Fragment {
 
         // specify an adapter (see also next example)
         vm.getBooks(this::onGetBookSuccess, this::onGetBookFail);
+        // need to set an empty adapter here otherwise there are errors
+        RecyclerView.Adapter tempAdapter = new OwnedListAdapter(books);
+        recyclerView.setAdapter(tempAdapter);
     }
 
     public void onGetBookSuccess(ArrayList<Book> books) {
         this.books = books;
+        // replace the adapter with real data
         mAdapter = new OwnedListAdapter(this.books);
         recyclerView.setAdapter(mAdapter);
         for (Book book : books) {
-            vm.getBooksImage(book, this::onGetImageSuccess);
+            if (book.getIsImageAttached()) {
+                vm.getBookImage(book, this::onGetImageSuccess);
+            }
         }
     }
 
