@@ -13,21 +13,23 @@ public class Book {
     private String author;
     private String description;
     private String owner; // the owner's username
+    private String imageName;
     private BOOK_STATUS status;
     private Uri imageUri;
 
-    public Book(String id, String isbn, String title, String author, String description, String owner, BOOK_STATUS status) {
+    public Book(String id, String isbn, String title, String author, String description, String owner, String imageName, BOOK_STATUS status) {
         this.id = id;
         this.isbn = isbn;
         this.title = title;
         this.author = author;
         this.description = description;
         this.owner = owner;
+        this.imageName = imageName;
         this.status = status;
     }
 
-    public Book(String id, String isbn, String title, String author, String description, String owner, BOOK_STATUS status, Uri imageUri) {
-        this(id, isbn, title, author, description, owner, status);
+    public Book(String id, String isbn, String title, String author, String description, String owner, String imageName, BOOK_STATUS status, Uri imageUri) {
+        this(id, isbn, title, author, description, owner, imageName, status);
         this.imageUri = imageUri;
     }
 
@@ -52,6 +54,10 @@ public class Book {
 
     public String getOwner() {
         return owner;
+    }
+
+    public String getImageName() {
+        return imageName;
     }
 
     public BOOK_STATUS getBookStatus() {

@@ -43,7 +43,7 @@ public class OwnedViewModel extends ViewModel {
     }
 
     public void getBookImage(Book book, OnGetImageSuccessCallback successCallback) {
-        bookService.getImage(book.getId()).addOnCompleteListener(
+        bookService.getImage(book.getImageName()).addOnCompleteListener(
                 getImageTask -> {
                     if (getImageTask.isSuccessful()) {
                         Uri imageUri = getImageTask.getResult();

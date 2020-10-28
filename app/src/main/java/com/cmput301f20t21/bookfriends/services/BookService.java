@@ -51,6 +51,12 @@ public class BookService {
         return fileReference.putFile(imageUri);
     }
 
+    public Task<Void> addImageNameToBook(String bookId, String imageName) {
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("imageName", imageName);
+        return bookCollection.document(bookId).update(data);
+    }
+
     public Task<Void> delete(String id) {
         return bookCollection.document(id).delete();
     }
@@ -66,14 +72,15 @@ public class BookService {
             String description = (String) data.get("description");
             String owner = (String) data.get("owner");
             String status = (String) data.get("status");
-            Book book = new Book(id, isbn, title, author, description, owner, BOOK_STATUS.valueOf(status));
+            String imageName = (String) data.get("imageName");
+            Book book = new Book(id, isbn, title, author, description, owner, imageName, BOOK_STATUS.valueOf(status));
             books.add(book);
         }
         return books;
     }
 
-    public Task<Uri> getImage(String bookId) {
-        StorageReference pathReference = imageStorageReference.child(bookId);
+    public Task<Uri> getImage(String imageName) {
+        StorageReference pathReference = imageStorageReference.child(imageName);
         return pathReference.getDownloadUrl();
     }
 
