@@ -6,11 +6,19 @@ import androidx.lifecycle.ViewModel;
 
 import com.cmput301f20t21.bookfriends.entities.User;
 import com.cmput301f20t21.bookfriends.services.UserService;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 
 public class ProfileViewModel extends ViewModel {
+    public interface OnGetUserSuccess {
+        void run(User u);
+    }
+    public interface OnGetUserFail {
+        void run();
+    }
+
     private final UserService userService;
     private final MutableLiveData<ArrayList<User>> searchedUsers = new MutableLiveData<>(new ArrayList<>());
 
@@ -23,6 +31,7 @@ public class ProfileViewModel extends ViewModel {
         return searchedUsers;
     }
 
+    // the update api for views
     public void updateSearchQuery(String query) {
         // start a search routine, update results
         userService.getByUsernameStartWith(query).addOnCompleteListener(usernameTask -> {
@@ -35,7 +44,7 @@ public class ProfileViewModel extends ViewModel {
                                 document.get("username").toString(),
                                 "",
                                 document.get("email").toString(),
-                                "123123"
+                                ""
                         ));
                     }
                     searchedUsers.setValue(users);
@@ -47,6 +56,28 @@ public class ProfileViewModel extends ViewModel {
                 // fail to get username
                 searchedUsers.setValue(new ArrayList<>());
             }
+        });
+    }
+
+    public void getUserByUid(String uid, OnGetUserSuccess onSuccess, OnGetUserFail onFail) {
+        userService.getByUid(uid).addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                onFail.run();
+                return;
+            }
+            DocumentSnapshot document = task.getResult();
+            if (document == null) {
+                onFail.run();
+                return;
+            }
+            User u = new User(
+                    document.getId(),
+                    document.get("username").toString(),
+                    "",
+                    document.get("email").toString(),
+                    ""
+            );
+            onSuccess.run(u);
         });
     }
 }

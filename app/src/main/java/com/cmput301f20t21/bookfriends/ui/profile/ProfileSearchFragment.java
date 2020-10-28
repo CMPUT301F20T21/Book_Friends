@@ -42,7 +42,7 @@ public class ProfileSearchFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         vm.getSearchedUsers().observe(getViewLifecycleOwner(), (ArrayList<User> users) -> {
-            adapter = new SearchedUserListAdapter(users);
+            adapter = new SearchedUserListAdapter(users, getContext());
             recyclerView.setAdapter(adapter);
         });
     }

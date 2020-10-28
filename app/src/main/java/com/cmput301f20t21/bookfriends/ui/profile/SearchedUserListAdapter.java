@@ -1,5 +1,7 @@
 package com.cmput301f20t21.bookfriends.ui.profile;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -20,16 +22,19 @@ import com.cmput301f20t21.bookfriends.ui.library.BaseBookListAdapter;
 import java.util.ArrayList;
 
 public class SearchedUserListAdapter extends RecyclerView.Adapter<SearchedUserListAdapter.ViewHolder> {
-    ArrayList<User> users;
-    public SearchedUserListAdapter(ArrayList<User> users) {
+    private ArrayList<User> users;
+    private Context context;
+
+    public SearchedUserListAdapter(ArrayList<User> users, Context context) {
         this.users = users;
+        this.context = context;
     }
 
     @NonNull
     @Override
     public SearchedUserListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_searched_user, parent, false);
-        return new ViewHolder(itemView);
+        return new ViewHolder(itemView, parent);
     }
 
     @Override
@@ -43,18 +48,24 @@ public class SearchedUserListAdapter extends RecyclerView.Adapter<SearchedUserLi
         return users.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         final TextView usernameView;
+        final ViewGroup parent;
+        private User user;
 
-        public ViewHolder(View v) {
+        public ViewHolder(View v, ViewGroup parent) {
             super(v);
-            usernameView = v.findViewById(R.id.searched_user_username);
+            this.parent = parent;
+            this.usernameView = v.findViewById(R.id.searched_user_username);
             v.setOnClickListener(itemView -> {
-
+                Intent intent = new Intent(parent.getContext(), ProfileViewUserActivity.class);
+                intent.putExtra(ProfileViewUserActivity.UID_KEY, user.getUid());
+                context.startActivity(intent);
             });
         }
 
         public void onBind(User user) {
+            this.user = user;
             this.usernameView.setText(user.getUsername());
         }
     }
