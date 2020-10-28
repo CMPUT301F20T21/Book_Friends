@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.cmput301f20t21.bookfriends.callbacks.OnFailCallback;
+import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.entities.User;
 import com.cmput301f20t21.bookfriends.services.UserService;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -12,13 +14,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 
 public class ProfileViewModel extends ViewModel {
-    public interface OnGetUserSuccess {
-        void run(User u);
-    }
-    public interface OnGetUserFail {
-        void run();
-    }
-
     private final UserService userService;
     private final MutableLiveData<ArrayList<User>> searchedUsers = new MutableLiveData<>(new ArrayList<>());
 
@@ -59,7 +54,7 @@ public class ProfileViewModel extends ViewModel {
         });
     }
 
-    public void getUserByUid(String uid, OnGetUserSuccess onSuccess, OnGetUserFail onFail) {
+    public void getUserByUid(String uid, OnSuccessCallbackWithMessage<User> onSuccess, OnFailCallback onFail) {
         userService.getByUid(uid).addOnCompleteListener(task -> {
             if (!task.isSuccessful()) {
                 onFail.run();
