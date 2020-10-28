@@ -5,6 +5,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
+import com.cmput301f20t21.bookfriends.callbacks.OnFailCallback;
+import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallback;
 import com.cmput301f20t21.bookfriends.services.AuthService;
 import com.cmput301f20t21.bookfriends.services.UserService;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -14,18 +16,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 public class LoginViewModel extends ViewModel {
-    /**
-     * interface for callback lambda function
-     * will/should be called by request-related handlers when async request succeeded
-     */
-    public interface OnSuccessCallback {
-        void run();
-    }
-    /** called by handlers when async request failed */
-    public interface OnFailCallback {
-        void run();
-    }
-
     private final AuthService authService = AuthService.getInstance();
     private final UserService userService = UserService.getInstance();
 
