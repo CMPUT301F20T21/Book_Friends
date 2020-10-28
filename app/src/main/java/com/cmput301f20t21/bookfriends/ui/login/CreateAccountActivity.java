@@ -23,6 +23,10 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     private CreateAccountViewModel model;
 
+    /**
+     * this function is used to display errors and set up the function for creating accounts
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,58 +81,86 @@ public class CreateAccountActivity extends AppCompatActivity {
     }
 
     /**
-     * check the input field for emptiness, adding error message if field is empty
-     * @param layout the input field layout that the user entered
-     * @return true if the field is empty, false if field is not empty
+     * back to the login in page when clicking cancel button
+     * @param view
      */
-    private boolean checkEmpty(TextInputLayout layout) {
-        EditText inputField = layout.getEditText();
-        String userInput  = inputField.getText().toString();
-        String inputHint = inputField.getHint().toString();
-        boolean isFieldEmpty = userInput.isEmpty();
-
-        if (isFieldEmpty) {
-            layout.setError( inputHint + getString(R.string.empty_error));
-        }
-        return isFieldEmpty;
-    }
-
     public void onCancelClicked(View view) {
         finish();
     }
 
+    /**
+     * create the account if there's no input errors, or display errors
+     * @param view
+     */
     public void onCreateClicked(View view){
-        String confirmPassword = confirmField.getText().toString();
-        String password = passwordField.getText().toString();
-        if(!confirmPassword.equals(password)){
-            confirmLayout.setError(getString(R.string.password_match_error));
+        boolean allValid = true;
+        if (!model.isEmailValid(emailLayout)) {
+            emailLayout.setError(getString(R.string.email_format_error));
+            allValid = false;
         }
-        else if (!checkEmpty(usernameLayout) && !checkEmpty(passwordLayout) &&
-                !checkEmpty(confirmLayout) && !checkEmpty(emailLayout)) {
+        if(!model.correctPasswordLength(passwordLayout)){
+            passwordLayout.setError(getString(R.string.password_length_error));
+            allValid = false;
+        }
+        if(!model.isUsernameValid(usernameLayout)){
+            usernameLayout.setError(getString(R.string.alphanumeric_error));
+            allValid = false;
+        }
+        if(model.isEmpty(usernameLayout)){
+            usernameLayout.setError(getString(R.string.empty_error));
+            allValid = false;
+        }
+        if(model.isEmpty(confirmLayout)){
+            confirmLayout.setError(getString(R.string.empty_error));
+            allValid = false;
+        }
+        if(model.isEmpty(passwordLayout)){
+            passwordLayout.setError(getString(R.string.empty_error));
+            allValid = false;
+        }
+        if(model.isEmpty(emailLayout)){
+            emailLayout.setError(getString(R.string.empty_error));
+            allValid = false;
+        }
+        if(!model.isPasswordMatch( passwordLayout, confirmLayout)){
+            confirmLayout.setError(getString(R.string.password_match_error));
+            allValid = false;
+        }
+        if (allValid) {
             String username = usernameField.getText().toString();
             String email = emailField.getText().toString();
+            String password = passwordField.getText().toString();
             model.handleSignUp(username, email, password,
                     () -> onSignUpSuccess(),
-                    (SIGNUP_ERROR error) -> onSignUpFail(error));
+                    (SIGNUP_ERROR error) -> onSignUpFail(error)
+            );
         }
   }
 
+    /**
+     * leave the page when sign up successfully
+     */
     public void onSignUpSuccess() {
         finish();
     }
 
+    /**
+     * display sign up errors
+     * @param error
+     */
     public void onSignUpFail(SIGNUP_ERROR error) {
         switch (error) {
             case EMAIL_EXISTS:
                 emailLayout.setError(getString(R.string.email_already_registered_error));
                 emailField.requestFocus();
                 return;
+
             case USERNAME_EXISTS:
                 usernameLayout.setError(getString(R.string.username_already_registered_error));
                 usernameField.requestFocus();
                 return;
+
             default:
-                // should display unexpected error here
                 return;
         }
     }

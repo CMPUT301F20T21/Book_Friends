@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">BookFriends</string>
     <string name="title_library">Your Library</string>
+    <string name="tab_title_my_library">My Books</string>
+    <string name="tab_title_borrowed_library">Borrowed Books</string>
     <string name="title_borrow">Borrow</string>
     <string name="title_profile">Me</string>
     <string name="title_notifications">Notifications</string>
@@ -48,6 +50,14 @@
     <string name="example_text">Example Text</string>
     <string name="accept">Accept</string>
     <string name="reject">Reject</string>
+    <string name="book_list_item_author">by %1$s</string>
+    <string name="book_list_item_owner">owner: %1$s</string>
+    <string name="book_item_menu_delete">Delete</string>
+    <string name="book_item_menu_view_requests">View all requests</string>
+    <string name="space_error">No Spaces Allowed</string>
+    <string name= "alphanumeric_error">Only letters and numbers are allowed</string>
+    <string name="password_length_error">Password should be at least 6 characters</string>
+    <string name="email_format_error">Invalid Email</string>
     <string name="add_book_successful">Book Successfully Added</string>
     <string name="edit_book_successful">Book Successfully Edited</string>
     <string name="operation_failed">Operation failed, Please try again</string>
