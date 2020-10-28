@@ -39,12 +39,8 @@ public class AddEditViewModel extends ViewModel {
             final String isbn, final String title, final String author, final String description,
             @Nullable Uri imageUri, OnSuccessCallback successCallback, OnFailCallback failCallback
     ) {
-        boolean imageAttached = true;
-        if (imageUri == null) {
-            imageAttached = false;
-        }
         String owner = authService.getCurrentUser().getUsername();
-        bookService.add(isbn, title, author, description, owner, imageAttached).addOnCompleteListener(
+        bookService.add(isbn, title, author, description, owner).addOnCompleteListener(
                 addBookTask -> {
                     if (addBookTask.isSuccessful()) {
                         DocumentReference result = addBookTask.getResult();
