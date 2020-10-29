@@ -1,10 +1,12 @@
 package com.cmput301f20t21.bookfriends.ui.library;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,9 +16,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
+import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.ui.add.AddEditActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
 
 public class OwnedListFragment extends Fragment {
     public static final String BOOK_ACTION_KEY = "com.cmput301f20t21.bookfriends.BOOK_ACTION";
@@ -25,6 +30,7 @@ public class OwnedListFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    private ArrayList<Book> books = new ArrayList<>();
 
     @Nullable
     @Override
@@ -63,8 +69,34 @@ public class OwnedListFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new OwnedListAdapter(vm.getBooks());
-        recyclerView.setAdapter(mAdapter);
+        vm.getBooks(this::onGetBookSuccess, this::onGetBookFail);
+        // need to set an empty adapter here otherwise there are errors
+        RecyclerView.Adapter tempAdapter = new OwnedListAdapter(books);
+        recyclerView.setAdapter(tempAdapter);
     }
+
+    public void onGetBookSuccess(ArrayList<Book> books) {
+        this.books = books;
+        // replace the adapter with real data
+        mAdapter = new OwnedListAdapter(this.books);
+        recyclerView.setAdapter(mAdapter);
+        for (Book book : books) {
+            if (book.getImageName() != null) {
+                vm.getBookImage(book, this::onGetImageSuccess);
+            }
+        }
+    }
+
+    public void onGetBookFail() {
+        Toast.makeText(getContext(), getString(R.string.fail_to_get_books), Toast.LENGTH_SHORT).show();
+    }
+
+    public void onGetImageSuccess(Book book, @Nullable Uri imageUri) {
+        if (imageUri != null) {
+            book.setImageUri(imageUri);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
 }
 

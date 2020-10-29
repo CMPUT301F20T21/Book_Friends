@@ -65,4 +65,5 @@
     <string name="unexpected_error">Something unexpected happened, please try again</string>
     <string name="confirm_request_text">Accepting it will reject all other requests for this book and you will be prompted to mark a place to meet</string>
     <string name="book_status">status</string>
+    <string name="fail_to_get_books">Failed to get a list of books from server</string>
 </resources>
