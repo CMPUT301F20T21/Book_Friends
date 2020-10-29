@@ -5,18 +5,12 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.cmput301f20t21.bookfriends.entities.Book;
-import com.cmput301f20t21.bookfriends.services.AuthService;
+import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.services.BookService;
 import com.cmput301f20t21.bookfriends.services.RequestService;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.Map;
 
 public class RequestViewModel extends ViewModel {
     private MutableLiveData<Book> book;
@@ -42,7 +36,14 @@ public class RequestViewModel extends ViewModel {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-
+                        String author = (String) document.get("author");
+                        String description = (String) document.get("description");
+                        String imageName = (String) document.get("imageName");
+                        String isbn = (String) document.get("isbn");
+                        String owner = (String) document.get("owner");
+                        String status = (String) document.get("status");
+                        String title = (String) document.get("title");
+                        book.setValue(new Book(bookId, isbn, title, author, description, owner, imageName, BOOK_STATUS.valueOf(status)));
                     }
                 }
             }
@@ -72,6 +73,9 @@ public class RequestViewModel extends ViewModel {
     }
 
     public MutableLiveData<Book> getBook() {
+        if (book == null) {
+            book = new MutableLiveData<>();
+        }
         return this.book;
     }
 }

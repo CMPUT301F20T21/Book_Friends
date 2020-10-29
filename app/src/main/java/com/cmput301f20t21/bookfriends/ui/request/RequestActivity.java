@@ -2,6 +2,7 @@ package com.cmput301f20t21.bookfriends.ui.request;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 
@@ -26,6 +28,7 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
     private TextView authorTextView;
     private TextView descriptionTextView;
     private TextView bookStatus;
+    private ImageView bookImage;
 
     private RequestViewModel requestViewModel;
 
@@ -37,16 +40,21 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
         authorTextView = findViewById(R.id.author_text_view);
         descriptionTextView = findViewById(R.id.description_text_view);
         bookStatus = findViewById(R.id.status_text_view);
+        bookImage = findViewById(R.id.book_image_view);
 
         requestViewModel = new ViewModelProvider(this).get(RequestViewModel.class);
 
         // TODO: getting book ID from previous activity
+//        String bookId = "x1z6o0qZbcgGBFezURsS";
         String bookId = "kEkNn53bBoANMSyPjJDZ"; // temporary book ID
         requestViewModel.getBookInfo(bookId, this::onSuccess, this::onFailure);
 
         requestViewModel.getBook().observe(this, book -> {
             titleTextView.setText(book.getTitle());
             authorTextView.setText(book.getAuthor());
+            descriptionTextView.setText(book.getDescription());
+            bookStatus.setText(book.getBookStatus().toString());
+            Glide.with(this).load(book.getImageUri()).into(bookImage);
         });
 
 
