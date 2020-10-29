@@ -1,22 +1,25 @@
 package com.cmput301f20t21.bookfriends.ui.library;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapter.ViewHolder> {
-    protected ArrayList<Book> books;
+    protected List<Book> books;
 
-    public BaseBookListAdapter(ArrayList<Book> books) {
+    public BaseBookListAdapter(List<Book> books) {
         this.books = books;
     }
 
@@ -42,14 +45,17 @@ public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapte
         final TextView title;
         final TextView author;
         final TextView isbn;
-
+        final ImageView bookImage;
+        View holderView;
         Book book;
 
         public ViewHolder(View v) {
             super(v);
+            holderView = v;
             title = v.findViewById(R.id.item_book_title);
             author = v.findViewById(R.id.item_book_author);
             isbn = v.findViewById(R.id.item_book_isbn);
+            bookImage = v.findViewById(R.id.booklist_image_view);
         }
 
         public void onBind(Book book) {
@@ -57,6 +63,14 @@ public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapte
             this.author.setText(this.itemView.getResources().getString(R.string.book_list_item_author, book.getAuthor()));
             this.isbn.setText(book.getIsbn());
             this.book = book;
+            Uri imageUri = book.getImageUri();
+            if (imageUri != null) {
+                Glide.with(holderView).load(imageUri).into(bookImage);
+            } else {
+                // there is a bug that one image is loaded into multiple imageViews
+                // must set the image to something default for each imageView if no image exist
+                Glide.with(holderView).load(R.drawable.no_image).into(bookImage);
+            }
         }
     }
 }
