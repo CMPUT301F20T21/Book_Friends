@@ -28,7 +28,7 @@ public class BorrowFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_library, container, false);
+        return inflater.inflate(R.layout.fragment_tab, container, false);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class BorrowFragment extends Fragment {
         tabsAdapter = new BorrowTabCollectionAdapter(this);
 
         viewPager = view.findViewById(R.id.viewpager_borrow);
-        tabLayout = view.findViewById(R.id.tab_layout_library);
+        tabLayout = view.findViewById(R.id.tab_layout);
 
         viewPager.setAdapter(tabsAdapter);
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {

@@ -9,15 +9,15 @@ import java.util.ArrayList;
 
 public class AcceptedListViewModel extends ViewModel {
     public ArrayList<Book> getBooks() {
-        ArrayList<Book> mData = new ArrayList<>();
-        mData.add(new Book ("The two towers" ));
-        mData.add(new Book ("The Lord of the Rings"));
-        mData.add(new Book ("Notes for CMPUT301"));
-        mData.add(new Book ("The Return of the King"));
-        mData.add(new Book ("The Hobbit"));
-        mData.add(new Book ("The Return of the King"));
-        mData.add(new Book ("The Return of the King"));
-        mData.add(new Book ("The Return of theKing"));
-        return mData;
+        ArrayList<Book> AcceptedBookData = new ArrayList<>();
+        AcceptedBookData.add(new Book ("The two towers" ));
+        AcceptedBookData.add(new Book ("The Lord of the Rings"));
+        AcceptedBookData.add(new Book ("Notes for CMPUT301"));
+        AcceptedBookData.add(new Book ("The Return of the King"));
+        AcceptedBookData.add(new Book ("The Hobbit"));
+        AcceptedBookData.add(new Book ("The Return of the King"));
+        AcceptedBookData.add(new Book ("The Return of the King"));
+        AcceptedBookData.add(new Book ("The Return of theKing"));
+        return AcceptedBookData;
     }
 }

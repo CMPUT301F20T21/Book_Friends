@@ -12,7 +12,6 @@ import androidx.appcompat.widget.PopupMenu;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
-import com.cmput301f20t21.bookfriends.ui.library.BaseBookListAdapter;
 
 import java.util.ArrayList;
 
@@ -28,7 +27,6 @@ public class AcceptedListAdapter extends BaseBookListAdapter {
         return new com.cmput301f20t21.bookfriends.ui.borrow.AcceptedListAdapter.ViewHolder(itemView);
     }
 
-
     public static class ViewHolder extends BaseBookListAdapter.ViewHolder {
         final ImageButton moreBtn;
 
@@ -41,7 +39,7 @@ public class AcceptedListAdapter extends BaseBookListAdapter {
         private void showPopup(View view) {
             PopupMenu popup = new PopupMenu(view.getContext(), moreBtn);
             MenuInflater inflater = popup.getMenuInflater();
-            inflater.inflate(R.menu.library_owned_book_item_menu, popup.getMenu());
+            inflater.inflate(R.menu.accepted_book_item_menu, popup.getMenu());
             popup.setGravity(Gravity.END);
             popup.show();
         }

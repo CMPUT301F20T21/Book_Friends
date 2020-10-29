@@ -8,15 +8,15 @@ import java.util.ArrayList;
 
 public class RequestedViewModel extends ViewModel {
     public ArrayList<Book> getBooks() {
-        ArrayList<Book> mData = new ArrayList<>();
-        mData.add(new Book ("Some Book Name"));
-        mData.add(new Book ("How to Squish a Cat"));
-        mData.add(new Book ("Calculus II"));
-        mData.add(new Book ("Calculus III"));
-        mData.add(new Book ("Calculus IV"));
-        mData.add(new Book ("Calculator V"));
-        mData.add(new Book ("Terminator V"));
-        return mData;
+        ArrayList<Book> RequestedBookData = new ArrayList<>();
+        RequestedBookData.add(new Book ("Some Book Name"));
+        RequestedBookData.add(new Book ("How to Squish a Cat"));
+        RequestedBookData.add(new Book ("Calculus II"));
+        RequestedBookData.add(new Book ("Calculus III"));
+        RequestedBookData.add(new Book ("Calculus IV"));
+        RequestedBookData.add(new Book ("Calculator V"));
+        RequestedBookData.add(new Book ("Terminator V"));
+        return RequestedBookData;
     }
 
 

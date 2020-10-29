@@ -28,12 +28,12 @@ public class AcceptedListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         mViewModel = new ViewModelProvider(this).get(AcceptedListViewModel.class);
-        return inflater.inflate(R.layout.borrowed_list_book, container, false);
+        return inflater.inflate(R.layout.accepted_list_book, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        recyclerView = (RecyclerView) view.findViewById(R.id.borrowed_recycler_list_book);
+        recyclerView = (RecyclerView) view.findViewById(R.id.accept_recycler_view);
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         recyclerView.setHasFixedSize(true);
