@@ -62,8 +62,6 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.EditL
         User firebaseUser = AuthService.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             String userId = firebaseUser.getUid();
-            String userEmail = firebaseUser.getEmail();
-            emailAddress.setText(userEmail);
 
             //document reference
             final DocumentReference docReference = FirebaseFirestore.getInstance().collection("users").document(userId);
@@ -74,7 +72,9 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.EditL
                         DocumentSnapshot doc = task.getResult();
                         if (doc.exists()) {
                             String username = doc.getString("username");
+                            String email = doc.getString("email");
                             name.setText(username);
+                            emailAddress.setText(email);
                         }
                     }
                 }
