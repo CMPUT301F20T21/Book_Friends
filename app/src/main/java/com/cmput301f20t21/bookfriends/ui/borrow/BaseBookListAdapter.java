@@ -1,4 +1,5 @@
-package com.cmput301f20t21.bookfriends.ui.library;
+package com.cmput301f20t21.bookfriends.ui.borrow;
+
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
@@ -58,4 +60,5 @@ public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapte
             this.book = book;
         }
     }
+
 }
