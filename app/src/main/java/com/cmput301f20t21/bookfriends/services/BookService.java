@@ -61,4 +61,8 @@ public class BookService {
         // TODO placeholder here
         return bookCollection.whereEqualTo("owner", uid).get();
     }
+
+    public Task<QuerySnapshot> getBookById(String bookId) {
+        return bookCollection.whereEqualTo("bookId", bookId).get();
+    }
 }

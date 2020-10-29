@@ -42,7 +42,7 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
 
         // TODO: getting book ID from previous activity
         String bookId = "RmJi5i1sav1B4fKQcNHP"; // temporary book ID
-        requestViewModel.handleViewRequest(bookId, this::onSuccess, this::onFailure);
+        requestViewModel.handleBookInfo(bookId, this::onSuccess, this::onFailure);
 
         titleTextView.setText(requestViewModel.getBookName());
         authorTextView.setText(requestViewModel.getAuthor());
