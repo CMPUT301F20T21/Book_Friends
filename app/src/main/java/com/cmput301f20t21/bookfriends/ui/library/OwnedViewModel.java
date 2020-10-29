@@ -52,7 +52,8 @@ public class OwnedViewModel extends ViewModel {
                 getBookTask -> {
                     if (getBookTask.isSuccessful()) {
                         QuerySnapshot result = getBookTask.getResult();
-                        if (result == null) {
+                        if (result == null) { // should never happen
+                            errorMessageObserver.setValue(BOOK_ERROR.FAIL_TO_GET_BOOKS);
                             return;
                         }
                         List<DocumentSnapshot> documents = result.getDocuments();
