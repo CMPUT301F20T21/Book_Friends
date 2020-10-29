@@ -14,12 +14,12 @@ import com.bumptech.glide.Glide;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapter.ViewHolder> {
-    protected ArrayList<Book> books;
+    protected List<Book> books;
 
-    public BaseBookListAdapter(ArrayList<Book> books) {
+    public BaseBookListAdapter(List<Book> books) {
         this.books = books;
     }
 

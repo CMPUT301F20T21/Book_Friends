@@ -13,10 +13,10 @@ import androidx.appcompat.widget.PopupMenu;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class OwnedListAdapter extends BaseBookListAdapter {
-    public OwnedListAdapter(ArrayList<Book> books) {
+    public OwnedListAdapter(List<Book> books) {
         super(books);
     }
 

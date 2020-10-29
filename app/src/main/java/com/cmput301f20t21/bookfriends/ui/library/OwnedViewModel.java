@@ -1,64 +1,76 @@
 package com.cmput301f20t21.bookfriends.ui.library;
 
-import android.net.Uri;
-
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.cmput301f20t21.bookfriends.callbacks.OnFailCallback;
-import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.entities.Book;
+import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.services.AuthService;
 import com.cmput301f20t21.bookfriends.services.BookService;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.StorageException;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class OwnedViewModel extends ViewModel {
-    public interface OnGetImageSuccessCallback {
-        void run(Book book, Uri imageUri);
-    }
 
     private final AuthService authService = AuthService.getInstance();
     private final BookService bookService = BookService.getInstance();
+    
+    private MutableLiveData<List<Book>> books;
+    private MutableLiveData<Integer> updatedPosition;
+    private MutableLiveData<BOOK_ERROR> errorMessageObserver;
 
-    public void getBooks(OnSuccessCallbackWithMessage<ArrayList<Book>> successCallback, OnFailCallback failCallback) {
+    public LiveData<List<Book>> getBooks() {
+        if (books == null) {
+            books = new MutableLiveData<>();
+            fetchBooks();
+        }
+        return books;
+    }
+
+    public LiveData<Integer> getUpdatedPosition() {
+        if (updatedPosition == null) {
+            updatedPosition = new MutableLiveData<>(0);
+        }
+        return updatedPosition;
+    }
+
+    public LiveData<BOOK_ERROR> getErrorMessageObserver() {
+        if (errorMessageObserver == null) {
+            errorMessageObserver = new MutableLiveData<>();
+        }
+        return errorMessageObserver;
+    }
+
+    private void fetchBooks() {
         String currentUsername = authService.getCurrentUser().getUsername();
         bookService.getBooksOfOwnerId(currentUsername).addOnCompleteListener(
                 getBookTask -> {
                     if (getBookTask.isSuccessful()) {
                         QuerySnapshot result = getBookTask.getResult();
-                        if (result != null) {
-                            ArrayList<Book> books = bookService.getBooksOnResult(result);
-                            successCallback.run(books);
-                        } else {
-                            // should never happen
-                            failCallback.run();
+                        if (result == null) {
+                            return;
                         }
+                        List<DocumentSnapshot> documents = result.getDocuments();
+                        books.setValue(IntStream.range(0, documents.size()).mapToObj(i -> {
+                            DocumentSnapshot document = documents.get(i);
+                            Book book = bookService.getBookFromDocument(document);
+                            if (document.get("imageName") != null) {
+                                bookService.getImage((String) document.get("imageName")).addOnSuccessListener(uri -> {
+                                    book.setImageUri(uri);
+                                    updatedPosition.setValue(i);
+                                });
+                            }
+                            return book;
+                        }).collect(Collectors.toList()));
                     } else {
-                        failCallback.run();
+                        errorMessageObserver.setValue(BOOK_ERROR.FAIL_TO_GET_BOOKS);
                     }
                 }
         );
     }
-
-    public void getBookImage(Book book, OnGetImageSuccessCallback successCallback) {
-        bookService.getImage(book.getImageName()).addOnCompleteListener(
-                getImageTask -> {
-                    if (getImageTask.isSuccessful()) {
-                        Uri imageUri = getImageTask.getResult();
-                        successCallback.run(book, imageUri);
-                    } else {
-                        Exception error = getImageTask.getException();
-                        if (error instanceof StorageException &&
-                                ((StorageException) error).getErrorCode() == StorageException.ERROR_OBJECT_NOT_FOUND
-                        ) {
-                            // book image does not exist
-                        }
-                    }
-                }
-        );
-
-    }
-
 }
