@@ -1,5 +1,7 @@
 package com.cmput301f20t21.bookfriends.ui.request;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -14,22 +16,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 public class RequestViewModel extends ViewModel {
     private MutableLiveData<Book> book;
+    private MutableLiveData<Uri> imageUri;
 
     private final RequestService requestService = RequestService.getInstance();
     private final BookService bookService = BookService.getInstance();
 
-    public interface OnViewRequestSuccessCallback {
-        void run();
-    }
-
-    public interface OnFailCallBack {
-        void run();
-    }
-
-    public void getBookInfo(
-            String bookId,
-            OnViewRequestSuccessCallback successCallback,
-            OnFailCallBack failCallBack) {
+    public void getBookInfo(String bookId) {
         bookService.getBookById(bookId).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -43,6 +35,9 @@ public class RequestViewModel extends ViewModel {
                         String owner = (String) document.get("owner");
                         String status = (String) document.get("status");
                         String title = (String) document.get("title");
+                        bookService.getImage(imageName).addOnSuccessListener(uri -> {
+                           imageUri.setValue(uri);
+                        });
                         book.setValue(new Book(bookId, isbn, title, author, description, owner, imageName, BOOK_STATUS.valueOf(status)));
                     }
                 }
@@ -50,32 +45,39 @@ public class RequestViewModel extends ViewModel {
         });
     }
 
-
     // TODO: fully implement it
-    public void handleViewRequest(
-            String bookId,
-            OnViewRequestSuccessCallback successCallback,
-            OnFailCallBack failCallBack) {
-        requestService.getByBookId(bookId).addOnCompleteListener(
-                viewRequestTask -> {
-                    if (viewRequestTask.isSuccessful()) {
-                        if (!viewRequestTask.getResult().isEmpty()) {
+//    public void handleViewRequest(
+//            String bookId,
+//            OnViewRequestSuccessCallback successCallback,
+//            OnFailCallBack failCallBack) {
+//        requestService.getByBookId(bookId).addOnCompleteListener(
+//                viewRequestTask -> {
+//                    if (viewRequestTask.isSuccessful()) {
+//                        if (!viewRequestTask.getResult().isEmpty()) {
+//
+////                            successCallback.run();
+//                        } else {
+//                            failCallBack.run();
+//                        }
+//                    } else {
+//                        failCallBack.run();
+//                    }
+//                }
+//        );
+//    }
 
-                            successCallback.run();
-                        } else {
-                            failCallBack.run();
-                        }
-                    } else {
-                        failCallBack.run();
-                    }
-                }
-        );
-    }
-
-    public MutableLiveData<Book> getBook() {
+    public MutableLiveData<Book> getBook(String bookId) {
         if (book == null) {
             book = new MutableLiveData<>();
+            getBookInfo(bookId);
         }
         return this.book;
+    }
+
+    public MutableLiveData<Uri> getImageUri() {
+        if (imageUri == null) {
+            imageUri = new MutableLiveData<>();
+        }
+        return this.imageUri;
     }
 }

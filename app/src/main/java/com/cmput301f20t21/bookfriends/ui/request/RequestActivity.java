@@ -1,5 +1,6 @@
 package com.cmput301f20t21.bookfriends.ui.request;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -17,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 
+import java.net.URI;
 import java.util.ArrayList;
 
 public class RequestActivity extends AppCompatActivity implements ConfirmDialog.ConfirmDialogListener {
@@ -36,6 +38,22 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_all_requests_activity);
+
+        // TODO: getting book ID from previous activity
+//        String bookId = "x1z6o0qZbcgGBFezURsS";
+        String bookId = "kEkNn53bBoANMSyPjJDZ"; // temporary book ID
+        displayBookInfo(bookId);
+        displayRequest();
+        // set up the back button
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_white_18);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        createExample();
+        buildRecyclerView();
+    }
+
+    public void displayBookInfo(String bookId) {
+        // bind the text view
         titleTextView = findViewById(R.id.title_text_view);
         authorTextView = findViewById(R.id.author_text_view);
         descriptionTextView = findViewById(R.id.description_text_view);
@@ -44,25 +62,22 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
 
         requestViewModel = new ViewModelProvider(this).get(RequestViewModel.class);
 
-        // TODO: getting book ID from previous activity
-//        String bookId = "x1z6o0qZbcgGBFezURsS";
-        String bookId = "kEkNn53bBoANMSyPjJDZ"; // temporary book ID
-        requestViewModel.getBookInfo(bookId, this::onSuccess, this::onFailure);
-
-        requestViewModel.getBook().observe(this, book -> {
+        // since the data is mutable live, set the observer so the content will change accordingly
+        requestViewModel.getBook(bookId).observe(this, book -> {
             titleTextView.setText(book.getTitle());
             authorTextView.setText(book.getAuthor());
             descriptionTextView.setText(book.getDescription());
             bookStatus.setText(book.getBookStatus().toString());
-            Glide.with(this).load(book.getImageUri()).into(bookImage);
         });
 
+        // also getting the image
+        requestViewModel.getImageUri().observe(this, uri -> {
+            Glide.with(this).load(uri).into(bookImage);
+        });
+    }
 
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_white_18);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    public void displayRequest() {
 
-        createExample();
-        buildRecyclerView();
     }
 
     @Override
@@ -143,13 +158,5 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
             requestDataList.subList(0, size).clear();
             requestAdapter.notifyItemRangeRemoved(0, size);
         }
-    }
-
-    public void onSuccess() {
-
-    }
-
-    public void onFailure() {
-
     }
 }
