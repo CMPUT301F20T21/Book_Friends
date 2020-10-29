@@ -6,14 +6,14 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 public class BorrowTabCollectionAdapter extends FragmentStateAdapter {
     public enum TabType {
-        Requested_BOOKS,
-        Accepted_BOOKS
+        REQUESTED_BOOKS,
+        ACCEPTED_BOOKS
     }
 
     public static TabType getTabTypeFromPosition (int position) {
         switch (position) {
-            case 0: return TabType.Requested_BOOKS;
-            case 1: return TabType.Accepted_BOOKS;
+            case 0: return TabType.REQUESTED_BOOKS;
+            case 1: return TabType.ACCEPTED_BOOKS;
             default: return null;
         }
     }
@@ -31,8 +31,8 @@ public class BorrowTabCollectionAdapter extends FragmentStateAdapter {
         TabType tabType = getTabTypeFromPosition(position);
         if (tabType == null) return null;
         switch (tabType) {
-            case Requested_BOOKS: return new RequestedListFragment();
-            case Accepted_BOOKS: return new AcceptedListFragment();
+            case REQUESTED_BOOKS: return new RequestedListFragment();
+            case ACCEPTED_BOOKS: return new AcceptedListFragment();
             default: return null;
         }
     }

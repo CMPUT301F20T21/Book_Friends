@@ -22,9 +22,9 @@ public class AcceptedListAdapter extends BaseBookListAdapter {
 
     @NonNull
     @Override
-    public com.cmput301f20t21.bookfriends.ui.borrow.AcceptedListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AcceptedListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_list, parent, false);
-        return new com.cmput301f20t21.bookfriends.ui.borrow.AcceptedListAdapter.ViewHolder(itemView);
+        return new AcceptedListAdapter.ViewHolder(itemView);
     }
 
     public static class ViewHolder extends BaseBookListAdapter.ViewHolder {

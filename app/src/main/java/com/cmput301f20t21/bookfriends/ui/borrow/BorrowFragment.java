@@ -21,8 +21,8 @@ public class BorrowFragment extends Fragment {
     private ViewPager2 viewPager;
     private TabLayout tabLayout;
 
-    public static com.cmput301f20t21.bookfriends.ui.borrow.BorrowFragment newInstance() {
-        return new com.cmput301f20t21.bookfriends.ui.borrow.BorrowFragment();
+    public static BorrowFragment newInstance() {
+        return new BorrowFragment();
     }
 
     @Override
