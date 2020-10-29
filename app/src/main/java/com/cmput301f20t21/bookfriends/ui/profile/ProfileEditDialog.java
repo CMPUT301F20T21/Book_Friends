@@ -34,8 +34,11 @@ public class ProfileEditDialog extends DialogFragment {
         cancel = view.findViewById(R.id.text_cancel);
         confirm = view.findViewById(R.id.text_confirm);
         //set value from the fragment
-        editEmail.setText(getArguments().getString("email"));
-        editPhone.setText(getArguments().getString("phone"));
+        Bundle argument  = getArguments();
+        if (argument != null) {
+            editEmail.setText(argument.getString("email"));
+            editPhone.setText(argument.getString("phone"));
+        }
 
 
         getDialog().getWindow().setBackgroundDrawableResource(R.drawable.button_round_corner);
