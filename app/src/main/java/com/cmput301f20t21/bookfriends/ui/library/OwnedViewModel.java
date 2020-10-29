@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class OwnedViewModel extends ViewModel {
-
+  
     private final AuthService authService = AuthService.getInstance();
     private final BookService bookService = BookService.getInstance();
     
@@ -74,4 +74,5 @@ public class OwnedViewModel extends ViewModel {
                 }
         );
     }
+  
 }
