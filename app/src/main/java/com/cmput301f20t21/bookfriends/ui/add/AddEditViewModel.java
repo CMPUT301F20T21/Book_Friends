@@ -47,10 +47,16 @@ public class AddEditViewModel extends ViewModel {
                         if (result != null) {
                             String bookId = result.getId();
                             if(imageUri != null) {
-                                bookService.addImage(bookId, imageUri).addOnCompleteListener(
+                                // not using string resource because this is not displayed to user
+                                String imageName = bookId + "cover";
+                                bookService.addImage(imageName, imageUri).addOnCompleteListener(
                                         addImageTask -> {
                                             if (addImageTask.isSuccessful()) {
-                                                successCallback.run();
+                                                bookService.addImageNameToBook(bookId, imageName).addOnCompleteListener(
+                                                        addNameTask -> {
+                                                            successCallback.run();
+                                                        }
+                                                );
                                             } else {
                                                 failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
                                             }

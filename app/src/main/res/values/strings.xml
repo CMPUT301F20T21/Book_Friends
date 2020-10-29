@@ -62,4 +62,5 @@
     <string name="operation_failed">Operation failed, Please try again</string>
     <string name="fail_to_add_image">Fail to add book image, book is added without image</string>
     <string name="unexpected_error">Something unexpected happened, please try again</string>
+    <string name="fail_to_get_books">Failed to get a list of books from server</string>
 </resources>

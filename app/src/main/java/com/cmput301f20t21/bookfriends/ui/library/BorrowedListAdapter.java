@@ -15,10 +15,11 @@ import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BorrowedListAdapter extends BaseBookListAdapter {
 
-    public BorrowedListAdapter(ArrayList<Book> books) {
+    public BorrowedListAdapter(List<Book> books) {
         super(books);
     }
 

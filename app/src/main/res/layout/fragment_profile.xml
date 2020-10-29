@@ -125,4 +125,12 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/profile_search_list_container_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="2dp"
+        android:visibility="gone"
+        android:layout_gravity="top"
+        />
 </FrameLayout>
