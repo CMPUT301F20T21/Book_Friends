@@ -69,27 +69,17 @@ public class BorrowedViewModel extends ViewModel {
                 List<DocumentSnapshot> documents = bookDocumentsSnapshots.getDocuments();
                 books.setValue(IntStream.range(0, documents.size()).mapToObj(i -> {
                     DocumentSnapshot document = documents.get(i);
-                    String id = document.getId();
-                    String isbn = (String) document.get("isbn");
-                    String title = (String) document.get("title");
-                    String author = (String) document.get("author");
-                    String description = (String) document.get("description");
-                    String owner = (String) document.get("owner");
-                    String status = (String) document.get("status");
-                    String imageName = (String) document.get("imageName");
-                    Book book = new Book(id, isbn, title, author, description, owner, imageName, BOOK_STATUS.valueOf(status));
-
+                    Book book = bookService.getBookFromDocument(document);
                     if (document.get("imageName") != null) {
                         bookService.getImage((String) document.get("imageName")).addOnSuccessListener(uri -> {
                             book.setImageUri(uri);
                             updatedPosition.setValue(i);
                         });
                     }
-
                     return book;
                 }).collect(Collectors.toList()));
             }).addOnFailureListener(e -> {
-                Log.d("FAIL", e.getMessage());
+                // TODO: handle failure here
             });
         });
     }

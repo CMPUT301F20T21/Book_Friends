@@ -35,7 +35,7 @@ public class BorrowedListFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        recyclerView = (RecyclerView) view.findViewById(R.id.borrowed_recycler_list_book);
+        recyclerView = view.findViewById(R.id.borrowed_recycler_list_book);
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         recyclerView.setHasFixedSize(true);
