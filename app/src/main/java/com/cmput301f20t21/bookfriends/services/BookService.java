@@ -7,6 +7,7 @@ import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -95,6 +96,6 @@ public class BookService {
     }
 
     public Task<QuerySnapshot> batchGetBooks(List<String> bookIds) {
-        return bookCollection.whereIn("bookId", bookIds).get();
+        return bookCollection.whereIn(FieldPath.documentId(), bookIds).get();
     }
 }

@@ -13,19 +13,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
+import com.cmput301f20t21.bookfriends.entities.Book;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BorrowedListFragment extends Fragment {
-    private BorrowedViewModel mViewModel;
+    private BorrowedViewModel vm;
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mViewModel = new ViewModelProvider(this).get(BorrowedViewModel.class);
+        vm = new ViewModelProvider(this).get(BorrowedViewModel.class);
         return inflater.inflate(R.layout.borrowed_list_book, container, false);
     }
 
@@ -41,8 +45,16 @@ public class BorrowedListFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new BorrowedListAdapter(mViewModel.getBooks());
-        recyclerView.setAdapter(mAdapter);
+        vm.getBooks().observe(getViewLifecycleOwner(), (List<Book> books) -> {
+            adapter = new BorrowedListAdapter(books);
+            recyclerView.setAdapter(adapter);
+        });
+
+        vm.getUpdatedPosition().observe(getViewLifecycleOwner(), (Integer pos) -> {
+            if (adapter != null) {
+                adapter.notifyItemChanged(pos);
+            }
+        });
     }
 }
 
