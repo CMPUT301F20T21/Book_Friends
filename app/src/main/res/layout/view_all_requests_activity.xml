@@ -31,9 +31,54 @@
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/book_image_view">
+        app:layout_constraintTop_toBottomOf="@+id/status_text_view">
 
     </androidx.recyclerview.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/string_title"
+        app:layout_constraintStart_toEndOf="@+id/book_image_view"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="25sp"/>
+
+    <TextView
+        android:id="@+id/author_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/string_author"
+        app:layout_constraintStart_toEndOf="@+id/book_image_view"
+        app:layout_constraintTop_toBottomOf="@+id/title_text_view" />
+
+    <TextView
+        android:id="@+id/description_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/string_description"
+        app:layout_constraintStart_toEndOf="@+id/book_image_view"
+        app:layout_constraintTop_toBottomOf="@+id/author_text_view" />
+
+    <TextView
+        android:id="@+id/status_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/book_status"
+        app:layout_constraintEnd_toEndOf="@+id/book_image_view"
+        app:layout_constraintStart_toStartOf="@+id/book_image_view"
+        app:layout_constraintTop_toBottomOf="@+id/book_image_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

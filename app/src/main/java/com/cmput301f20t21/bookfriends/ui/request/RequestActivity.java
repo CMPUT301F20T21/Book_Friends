@@ -2,15 +2,18 @@ package com.cmput301f20t21.bookfriends.ui.request;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
+import com.cmput301f20t21.bookfriends.services.RequestService;
 
 import java.util.ArrayList;
 
@@ -19,13 +22,36 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
     private RequestAdapter requestAdapter;
     private ArrayList<RequestItem> requestDataList;
     private RecyclerView.LayoutManager layoutManager;
+    private TextView titleTextView;
+    private TextView authorTextView;
+    private TextView descriptionTextView;
+    private TextView bookStatus;
+
+    private RequestViewModel requestViewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_all_requests_activity);
+        titleTextView = findViewById(R.id.title_text_view);
+        authorTextView = findViewById(R.id.author_text_view);
+        descriptionTextView = findViewById(R.id.description_text_view);
+        bookStatus = findViewById(R.id.status_text_view);
+
+        requestViewModel = new ViewModelProvider(this).get(RequestViewModel.class);
+
+        // TODO: getting book ID from previous activity
+        String bookId = "RmJi5i1sav1B4fKQcNHP"; // temporary book ID
+        requestViewModel.handleViewRequest(bookId, this::onSuccess, this::onFailure);
+
+        titleTextView.setText(requestViewModel.getBookName());
+        authorTextView.setText(requestViewModel.getAuthor());
+        descriptionTextView.setText(requestViewModel.getDescription());
+        bookStatus.setText(requestViewModel.getStatus());
+
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_white_18);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         createExample();
         buildRecyclerView();
     }
@@ -41,19 +67,16 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
 
     public void createExample() {
         requestDataList = new ArrayList<>();
-        requestDataList.add(new RequestItem("Test1"));
-        requestDataList.add(new RequestItem("Test2"));
-        requestDataList.add(new RequestItem("Test3"));
-        requestDataList.add(new RequestItem("Test4"));
-        requestDataList.add(new RequestItem("Test5"));
-        requestDataList.add(new RequestItem("Test6"));
-        requestDataList.add(new RequestItem("Test7"));
-        requestDataList.add(new RequestItem("Test8"));
-        requestDataList.add(new RequestItem("Test9"));
-        requestDataList.add(new RequestItem("Test10"));
-        requestDataList.add(new RequestItem("Test11"));
-        requestDataList.add(new RequestItem("Test12"));
-        requestDataList.add(new RequestItem("Test13"));
+        requestDataList.add(new RequestItem("Lucas"));
+        requestDataList.add(new RequestItem("Meillin"));
+        requestDataList.add(new RequestItem("Khang"));
+        requestDataList.add(new RequestItem("Ze Hui"));
+        requestDataList.add(new RequestItem("Trung"));
+        requestDataList.add(new RequestItem("Qi"));
+        requestDataList.add(new RequestItem("John"));
+        requestDataList.add(new RequestItem("Anna"));
+        requestDataList.add(new RequestItem("Smith"));
+        requestDataList.add(new RequestItem("Kevin"));
     }
 
     /**
@@ -111,5 +134,13 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
             requestDataList.subList(0, size).clear();
             requestAdapter.notifyItemRangeRemoved(0, size);
         }
+    }
+
+    public void onSuccess() {
+
+    }
+
+    public void onFailure() {
+
     }
 }
