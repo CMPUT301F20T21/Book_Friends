@@ -46,5 +46,4 @@ public class BorrowedViewModel extends ViewModel {
 
         });
     }
-
 }
