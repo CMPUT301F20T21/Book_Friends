@@ -18,10 +18,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
+import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.ui.add.AddEditActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class OwnedListFragment extends Fragment {
     public static final String BOOK_ACTION_KEY = "com.cmput301f20t21.bookfriends.BOOK_ACTION";
@@ -30,7 +32,6 @@ public class OwnedListFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    private ArrayList<Book> books = new ArrayList<>();
 
     @Nullable
     @Override
@@ -68,34 +69,25 @@ public class OwnedListFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        // specify an adapter (see also next example)
-        vm.getBooks(this::onGetBookSuccess, this::onGetBookFail);
-        // need to set an empty adapter here otherwise there are errors
-        RecyclerView.Adapter tempAdapter = new OwnedListAdapter(books);
-        recyclerView.setAdapter(tempAdapter);
-    }
+        // set a temporary adapter
+        recyclerView.setAdapter(new OwnedListAdapter(new ArrayList<>()));
 
-    public void onGetBookSuccess(ArrayList<Book> books) {
-        this.books = books;
-        // replace the adapter with real data
-        mAdapter = new OwnedListAdapter(this.books);
-        recyclerView.setAdapter(mAdapter);
-        for (Book book : books) {
-            if (book.getImageName() != null) {
-                vm.getBookImage(book, this::onGetImageSuccess);
+        vm.getBooks().observe(getViewLifecycleOwner(), (List<Book> books) -> {
+            mAdapter = new OwnedListAdapter(books);
+            recyclerView.setAdapter(mAdapter);
+        });
+
+        vm.getUpdatedPosition().observe(getViewLifecycleOwner(), (Integer pos) -> {
+            if (mAdapter != null) {
+                mAdapter.notifyItemChanged(pos);
             }
-        }
-    }
+        });
 
-    public void onGetBookFail() {
-        Toast.makeText(getContext(), getString(R.string.fail_to_get_books), Toast.LENGTH_SHORT).show();
-    }
-
-    public void onGetImageSuccess(Book book, @Nullable Uri imageUri) {
-        if (imageUri != null) {
-            book.setImageUri(imageUri);
-            mAdapter.notifyDataSetChanged();
-        }
+        vm.getErrorMessageObserver().observe(getViewLifecycleOwner(), (BOOK_ERROR error) -> {
+            if (error == BOOK_ERROR.FAIL_TO_GET_BOOKS) {
+                Toast.makeText(getActivity(), getString(R.string.fail_to_get_books), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }
