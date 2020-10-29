@@ -7,13 +7,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
-import com.cmput301f20t21.bookfriends.services.RequestService;
+import com.cmput301f20t21.bookfriends.entities.Book;
 
 import java.util.ArrayList;
 
@@ -41,13 +41,14 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
         requestViewModel = new ViewModelProvider(this).get(RequestViewModel.class);
 
         // TODO: getting book ID from previous activity
-        String bookId = "RmJi5i1sav1B4fKQcNHP"; // temporary book ID
-        requestViewModel.handleBookInfo(bookId, this::onSuccess, this::onFailure);
+        String bookId = "kEkNn53bBoANMSyPjJDZ"; // temporary book ID
+        requestViewModel.getBookInfo(bookId, this::onSuccess, this::onFailure);
 
-        titleTextView.setText(requestViewModel.getBookName());
-        authorTextView.setText(requestViewModel.getAuthor());
-        descriptionTextView.setText(requestViewModel.getDescription());
-        bookStatus.setText(requestViewModel.getStatus());
+        requestViewModel.getBook().observe(this, book -> {
+            titleTextView.setText(book.getTitle());
+            authorTextView.setText(book.getAuthor());
+        });
+
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_white_18);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

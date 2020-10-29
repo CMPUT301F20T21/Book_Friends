@@ -1,17 +1,25 @@
 package com.cmput301f20t21.bookfriends.ui.request;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.services.AuthService;
 import com.cmput301f20t21.bookfriends.services.BookService;
 import com.cmput301f20t21.bookfriends.services.RequestService;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.Map;
 
 public class RequestViewModel extends ViewModel {
-    private String bookName;
-    private String author;
-    private String description;
-    private String status;
+    private MutableLiveData<Book> book;
 
     private final RequestService requestService = RequestService.getInstance();
     private final BookService bookService = BookService.getInstance();
@@ -24,29 +32,22 @@ public class RequestViewModel extends ViewModel {
         void run();
     }
 
-    public void handleBookInfo(
+    public void getBookInfo(
             String bookId,
             OnViewRequestSuccessCallback successCallback,
             OnFailCallBack failCallBack) {
-        bookService.getBookById(bookId).addOnCompleteListener(
-                bookInfoTask -> {
-                    if (bookInfoTask.isSuccessful()) {
-                        if (!bookInfoTask.getResult().isEmpty()) {
-                            bookName = bookInfoTask.getResult().getDocuments().get(6).get("title").toString();
-                            author = bookInfoTask.getResult().getDocuments().get(0).get("author").toString();
-                            description = bookInfoTask.getResult().getDocuments().get(1).get("description").toString();
-                            status = bookInfoTask.getResult().getDocuments().get(4).get("status").toString();
-                            successCallback.run();
-                        } else {
-                            failCallBack.run();
-                        }
-                    } else {
-                        failCallBack.run();
+        bookService.getBookById(bookId).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+
                     }
                 }
-        );
+            }
+        });
     }
-
 
 
     // TODO: fully implement it
@@ -70,19 +71,7 @@ public class RequestViewModel extends ViewModel {
         );
     }
 
-    public String getBookName() {
-        return this.bookName;
-    }
-
-    public String getAuthor() {
-        return this.author;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public String getStatus() {
-        return this.status;
+    public MutableLiveData<Book> getBook() {
+        return this.book;
     }
 }

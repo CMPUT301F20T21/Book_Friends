@@ -5,6 +5,7 @@ import android.net.Uri;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -62,7 +63,7 @@ public class BookService {
         return bookCollection.whereEqualTo("owner", uid).get();
     }
 
-    public Task<QuerySnapshot> getBookById(String bookId) {
-        return bookCollection.whereEqualTo("bookId", bookId).get();
+    public Task<DocumentSnapshot> getBookById(String bookId) {
+        return bookCollection.document(bookId).get();
     }
 }
