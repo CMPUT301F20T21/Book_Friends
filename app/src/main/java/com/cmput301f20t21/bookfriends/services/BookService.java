@@ -86,8 +86,8 @@ public class BookService {
 
     public Task<DocumentSnapshot> getBookById(String bookId) {
         return bookCollection.document(bookId).get();
-
-    public Task<QuerySnapshot> batchGetBooks(List<String> bookIds){
+    }
+    public Task<QuerySnapshot> batchGetBooks( List<String> bookIds){
         return bookCollection.whereIn(FieldPath.documentId(), bookIds).get();
     }
 }

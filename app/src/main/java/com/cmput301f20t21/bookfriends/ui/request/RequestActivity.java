@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class RequestActivity extends AppCompatActivity implements ConfirmDialog.ConfirmDialogListener {
     private RecyclerView recyclerView;
     private RequestAdapter requestAdapter;
-    private ArrayList<RequestItem> requestDataList;
+    private ArrayList<RequestItem> requestDataList = new ArrayList<>();
     private RecyclerView.LayoutManager layoutManager;
     private TextView titleTextView;
     private TextView authorTextView;
@@ -43,15 +43,18 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
 //        String bookId = "x1z6o0qZbcgGBFezURsS";
         String bookId = "kEkNn53bBoANMSyPjJDZ"; // temporary book ID
         displayBookInfo(bookId);
-        displayRequest();
+        displayRequest(bookId);
         // set up the back button
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_white_18);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        createExample();
         buildRecyclerView();
     }
 
+    /**
+     * display book information by getting it from FireStore based on bookId
+     * @param bookId
+     */
     public void displayBookInfo(String bookId) {
         // bind the text view
         titleTextView = findViewById(R.id.title_text_view);
@@ -76,8 +79,20 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
         });
     }
 
-    public void displayRequest() {
-
+    /**
+     * display requesters of the book by getting them from FireStore based on bookId
+     * @param bookId
+     */
+    public void displayRequest(String bookId) {
+        requestViewModel.getRequesters(bookId).observe(this, requesters -> {
+//            requestDataList = new ArrayList<>();
+            if (requesters != null) {
+                for (String requester : requesters) {
+                    requestDataList.add(new RequestItem(requester));
+                }
+                requestAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -87,20 +102,6 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public void createExample() {
-        requestDataList = new ArrayList<>();
-        requestDataList.add(new RequestItem("Lucas"));
-        requestDataList.add(new RequestItem("Meillin"));
-        requestDataList.add(new RequestItem("Khang"));
-        requestDataList.add(new RequestItem("Ze Hui"));
-        requestDataList.add(new RequestItem("Trung"));
-        requestDataList.add(new RequestItem("Qi"));
-        requestDataList.add(new RequestItem("John"));
-        requestDataList.add(new RequestItem("Anna"));
-        requestDataList.add(new RequestItem("Smith"));
-        requestDataList.add(new RequestItem("Kevin"));
     }
 
     /**

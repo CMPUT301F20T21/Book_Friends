@@ -5,6 +5,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
@@ -84,6 +85,10 @@ public class RequestService {
             batch.update(request, "status", REQUEST_STATUS.DENIED.toString());
         }
         return batch.commit();
+    }
+
+    public String getRequesterFromDocument(DocumentSnapshot documentSnapshot) {
+        return (String) documentSnapshot.get("requester");
     }
 
 }

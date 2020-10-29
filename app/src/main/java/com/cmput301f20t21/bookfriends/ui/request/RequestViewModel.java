@@ -14,13 +14,22 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 public class RequestViewModel extends ViewModel {
     private MutableLiveData<Book> book;
     private MutableLiveData<Uri> imageUri;
+    private MutableLiveData<List<String>> requesters;
 
     private final RequestService requestService = RequestService.getInstance();
     private final BookService bookService = BookService.getInstance();
 
+    /**
+     * Function to get the book information from FireStore
+     * @param bookId we will query the book information based on the bookID
+     */
     public void getBookInfo(String bookId) {
         bookService.getBookById(bookId).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -38,10 +47,21 @@ public class RequestViewModel extends ViewModel {
                         bookService.getImage(imageName).addOnSuccessListener(uri -> {
                            imageUri.setValue(uri);
                         });
-                        book.setValue(new Book(bookId, isbn, title, author, description, owner, imageName, BOOK_STATUS.valueOf(status)));
+                        book.setValue(new Book(bookId, isbn, title, author, description, owner, BOOK_STATUS.valueOf(status)));
                     }
                 }
             }
+        });
+    }
+
+    public void fetchRequesters(String bookId) {
+        requestService.getByBookId(bookId).addOnSuccessListener(requesterDocumentsSnapShots -> {
+           List<DocumentSnapshot> documents = requesterDocumentsSnapShots.getDocuments();
+           requesters.setValue(IntStream.range(0, documents.size()).mapToObj(i -> {
+               DocumentSnapshot document = documents.get(i);
+               String requester = requestService.getRequesterFromDocument(document);
+               return requester;
+           }).collect(Collectors.toList()));
         });
     }
 
@@ -66,6 +86,11 @@ public class RequestViewModel extends ViewModel {
 //        );
 //    }
 
+    /**
+     * function to notify the content displayed on device when the data is changed
+     * @param bookId we get book information by book ID then pass the content to display
+     * @return
+     */
     public MutableLiveData<Book> getBook(String bookId) {
         if (book == null) {
             book = new MutableLiveData<>();
@@ -74,10 +99,22 @@ public class RequestViewModel extends ViewModel {
         return this.book;
     }
 
+    /**
+     * similar, we get the image of the current book
+     * @return
+     */
     public MutableLiveData<Uri> getImageUri() {
         if (imageUri == null) {
             imageUri = new MutableLiveData<>();
         }
         return this.imageUri;
+    }
+
+    public MutableLiveData<List<String>> getRequesters(String bookId) {
+        if (requesters == null) {
+            requesters = new MutableLiveData<>();
+            fetchRequesters(bookId);
+        }
+        return this.requesters;
     }
 }
