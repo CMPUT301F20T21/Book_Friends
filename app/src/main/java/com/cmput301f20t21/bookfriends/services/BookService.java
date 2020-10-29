@@ -7,25 +7,22 @@ import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public class BookService {
-    // TODO not done
-
-    private CollectionReference bookCollection;
-    private final StorageReference imageStorageReference = FirebaseStorage.getInstance().getReference();
 
     private static final BookService instance = new BookService();
+    private final StorageReference imageStorageReference = FirebaseStorage.getInstance().getReference();
+    private final CollectionReference bookCollection;
 
     private BookService() {
         bookCollection = FirebaseFirestore.getInstance().collection("books");
@@ -62,22 +59,15 @@ public class BookService {
         return bookCollection.document(id).delete();
     }
 
-    public ArrayList<Book> getBooksOnResult(QuerySnapshot resultSnapshot) {
-        ArrayList<Book> books = new ArrayList<>();
-        for (QueryDocumentSnapshot document : resultSnapshot) {
-            Map<String, Object> data = document.getData();
-            String id = document.getId();
-            String isbn = (String) data.get("isbn");
-            String title = (String) data.get("title");
-            String author = (String) data.get("author");
-            String description = (String) data.get("description");
-            String owner = (String) data.get("owner");
-            String status = (String) data.get("status");
-            String imageName = (String) data.get("imageName");
-            Book book = new Book(id, isbn, title, author, description, owner, imageName, BOOK_STATUS.valueOf(status));
-            books.add(book);
-        }
-        return books;
+    public Book getBookFromDocument(DocumentSnapshot document) {
+        String id = document.getId();
+        String isbn = (String) document.get("isbn");
+        String title = (String) document.get("title");
+        String author = (String) document.get("author");
+        String description = (String) document.get("description");
+        String owner = (String) document.get("owner");
+        String status = (String) document.get("status");
+        return new Book(id, isbn, title, author, description, owner, BOOK_STATUS.valueOf(status));
     }
 
     public Task<Uri> getImage(String imageName) {
@@ -96,5 +86,8 @@ public class BookService {
 
     public Task<DocumentSnapshot> getBookById(String bookId) {
         return bookCollection.document(bookId).get();
+
+    public Task<QuerySnapshot> batchGetBooks(List<String> bookIds){
+        return bookCollection.whereIn(FieldPath.documentId(), bookIds).get();
     }
 }

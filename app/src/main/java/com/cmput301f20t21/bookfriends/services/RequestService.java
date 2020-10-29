@@ -35,6 +35,12 @@ public class RequestService {
         return requestCollection.whereEqualTo("bookId", bookId).get();
     }
 
+    public Task<QuerySnapshot> getBorrowedRequestByUsername(String username) {
+        return requestCollection.whereEqualTo("requester", username)
+                .whereEqualTo("status", REQUEST_STATUS.BORROWED.toString()).get();
+    }
+
+
     /**
      * add request by bookId and requesterId
      * @param bookId, requesterId
@@ -79,4 +85,5 @@ public class RequestService {
         }
         return batch.commit();
     }
+
 }
