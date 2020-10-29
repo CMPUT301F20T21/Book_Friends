@@ -30,14 +30,21 @@ import com.cmput301f20t21.bookfriends.entities.User;
 import com.cmput301f20t21.bookfriends.services.AuthService;
 import com.cmput301f20t21.bookfriends.ui.login.LoginActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.WriteBatch;
 
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProfileFragment extends Fragment implements ProfileEditDialog.EditListener {
+    final String TAG = "Phone";
     private TextView emailAddress;
     private TextView phoneNumber;
     private ImageView editProfile;
@@ -57,6 +64,7 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.EditL
         phoneNumber = view.findViewById(R.id.phone);
         editProfile = view.findViewById(R.id.image_edit);
         name = view.findViewById(R.id.username);
+        phoneNumber.setText("");
 
         // get the login information from firebase
         User firebaseUser = AuthService.getInstance().getCurrentUser();
@@ -66,7 +74,14 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.EditL
             String email = firebaseUser.getEmail();
             name.setText(username);
             emailAddress.setText(email);
+
+            //once the profile is opened, user can edit their phone number, and new field in firebase is created
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("phone", phoneNumber.getText().toString());
+            FirebaseFirestore.getInstance().collection("users").document(userId)
+                    .set(data, SetOptions.merge());
         }
+
 
         //click on the logout button, bring back to the login activity
         Button logout = view.findViewById(R.id.logout_button);
