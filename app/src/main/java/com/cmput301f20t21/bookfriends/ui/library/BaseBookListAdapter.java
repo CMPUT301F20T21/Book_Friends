@@ -49,6 +49,7 @@ public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapte
         View holderView;
         Book book;
 
+
         public ViewHolder(View v) {
             super(v);
             holderView = v;
