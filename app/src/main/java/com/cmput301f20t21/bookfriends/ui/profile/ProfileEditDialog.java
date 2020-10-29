@@ -23,8 +23,6 @@ public class ProfileEditDialog extends DialogFragment {
     private EditText editPhone;
     private TextView cancel;
     private TextView confirm;
-    private TextView existEmail;
-    private TextView existPhone;
     private EditListener listener;
 
     @NotNull
@@ -35,8 +33,10 @@ public class ProfileEditDialog extends DialogFragment {
         editPhone = view.findViewById(R.id.edit_phone);
         cancel = view.findViewById(R.id.text_cancel);
         confirm = view.findViewById(R.id.text_confirm);
-        existEmail = view.findViewById(R.id.email);
-        existPhone = view.findViewById(R.id.phone);
+        //set value from the fragment
+        editEmail.setText(getArguments().getString("email"));
+        editPhone.setText(getArguments().getString("phone"));
+
 
         getDialog().getWindow().setBackgroundDrawableResource(R.drawable.button_round_corner);
         cancel.setOnClickListener(new View.OnClickListener() {
