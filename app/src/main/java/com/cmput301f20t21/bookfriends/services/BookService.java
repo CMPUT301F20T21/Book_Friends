@@ -35,7 +35,7 @@ public class BookService {
         return instance;
     }
 
-    public Task<DocumentReference> add(String isbn, String title, String author, String description, String owner, boolean imageAttached) {
+    public Task<DocumentReference> add(String isbn, String title, String author, String description, String owner) {
         HashMap<String, Object> data = new HashMap<>();
         data.put("isbn", isbn);
         data.put("title", title);
@@ -44,13 +44,18 @@ public class BookService {
         data.put("owner", owner);
         // when a book is first added, the status will always be "AVAILABLE"
         data.put("status", BOOK_STATUS.AVAILABLE.toString());
-        data.put("image", imageAttached);
         return bookCollection.add(data);
     }
 
     public UploadTask addImage(String bookId, Uri imageUri) {
         StorageReference fileReference = imageStorageReference.child(bookId);
         return fileReference.putFile(imageUri);
+    }
+
+    public Task<Void> addImageNameToBook(String bookId, String imageName) {
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("imageName", imageName);
+        return bookCollection.document(bookId).update(data);
     }
 
     public Task<Void> delete(String id) {
@@ -68,15 +73,15 @@ public class BookService {
             String description = (String) data.get("description");
             String owner = (String) data.get("owner");
             String status = (String) data.get("status");
-            boolean isImageAttached = (boolean) data.get("image");
-            Book book = new Book(id, isbn, title, author, description, owner, BOOK_STATUS.valueOf(status), isImageAttached);
+            String imageName = (String) data.get("imageName");
+            Book book = new Book(id, isbn, title, author, description, owner, imageName, BOOK_STATUS.valueOf(status));
             books.add(book);
         }
         return books;
     }
 
-    public Task<Uri> getImage(String bookId) {
-        StorageReference pathReference = imageStorageReference.child(bookId);
+    public Task<Uri> getImage(String imageName) {
+        StorageReference pathReference = imageStorageReference.child(imageName);
         return pathReference.getDownloadUrl();
     }
 

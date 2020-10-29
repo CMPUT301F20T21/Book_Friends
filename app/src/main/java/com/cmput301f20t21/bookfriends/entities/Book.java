@@ -13,23 +13,23 @@ public class Book {
     private String author;
     private String description;
     private String owner; // the owner's username
+    private String imageName;
     private BOOK_STATUS status;
     private Uri imageUri;
-    private boolean isImageAttached;
 
-    public Book(String id, String isbn, String title, String author, String description, String owner, BOOK_STATUS status, boolean isImageAttached) {
+    public Book(String id, String isbn, String title, String author, String description, String owner, String imageName, BOOK_STATUS status) {
         this.id = id;
         this.isbn = isbn;
         this.title = title;
         this.author = author;
         this.description = description;
         this.owner = owner;
+        this.imageName = imageName;
         this.status = status;
-        this.isImageAttached = isImageAttached;
     }
 
-    public Book(String id, String isbn, String title, String author, String description, String owner, BOOK_STATUS status, Uri imageUri) {
-        this(id, isbn, title, author, description, owner, status, true);
+    public Book(String id, String isbn, String title, String author, String description, String owner, String imageName, BOOK_STATUS status, Uri imageUri) {
+        this(id, isbn, title, author, description, owner, imageName, status);
         this.imageUri = imageUri;
     }
 
@@ -56,12 +56,12 @@ public class Book {
         return owner;
     }
 
-    public BOOK_STATUS getBookStatus() {
-        return status;
+    public String getImageName() {
+        return imageName;
     }
 
-    public boolean getIsImageAttached() {
-        return isImageAttached;
+    public BOOK_STATUS getBookStatus() {
+        return status;
     }
 
     @Nullable

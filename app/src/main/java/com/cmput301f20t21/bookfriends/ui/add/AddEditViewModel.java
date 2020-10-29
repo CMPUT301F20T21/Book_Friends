@@ -39,22 +39,24 @@ public class AddEditViewModel extends ViewModel {
             final String isbn, final String title, final String author, final String description,
             @Nullable Uri imageUri, OnSuccessCallback successCallback, OnFailCallback failCallback
     ) {
-        boolean imageAttached = true;
-        if (imageUri == null) {
-            imageAttached = false;
-        }
         String owner = authService.getCurrentUser().getUsername();
-        bookService.add(isbn, title, author, description, owner, imageAttached).addOnCompleteListener(
+        bookService.add(isbn, title, author, description, owner).addOnCompleteListener(
                 addBookTask -> {
                     if (addBookTask.isSuccessful()) {
                         DocumentReference result = addBookTask.getResult();
                         if (result != null) {
                             String bookId = result.getId();
                             if(imageUri != null) {
-                                bookService.addImage(bookId, imageUri).addOnCompleteListener(
+                                // not using string resource because this is not displayed to user
+                                String imageName = bookId + "cover";
+                                bookService.addImage(imageName, imageUri).addOnCompleteListener(
                                         addImageTask -> {
                                             if (addImageTask.isSuccessful()) {
-                                                successCallback.run();
+                                                bookService.addImageNameToBook(bookId, imageName).addOnCompleteListener(
+                                                        addNameTask -> {
+                                                            successCallback.run();
+                                                        }
+                                                );
                                             } else {
                                                 failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
                                             }
