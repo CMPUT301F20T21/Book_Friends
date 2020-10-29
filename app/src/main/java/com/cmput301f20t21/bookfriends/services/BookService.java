@@ -12,6 +12,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class BookService {
     // TODO not done
@@ -60,5 +61,9 @@ public class BookService {
     public Task<QuerySnapshot> getBookOfBorrowerId(String uid) {
         // TODO placeholder here
         return bookCollection.whereEqualTo("owner", uid).get();
+    }
+
+    public Task<QuerySnapshot> batchGetBooks(List<String> bookIds) {
+        return bookCollection.whereIn("bookId", bookIds).get();
     }
 }
