@@ -62,23 +62,10 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.EditL
         User firebaseUser = AuthService.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             String userId = firebaseUser.getUid();
-
-            //document reference
-            final DocumentReference docReference = FirebaseFirestore.getInstance().collection("users").document(userId);
-            docReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot doc = task.getResult();
-                        if (doc.exists()) {
-                            String username = doc.getString("username");
-                            String email = doc.getString("email");
-                            name.setText(username);
-                            emailAddress.setText(email);
-                        }
-                    }
-                }
-            });
+            String username = firebaseUser.getUsername();
+            String email = firebaseUser.getEmail();
+            name.setText(username);
+            emailAddress.setText(email);
         }
 
         //click on the logout button, bring back to the login activity
