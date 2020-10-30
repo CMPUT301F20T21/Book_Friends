@@ -64,7 +64,7 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.EditL
         phoneNumber = view.findViewById(R.id.phone);
         editProfile = view.findViewById(R.id.image_edit);
         name = view.findViewById(R.id.username);
-        phoneNumber.setText("");
+
 
         // get the login information from firebase
         User firebaseUser = AuthService.getInstance().getCurrentUser();
@@ -75,11 +75,31 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.EditL
             name.setText(username);
             emailAddress.setText(email);
 
-            //once the profile is opened, user can edit their phone number, and new field in firebase is created
-            HashMap<String, Object> data = new HashMap<>();
-            data.put("phone", phoneNumber.getText().toString());
-            FirebaseFirestore.getInstance().collection("users").document(userId)
-                    .set(data, SetOptions.merge());
+            // search for field "phone"
+            final DocumentReference docReference = FirebaseFirestore.getInstance().collection("users").document(userId);
+            docReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot doc = task.getResult();
+                        if (doc.exists()) {
+                            // if field "phone" already exist
+                            if(doc.get("phone") != null){
+                                String phone = doc.getString("phone");
+                                phoneNumber.setText(phone);
+                            }
+                            // if field "phone" does not exist
+                            else{
+                                HashMap<String, Object> data = new HashMap<>();
+                                data.put("phone", phoneNumber.getText().toString());
+                                FirebaseFirestore.getInstance().collection("users").document(userId)
+                                        .set(data, SetOptions.merge());
+                                phoneNumber.setText("");
+                            }
+                        }
+                    }
+                }
+            });
         }
 
 
