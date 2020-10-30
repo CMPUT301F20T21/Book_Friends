@@ -112,7 +112,7 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.EditL
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 //logout from the firebase
-                FirebaseAuth.getInstance().signOut();
+                AuthService.getInstance().signOut();
             }
         });
 
