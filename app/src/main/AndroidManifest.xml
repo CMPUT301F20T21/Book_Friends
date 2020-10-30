@@ -41,6 +41,7 @@
             android:windowSoftInputMode="adjustPan"
             android:parentActivityName="com.cmput301f20t21.bookfriends.ui.login.LoginActivity" >
         </activity>
+
     </application>
 
 </manifest>

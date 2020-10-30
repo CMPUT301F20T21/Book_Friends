@@ -87,4 +87,11 @@ public class BookService {
     public Task<QuerySnapshot> batchGetBooks(List<String> bookIds) {
         return bookCollection.whereIn(FieldPath.documentId(), bookIds).get();
     }
+
+// get all the books, will be used in browse
+    public Task<QuerySnapshot> getAvailableBooks() {
+        return bookCollection
+                .whereEqualTo("status", BOOK_STATUS.AVAILABLE.toString())
+                .whereEqualTo("status", BOOK_STATUS.REQUESTED.toString()).get();
+    }
 }
