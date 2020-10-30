@@ -1,4 +1,4 @@
-package com.cmput301f20t21.bookfriends.ui.library;
+package com.cmput301f20t21.bookfriends.ui.component;
 
 import android.net.Uri;
 import android.view.LayoutInflater;
