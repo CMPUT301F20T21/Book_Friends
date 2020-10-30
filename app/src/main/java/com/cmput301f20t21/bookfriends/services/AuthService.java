@@ -1,6 +1,11 @@
 package com.cmput301f20t21.bookfriends.services;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
 import com.cmput301f20t21.bookfriends.entities.User;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,6 +24,7 @@ public class AuthService {
     public static AuthService getInstance() {
         return instance;
     }
+
 
     public User getCurrentUser() {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
@@ -42,5 +48,22 @@ public class AuthService {
 
     public void signOut() {
         mAuth.signOut();
+    }
+
+    public void updateEmail(String username, String TAG){
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            user.updateEmail(username)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "User email address updated.");
+                            }
+                        }
+                    });
+
+        }
+
     }
 }
