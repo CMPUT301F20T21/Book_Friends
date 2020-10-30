@@ -147,11 +147,12 @@ public class OwnedListFragment extends Fragment {
 
     private void onDeleteBookSuccess(Book book) {
         Toast.makeText(getActivity(), getString(R.string.delete_book_successful), Toast.LENGTH_SHORT).show();
-        // OPTION 1: delete from LiveData and notify adapter
-        vm.getBooks().getValue().remove(book);
-        mAdapter.notifyDataSetChanged();
-        // OPTION 2: query again, don't need book object
-        // vm.fetchBooks();
+        List<Book> books = vm.getBooks().getValue();
+        if (books != null) {
+            books.remove(book);
+            mAdapter.notifyDataSetChanged();
+        }
+
     }
 
 }
