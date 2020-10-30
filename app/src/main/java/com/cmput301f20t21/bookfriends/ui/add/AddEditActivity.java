@@ -19,12 +19,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.bumptech.glide.Glide;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.ui.library.OwnedListFragment;
-import com.cmput301f20t21.bookfriends.ui.scanner.ScannerActivity;
+import com.cmput301f20t21.bookfriends.ui.scanner.ScannerAddActivity;
+import com.cmput301f20t21.bookfriends.ui.scanner.ScannerBaseActivity;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class AddEditActivity extends AppCompatActivity {
@@ -179,8 +179,8 @@ public class AddEditActivity extends AppCompatActivity {
 
     private void openScanner() {
         // TODO: implement the scanner
-        Intent intent = new Intent(this, ScannerActivity.class);
-        startActivity(intent);
+        Intent intent = new Intent(this, ScannerAddActivity.class);
+        startActivity(intent); // TODO: potentially startActivityForResult
     }
 
     private void uploadImg() {

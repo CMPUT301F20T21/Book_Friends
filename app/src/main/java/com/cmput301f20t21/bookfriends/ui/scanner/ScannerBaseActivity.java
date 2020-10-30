@@ -23,7 +23,10 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 
-public class ScannerActivity extends AppCompatActivity {
+/**
+ * the base Activity to be extended by any that needs the scanning functionality
+ */
+public class ScannerBaseActivity extends AppCompatActivity {
     final static int REQUEST_CAMERA_PERMISSION = 100;
     final static String T = "bf_scanner";
     private SurfaceView surfaceView;
@@ -33,6 +36,12 @@ public class ScannerActivity extends AppCompatActivity {
     private CameraSource cameraSource;
     private Barcode detectedBarcode;
 
+    /**
+     * on create, the activity will setup views and ask for permission,
+     * and also start detecting for barcode right away.
+     *
+     * @param savedInstanceState don't need
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +49,9 @@ public class ScannerActivity extends AppCompatActivity {
         initWithPermission();
     }
 
+    /**
+     * initialize views, camera and detector after ensuring the camera permission is granted
+     */
     private void initWithPermission() {
         if (checkSelfPermission(Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_DENIED) {
@@ -50,9 +62,15 @@ public class ScannerActivity extends AppCompatActivity {
         }
     }
 
-    private void onBarcodeReceive(Barcode bar) {
-        detectedBarcode = bar;
-        isbnText.setText(bar.rawValue);
+    /**
+     * when the base scanner successfully detects a barcode, this function is called
+     * note that it might be called **many times** upon success detection.
+     * @param barcode the Barcode object that contains all the information we need
+     *                the code is accessible via barcode.rawValue
+     */
+    protected void onBarcodeReceive(Barcode barcode) {
+        detectedBarcode = barcode;
+        isbnText.setText(barcode.rawValue);
     }
 
     private void init() {
@@ -82,8 +100,8 @@ public class ScannerActivity extends AppCompatActivity {
 
         cameraSource = new CameraSource.Builder(getApplicationContext(), barcodeDetector)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
-                .setRequestedPreviewSize(400,300)
-                .setRequestedFps(5.0f)
+                .setRequestedPreviewSize(300, 300)
+                .setRequestedFps(2.0f)
                 .setAutoFocusEnabled(true)
                 .build();
 
@@ -97,9 +115,11 @@ public class ScannerActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
             }
+
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
                 cameraSource.stop();
@@ -108,6 +128,9 @@ public class ScannerActivity extends AppCompatActivity {
         ;
     }
 
+    /**
+     * on pause, we want to free up cameraSource object from memory
+     */
     @Override
     protected void onPause() {
         if (cameraSource != null) cameraSource.release();

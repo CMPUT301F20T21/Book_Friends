@@ -11,7 +11,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="50dp"
         />
     <TextView
         android:id="@+id/scanner_isbn_result_text"
@@ -19,9 +18,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:textAlignment="center"
-        android:textSize="40sp"
+        android:textSize="36sp"
        app:layout_constraintTop_toBottomOf="@id/scanner_preview_surface"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/scanner_extra_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/scanner_isbn_result_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
