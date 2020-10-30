@@ -4,13 +4,13 @@ import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 
 public class Request {
     private String id;
-    private String requesterId;
+    private String requester;
     private String bookId;
     private REQUEST_STATUS status;
 
-    public Request(String id, String requesterId, String bookId, String status) {
+    public Request(String id, String requester, String bookId, String status) {
         this.id = id;
-        this.requesterId = requesterId;
+        this.requester = requester;
         this.bookId = bookId;
         this.status = REQUEST_STATUS.valueOf(status);
     }
@@ -24,7 +24,7 @@ public class Request {
     }
 
     public String getRequesterId() {
-        return requesterId;
+        return requester;
     }
 
     public REQUEST_STATUS getStatus() {

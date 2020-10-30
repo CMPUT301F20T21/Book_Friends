@@ -66,4 +66,5 @@
     <string name="confirm_request_text">Accepting it will reject all other requests for this book and you will be prompted to mark a place to meet</string>
     <string name="book_status">status</string>
     <string name="fail_to_get_books">Failed to get a list of books from server</string>
+    <string name="ask_to_borrow">asked to borrow the book</string>
 </resources>

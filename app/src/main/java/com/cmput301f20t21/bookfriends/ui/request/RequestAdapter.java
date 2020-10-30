@@ -10,11 +10,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
+import com.cmput301f20t21.bookfriends.entities.Request;
 
 import java.util.ArrayList;
 
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestHolder> {
-    private ArrayList<RequestItem> requestItems;
+    private ArrayList<Request> requestItems;
     private OnItemClickListener listener;
     public interface OnItemClickListener{
         void onRejectClick(int position);
@@ -55,7 +56,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestH
         }
     }
 
-    public RequestAdapter(ArrayList<RequestItem> requestItems) {
+    public RequestAdapter(ArrayList<Request> requestItems) {
         this.requestItems = requestItems;
     }
 
@@ -72,8 +73,10 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestH
 
     @Override
     public void onBindViewHolder(@NonNull RequestHolder holder, int position) {
-        RequestItem currentItem = requestItems.get(position);
-        holder.textView.setText(currentItem.getTextRequest());
+        Request currentItem = requestItems.get(position);
+        String toPrint  = currentItem.getRequesterId() + " " +
+                holder.itemView.getContext().getResources().getString(R.string.ask_to_borrow);
+        holder.textView.setText(toPrint);
     }
 
     @Override

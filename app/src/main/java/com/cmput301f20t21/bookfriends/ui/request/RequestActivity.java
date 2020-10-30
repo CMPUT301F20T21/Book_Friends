@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
+import com.cmput301f20t21.bookfriends.entities.Request;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 public class RequestActivity extends AppCompatActivity implements ConfirmDialog.ConfirmDialogListener {
     private RecyclerView recyclerView;
     private RequestAdapter requestAdapter;
-    private ArrayList<RequestItem> requestDataList = new ArrayList<>();
+    private ArrayList<Request> requestDataList = new ArrayList<>();
     private RecyclerView.LayoutManager layoutManager;
     private TextView titleTextView;
     private TextView authorTextView;
@@ -87,8 +88,9 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
         requestViewModel.getRequesters(bookId).observe(this, requesters -> {
 //            requestDataList = new ArrayList<>();
             if (requesters != null) {
-                for (String requester : requesters) {
-                    requestDataList.add(new RequestItem(requester));
+                for (Request request : requesters) {
+                    String requester = request.getRequesterId();
+                    requestDataList.add(request);
                 }
                 requestAdapter.notifyDataSetChanged();
             }
@@ -133,6 +135,7 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
      * @param position that needs removing
      */
     public void removeItem(int position) {
+//        String requester = requestDataList.get(position).getRequester();
         requestDataList.remove(position);
         requestAdapter.notifyItemRemoved(position);
     }

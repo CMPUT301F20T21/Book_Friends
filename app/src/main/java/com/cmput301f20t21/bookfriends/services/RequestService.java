@@ -1,5 +1,7 @@
 package com.cmput301f20t21.bookfriends.services;
 
+import com.cmput301f20t21.bookfriends.entities.Request;
+import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -85,6 +87,14 @@ public class RequestService {
             batch.update(request, "status", REQUEST_STATUS.DENIED.toString());
         }
         return batch.commit();
+    }
+
+    public Request getRequestFromDocument(DocumentSnapshot documentSnapshot) {
+        String requestId = documentSnapshot.getId();
+        String requester = (String) documentSnapshot.get("requester");
+        String bookId = (String) documentSnapshot.get("bookId");
+        String status = (String) documentSnapshot.get("status");
+        return new Request(requestId, requester, bookId, status);
     }
 
     public String getRequesterFromDocument(DocumentSnapshot documentSnapshot) {

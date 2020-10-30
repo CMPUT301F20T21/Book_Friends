@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.cmput301f20t21.bookfriends.entities.Book;
+import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.services.BookService;
 import com.cmput301f20t21.bookfriends.services.RequestService;
@@ -21,7 +22,7 @@ import java.util.stream.IntStream;
 public class RequestViewModel extends ViewModel {
     private MutableLiveData<Book> book;
     private MutableLiveData<Uri> imageUri;
-    private MutableLiveData<List<String>> requesters;
+    private MutableLiveData<List<Request>> requesters;
 
     private final RequestService requestService = RequestService.getInstance();
     private final BookService bookService = BookService.getInstance();
@@ -54,37 +55,20 @@ public class RequestViewModel extends ViewModel {
         });
     }
 
+    /**
+     * get all the requesters of a book based on its bookId
+     * @param bookId
+     */
     public void fetchRequesters(String bookId) {
         requestService.getByBookId(bookId).addOnSuccessListener(requesterDocumentsSnapShots -> {
            List<DocumentSnapshot> documents = requesterDocumentsSnapShots.getDocuments();
            requesters.setValue(IntStream.range(0, documents.size()).mapToObj(i -> {
                DocumentSnapshot document = documents.get(i);
-               String requester = requestService.getRequesterFromDocument(document);
-               return requester;
+               Request request = requestService.getRequestFromDocument(document);
+               return request;
            }).collect(Collectors.toList()));
         });
     }
-
-    // TODO: fully implement it
-//    public void handleViewRequest(
-//            String bookId,
-//            OnViewRequestSuccessCallback successCallback,
-//            OnFailCallBack failCallBack) {
-//        requestService.getByBookId(bookId).addOnCompleteListener(
-//                viewRequestTask -> {
-//                    if (viewRequestTask.isSuccessful()) {
-//                        if (!viewRequestTask.getResult().isEmpty()) {
-//
-////                            successCallback.run();
-//                        } else {
-//                            failCallBack.run();
-//                        }
-//                    } else {
-//                        failCallBack.run();
-//                    }
-//                }
-//        );
-//    }
 
     /**
      * function to notify the content displayed on device when the data is changed
@@ -110,7 +94,7 @@ public class RequestViewModel extends ViewModel {
         return this.imageUri;
     }
 
-    public MutableLiveData<List<String>> getRequesters(String bookId) {
+    public MutableLiveData<List<Request>> getRequesters(String bookId) {
         if (requesters == null) {
             requesters = new MutableLiveData<>();
             fetchRequesters(bookId);
