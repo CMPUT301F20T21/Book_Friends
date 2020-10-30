@@ -26,7 +26,7 @@ import java.util.List;
 public class RequestActivity extends AppCompatActivity implements ConfirmDialog.ConfirmDialogListener {
     private RecyclerView recyclerView;
     private RequestAdapter requestAdapter;
-    private ArrayList<Request> requestDataList = new ArrayList<>();
+    private final ArrayList<Request> requestDataList = new ArrayList<>();
     private RecyclerView.LayoutManager layoutManager;
     private TextView titleTextView;
     private TextView authorTextView;
@@ -98,6 +98,11 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
         });
     }
 
+    /**
+     * setup the back button on the title
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -154,9 +159,7 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
         for (int i = 0; i < requestDataList.size();i++) {
             idsToRemove.add(requestDataList.get(i).getId());
         }
-        if (idsToRemove.contains(acceptedId)) {
-            idsToRemove.remove(acceptedId);
-        }
+        idsToRemove.remove(acceptedId);
         ConfirmDialog confirmDialog = new ConfirmDialog(acceptedId, idsToRemove);
         confirmDialog.show(getSupportFragmentManager(), "Confirm Dialog");
     }

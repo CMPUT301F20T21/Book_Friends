@@ -96,6 +96,11 @@ public class RequestViewModel extends ViewModel {
         return this.imageUri;
     }
 
+    /**
+     * live data of requesters retrieving from FireStore
+     * @param bookId
+     * @return
+     */
     public MutableLiveData<List<Request>> getRequesters(String bookId) {
         if (requesters == null) {
             requesters = new MutableLiveData<>();
@@ -104,6 +109,11 @@ public class RequestViewModel extends ViewModel {
         return this.requesters;
     }
 
+    /**
+     * When the requester is denied, remove his/her request.
+     * update the status of this requester to DENIED
+     * @param requesterId
+     */
     public void removeRequest(String requesterId) {
         requestService.deny(requesterId).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -113,6 +123,10 @@ public class RequestViewModel extends ViewModel {
         });
     }
 
+    /**
+     * When the requester is accepted, update the status of this requester to ACCEPTED
+     * @param requesterId
+     */
     public void acceptRequest(String requesterId) {
         requestService.accept(requesterId).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -122,6 +136,10 @@ public class RequestViewModel extends ViewModel {
         });
     }
 
+    /**
+     * function is called when 1 requester is accepted, remove all other requests
+     * @param ids
+     */
     public void removeAllRequest(List<String> ids) {
         requestService.batchDeny(ids).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
