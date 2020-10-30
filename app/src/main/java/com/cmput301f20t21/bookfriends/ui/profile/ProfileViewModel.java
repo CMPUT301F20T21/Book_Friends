@@ -1,5 +1,8 @@
 package com.cmput301f20t21.bookfriends.ui.profile;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -7,8 +10,14 @@ import androidx.lifecycle.ViewModel;
 import com.cmput301f20t21.bookfriends.callbacks.OnFailCallback;
 import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.entities.User;
+import com.cmput301f20t21.bookfriends.services.AuthService;
 import com.cmput301f20t21.bookfriends.services.UserService;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -74,5 +83,33 @@ public class ProfileViewModel extends ViewModel {
             );
             onSuccess.run(u);
         });
+    }
+
+    public void updateCurrentUserEmail(String username, String TAG){
+        //update email authentication
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            user.updateEmail(username)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "User email address updated.");
+                            }
+                        }
+                    });
+
+        }
+    }
+    public void updateFirestoreUser(String inputEmail, String inputPhone){
+        User firebaseUser = AuthService.getInstance().getCurrentUser();
+        if (firebaseUser != null) {
+            String userId = firebaseUser.getUid();
+            FirebaseFirestore.getInstance().collection("users").document(userId)
+                    .update(
+                            "email", inputEmail,
+                            "phone", inputPhone
+                    );
+        }
     }
 }
