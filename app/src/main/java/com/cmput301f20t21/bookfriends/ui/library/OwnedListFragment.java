@@ -23,6 +23,7 @@ import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.ui.add.AddEditActivity;
+import com.cmput301f20t21.bookfriends.ui.request.RequestActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class OwnedListFragment extends Fragment {
     public static final String BOOK_ACTION_KEY = "com.cmput301f20t21.bookfriends.BOOK_ACTION";
+    public static final String VIEW_REQUEST_KEY = "com.cmput301f20t21.bookfriends.VIEW_REQUEST";
 
     private OwnedViewModel vm;
     private RecyclerView recyclerView;
@@ -106,10 +108,10 @@ public class OwnedListFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         // set a temporary adapter
-        recyclerView.setAdapter(new OwnedListAdapter(new ArrayList<>(), this::onItemClick, this::onDeleteBook));
+        recyclerView.setAdapter(new OwnedListAdapter(new ArrayList<>(), this::onItemClick, this::onDeleteBook, this::onViewRequests));
 
         vm.getBooks().observe(getViewLifecycleOwner(), (List<Book> books) -> {
-            mAdapter = new OwnedListAdapter(books, this::onItemClick, this::onDeleteBook);
+            mAdapter = new OwnedListAdapter(books, this::onItemClick, this::onDeleteBook, this::onViewRequests);
             recyclerView.setAdapter(mAdapter);
         });
 
@@ -155,5 +157,15 @@ public class OwnedListFragment extends Fragment {
 
     }
 
+    /**
+     * when user click on view requests of a book
+     * go to request activity
+     * @param bookId is passed to that activity to retrieving information from FireStore
+     */
+    private void onViewRequests(String bookId) {
+        Intent intent = new Intent(this.getActivity(), RequestActivity.class);
+        intent.putExtra(VIEW_REQUEST_KEY, bookId);
+        startActivity(intent);
+    }
 }
 

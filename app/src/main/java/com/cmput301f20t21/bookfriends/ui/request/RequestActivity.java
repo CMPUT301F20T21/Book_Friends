@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.entities.Request;
+import com.cmput301f20t21.bookfriends.ui.library.OwnedListFragment;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -43,7 +44,8 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
 
         // TODO: getting book ID from previous activity
 //        String bookId = "x1z6o0qZbcgGBFezURsS";
-        String bookId = "kEkNn53bBoANMSyPjJDZ"; // temporary book ID
+//        String bookId = "kEkNn53bBoANMSyPjJDZ"; // temporary book ID
+        String bookId = getIntent().getStringExtra(OwnedListFragment.VIEW_REQUEST_KEY);
         displayBookInfo(bookId);
         displayRequest(bookId);
         // set up the back button
