@@ -14,20 +14,6 @@ import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity {
 
-    // saved for later when MainActivity is starting another activity
-//    public enum ActivityRequestCode {
-//
-//        private final int requestCode;
-//
-//        ActivityRequestCode(int requestCode) {
-//            this.requestCode = requestCode;
-//        }
-//
-//        public int getRequestCode() {
-//            return this.requestCode;
-//        }
-//    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

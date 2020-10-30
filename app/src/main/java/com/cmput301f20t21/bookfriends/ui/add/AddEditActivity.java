@@ -2,10 +2,12 @@ package com.cmput301f20t21.bookfriends.ui.add;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,12 +21,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.bumptech.glide.Glide;
 import com.cmput301f20t21.bookfriends.R;
+import com.cmput301f20t21.bookfriends.serializer.UriDeserializer;
+import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
+import com.cmput301f20t21.bookfriends.serializer.UriSerializer;
 import com.cmput301f20t21.bookfriends.ui.library.OwnedListFragment;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class AddEditActivity extends AppCompatActivity {
     private Button scanButton;
@@ -143,13 +149,23 @@ public class AddEditActivity extends AppCompatActivity {
         }
     }
 
-    public void onSuccess() {
+    public void onSuccess(Book book) {
         if (action == BOOK_ACTION.ADD) {
+            // https://stackoverflow.com/a/18463758
+            SharedPreferences sharedPreference = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            SharedPreferences.Editor preferenceEditor = sharedPreference.edit();
+            Gson gson = new GsonBuilder()
+                                .registerTypeAdapter(Uri.class, new UriSerializer())
+                                .create();
+            String json = gson.toJson(book);
+            preferenceEditor.putString(OwnedListFragment.BOOK_OBJECT_KEY, json);
+            preferenceEditor.apply();
             Toast.makeText(this, getString(R.string.add_book_successful), Toast.LENGTH_SHORT).show();
+            setResult(RESULT_OK);
+            finish();
         } else if (action == BOOK_ACTION.EDIT) {
             Toast.makeText(this, getString(R.string.edit_book_successful), Toast.LENGTH_SHORT).show();
         }
-        finish();
     }
 
     public void onFailure(BOOK_ERROR error) {
@@ -166,15 +182,6 @@ public class AddEditActivity extends AppCompatActivity {
         }
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
     }
-
-    // TODO: This is an idea to load image to imageView from cloud storage if needed
-    //       delete this when no longer needed
-    //       also check getImageFromBookId() from AddEditViewModel
-//    public void onGetImageCallback(Uri imageUri) {
-//        if(imageUri != null) {
-//            Glide.with(this).load(imageUri).into(bookImage);
-//        }
-//    }
 
     private void openScanner() {
         // TODO: implement the scanner
