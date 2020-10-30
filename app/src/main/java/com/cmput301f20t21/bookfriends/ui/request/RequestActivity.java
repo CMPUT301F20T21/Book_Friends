@@ -42,9 +42,7 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_all_requests_activity);
 
-        // TODO: getting book ID from previous activity
-//        String bookId = "x1z6o0qZbcgGBFezURsS";
-//        String bookId = "kEkNn53bBoANMSyPjJDZ"; // temporary book ID
+        // getting book ID from previous activity
         String bookId = getIntent().getStringExtra(OwnedListFragment.VIEW_REQUEST_KEY);
         displayBookInfo(bookId);
         displayRequest(bookId);
@@ -89,12 +87,8 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
      */
     public void displayRequest(String bookId) {
         requestViewModel.getRequesters(bookId).observe(this, requesters -> {
-//            requestDataList = new ArrayList<>();
             if (requesters != null) {
-                for (Request request : requesters) {
-                    String requester = request.getRequesterId();
-                    requestDataList.add(request);
-                }
+                requestDataList.addAll(requesters);
                 requestAdapter.notifyDataSetChanged();
             }
         });
