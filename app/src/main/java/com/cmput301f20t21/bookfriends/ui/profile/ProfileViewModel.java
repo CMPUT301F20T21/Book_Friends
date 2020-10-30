@@ -85,7 +85,8 @@ public class ProfileViewModel extends ViewModel {
         });
     }
 
-    public void updateCurrentUserEmail(String username, String TAG){
+    /*public void updateCurrentUserEmail(String username, String TAG){
+
         //update email authentication
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -100,7 +101,7 @@ public class ProfileViewModel extends ViewModel {
                     });
 
         }
-    }
+    }*/
     public void updateFirestoreUser(String inputEmail, String inputPhone){
         User firebaseUser = AuthService.getInstance().getCurrentUser();
         if (firebaseUser != null) {
