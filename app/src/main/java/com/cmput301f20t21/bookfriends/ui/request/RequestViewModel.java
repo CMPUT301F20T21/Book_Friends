@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
+import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 import com.cmput301f20t21.bookfriends.services.BookService;
 import com.cmput301f20t21.bookfriends.services.RequestService;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -108,6 +109,24 @@ public class RequestViewModel extends ViewModel {
             @Override
             public void onSuccess(Void aVoid) {
                 // not sure what to put here xD
+            }
+        });
+    }
+
+    public void acceptRequest(String requesterId) {
+        requestService.accept(requesterId).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+            }
+        });
+    }
+
+    public void removeAllRequest(List<String> ids) {
+        requestService.batchDeny(ids).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
             }
         });
     }

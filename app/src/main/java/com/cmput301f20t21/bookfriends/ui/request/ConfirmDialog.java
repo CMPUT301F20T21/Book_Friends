@@ -14,8 +14,18 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cmput301f20t21.bookfriends.R;
 
+import java.util.List;
+
 public class ConfirmDialog extends AppCompatDialogFragment {
     private ConfirmDialogListener confirmDialogListener;
+    private String requesterId;
+    private List<String> idsToRemove;
+
+    public ConfirmDialog(String id, List<String> idsToRemove) {
+        this.requesterId = id;
+        this.idsToRemove = idsToRemove;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -33,7 +43,7 @@ public class ConfirmDialog extends AppCompatDialogFragment {
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        confirmDialogListener.setConfirm();
+                        confirmDialogListener.setConfirm(requesterId, idsToRemove);
                     }
                 });
         return builder.create();
@@ -52,6 +62,6 @@ public class ConfirmDialog extends AppCompatDialogFragment {
     }
 
     public interface ConfirmDialogListener {
-        void setConfirm();
+        void setConfirm(String id, List<String> idsToRemove);
     }
 }

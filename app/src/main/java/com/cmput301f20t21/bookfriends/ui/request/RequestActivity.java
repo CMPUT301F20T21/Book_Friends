@@ -21,6 +21,7 @@ import com.cmput301f20t21.bookfriends.entities.Request;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.List;
 
 public class RequestActivity extends AppCompatActivity implements ConfirmDialog.ConfirmDialogListener {
     private RecyclerView recyclerView;
@@ -148,7 +149,15 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
      * @param position that we accept the item
      */
     public void openDialog(int position) {
-        ConfirmDialog confirmDialog = new ConfirmDialog();
+        String acceptedId = requestDataList.get(position).getId();
+        List<String> idsToRemove = new ArrayList<>();
+        for (int i = 0; i < requestDataList.size();i++) {
+            idsToRemove.add(requestDataList.get(i).getId());
+        }
+        if (idsToRemove.contains(acceptedId)) {
+            idsToRemove.remove(acceptedId);
+        }
+        ConfirmDialog confirmDialog = new ConfirmDialog(acceptedId, idsToRemove);
         confirmDialog.show(getSupportFragmentManager(), "Confirm Dialog");
     }
 
@@ -157,9 +166,11 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
      * remove all other requests
      */
     @Override
-    public void setConfirm() {
+    public void setConfirm(String id, List<String> idsToRemove) {
+        requestViewModel.acceptRequest(id);
         int size = requestDataList.size();
         if (size > 0) {
+            requestViewModel.removeAllRequest(idsToRemove);
             requestDataList.subList(0, size).clear();
             requestAdapter.notifyItemRangeRemoved(0, size);
         }

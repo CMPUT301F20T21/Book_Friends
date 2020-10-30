@@ -30,12 +30,12 @@ public class RequestService {
     }
 
     /**
-     * get request by bookId
+     * get request by bookId, only for books that are opened
      * @param bookId
      * @return Task QuerySnapshot for request
      */
     public Task<QuerySnapshot> getByBookId(String bookId) {
-        return requestCollection.whereEqualTo("bookId", bookId).get();
+        return requestCollection.whereEqualTo("bookId", bookId).whereEqualTo("status", "OPENED").get();
     }
 
     public Task<QuerySnapshot> getBorrowedRequestByUsername(String username) {
