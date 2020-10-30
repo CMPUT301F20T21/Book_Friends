@@ -12,6 +12,7 @@ import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.services.BookService;
 import com.cmput301f20t21.bookfriends.services.RequestService;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -100,5 +101,14 @@ public class RequestViewModel extends ViewModel {
             fetchRequesters(bookId);
         }
         return this.requesters;
+    }
+
+    public void removeRequest(String requesterId) {
+        requestService.deny(requesterId).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                // not sure what to put here xD
+            }
+        });
     }
 }

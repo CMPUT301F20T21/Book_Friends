@@ -135,7 +135,8 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
      * @param position that needs removing
      */
     public void removeItem(int position) {
-//        String requester = requestDataList.get(position).getRequester();
+        Request request = requestDataList.get(position);
+        requestViewModel.removeRequest(request.getId());
         requestDataList.remove(position);
         requestAdapter.notifyItemRemoved(position);
     }
