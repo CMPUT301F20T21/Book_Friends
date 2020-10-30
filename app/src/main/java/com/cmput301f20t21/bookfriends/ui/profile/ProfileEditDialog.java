@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.User;
@@ -43,6 +44,8 @@ public class ProfileEditDialog extends DialogFragment {
         cancel = view.findViewById(R.id.text_cancel);
         confirm = view.findViewById(R.id.text_confirm);
 
+        ProfileViewModel profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+
         //set value from the fragment
         Bundle argument  = getArguments();
         if (argument != null) {
@@ -71,27 +74,11 @@ public class ProfileEditDialog extends DialogFragment {
                     listener.onEdit(inputEmail, inputPhone);
                     getDialog().dismiss();
                 }
+
                 //update email authentication
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                user.updateEmail(inputEmail)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d(TAG, "User email address updated.");
-                                }
-                            }
-                        });
+                profileViewModel.updateCurrentUserEmail(inputEmail, TAG);
                 //update field "email" and "phone"
-                User firebaseUser = AuthService.getInstance().getCurrentUser();
-                if (firebaseUser != null) {
-                    String userId = firebaseUser.getUid();
-                    FirebaseFirestore.getInstance().collection("users").document(userId)
-                            .update(
-                                    "email", inputEmail,
-                                    "phone", inputPhone
-                            );
-                }
+                profileViewModel.updateFirestoreUser(inputEmail, inputPhone);
 
             }
         });
