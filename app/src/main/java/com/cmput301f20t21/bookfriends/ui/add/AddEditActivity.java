@@ -24,6 +24,7 @@ import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.ui.library.OwnedListFragment;
+import com.cmput301f20t21.bookfriends.ui.scanner.ScannerActivity;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class AddEditActivity extends AppCompatActivity {
@@ -178,6 +179,8 @@ public class AddEditActivity extends AppCompatActivity {
 
     private void openScanner() {
         // TODO: implement the scanner
+        Intent intent = new Intent(this, ScannerActivity.class);
+        startActivity(intent);
     }
 
     private void uploadImg() {
