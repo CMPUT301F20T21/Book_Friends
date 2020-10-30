@@ -2,10 +2,12 @@ package com.cmput301f20t21.bookfriends.ui.add;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +22,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.cmput301f20t21.bookfriends.R;
+import com.cmput301f20t21.bookfriends.datatransfer.BookDataTransferHelper;
+import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.ui.library.OwnedListFragment;
@@ -37,6 +41,7 @@ public class AddEditActivity extends AppCompatActivity {
     private BOOK_ACTION action;
 
     private AddEditViewModel model;
+    private Book editBook; // book currently being edited
 
     private static final int IMAGE_PICK_CODE = 1000;
     private static final int PERMISSION_CODE = 1001;
@@ -85,6 +90,12 @@ public class AddEditActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         action = (BOOK_ACTION) intent.getSerializableExtra(OwnedListFragment.BOOK_ACTION_KEY);
+        if (action == BOOK_ACTION.EDIT) {
+            editBook = BookDataTransferHelper.receive(getApplicationContext());
+            if (editBook != null) {
+                loadBookInformation();
+            }
+        }
     }
 
     @Override
@@ -137,17 +148,19 @@ public class AddEditActivity extends AppCompatActivity {
                         this::onSuccess,
                         this::onFailure
                 );
+            } else if (action == BOOK_ACTION.EDIT) {
+                model.handleEditBook(editBook, isbn, title, author, description, bookImageUri,
+                        this::onSuccess,
+                        this::onFailure
+                );
             }
 
         }
     }
 
-    public void onSuccess() {
-        if (action == BOOK_ACTION.ADD) {
-            Toast.makeText(this, getString(R.string.add_book_successful), Toast.LENGTH_SHORT).show();
-        } else if (action == BOOK_ACTION.EDIT) {
-            Toast.makeText(this, getString(R.string.edit_book_successful), Toast.LENGTH_SHORT).show();
-        }
+    public void onSuccess(Book book) {
+        BookDataTransferHelper.transfer(book, getApplicationContext());
+        setResult(RESULT_OK);
         finish();
     }
 
@@ -160,28 +173,32 @@ public class AddEditActivity extends AppCompatActivity {
             case FAIL_TO_ADD_IMAGE:
                 errorMessage = getString(R.string.fail_to_add_image);
                 break;
+            case FAIL_TO_EDIT_BOOK:
+                errorMessage = getString(R.string.operation_failed);
             default:
                 errorMessage = getString(R.string.unexpected_error);
         }
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
     }
 
-    // TODO: This is an idea to load image to imageView from cloud storage if needed
-    //       delete this when no longer needed
-    //       also check getImageFromBookId() from AddEditViewModel
-//    public void onGetImageCallback(Uri imageUri) {
-//        if(imageUri != null) {
-//            Glide.with(this).load(imageUri).into(bookImage);
-//        }
-//    }
+    private void loadBookInformation() {
+        isbnLayout.getEditText().setText(editBook.getIsbn());
+        titleLayout.getEditText().setText(editBook.getTitle());
+        authorLayout.getEditText().setText(editBook.getAuthor());
+        descriptionLayout.getEditText().setText(editBook.getDescription());
+        Uri imageUri = editBook.getImageUri();
+        if (imageUri != null) {
+            Glide.with(this).load(imageUri).into(bookImage);
+            bookImageUri = imageUri;
+        }
+    }
 
     private void openScanner() {
         // TODO: implement the scanner
     }
 
     private void uploadImg() {
-        // TODO: implement the feature that allows user to upload cover image
-        Intent intent = new Intent(Intent.ACTION_PICK);
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.setType("image/*");
         startActivityForResult(intent, IMAGE_PICK_CODE);
     }
@@ -220,8 +237,13 @@ public class AddEditActivity extends AppCompatActivity {
             // set image to image view
             if (data != null) {
                 bookImageUri = data.getData();
+                // needed to make sure permission is not lost when switching activity
+                getContentResolver().takePersistableUriPermission(bookImageUri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                );
                 bookImage.setImageURI(bookImageUri);
             }
         }
     }
+
 }

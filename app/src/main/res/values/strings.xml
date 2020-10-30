@@ -67,4 +67,7 @@
     <string name="book_status">status</string>
     <string name="fail_to_get_books">Failed to get a list of books from server</string>
     <string name="ask_to_borrow">asked to borrow the book</string>
+    <string name="delete_book_successful">Book Successfully Deleted</string>
+    <string name="fail_to_delete_book">Book Failed to delete</string>
+    <string name="fail_to_edit_book">Failed to edit book</string>
 </resources>
