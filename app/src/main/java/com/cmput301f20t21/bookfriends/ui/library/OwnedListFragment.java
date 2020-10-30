@@ -18,14 +18,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
-import com.cmput301f20t21.bookfriends.serializer.UriDeserializer;
+import com.cmput301f20t21.bookfriends.datatransfer.BookDataTransferHelper;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.ui.add.AddEditActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +32,12 @@ import static android.app.Activity.RESULT_OK;
 
 public class OwnedListFragment extends Fragment {
     public static final String BOOK_ACTION_KEY = "com.cmput301f20t21.bookfriends.BOOK_ACTION";
-    public static final String BOOK_OBJECT_KEY = "com.cmput301f20t21.bookfriends.BOOK_OBJECT";
 
     private OwnedViewModel vm;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    private int editBookIndex = -1;
 
     @Nullable
     @Override
@@ -50,7 +48,7 @@ public class OwnedListFragment extends Fragment {
         final FloatingActionButton addBookButton = root.findViewById(R.id.add_button);
 
         addBookButton.setOnClickListener(
-                view -> openAddEditActivity()
+                view -> openAddEditActivity(null)
         );
 
         return root;
@@ -61,16 +59,22 @@ public class OwnedListFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == BOOK_ACTION.ADD.getCode()) {
-                SharedPreferences sharedPreference =
-                        PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-                Gson gson = new GsonBuilder()
-                                .registerTypeAdapter(Uri.class, new UriDeserializer())
-                                .create();
-                String json = sharedPreference.getString(BOOK_OBJECT_KEY, "");
-                Book book = gson.fromJson(json, Book.class);
+                Book book = BookDataTransferHelper.receive(getActivity().getApplicationContext());
                 List<Book> books = vm.getBooks().getValue();
-                books.add(book);
-                mAdapter.notifyItemInserted(books.size() - 1);
+                if (books != null) {
+                    books.add(book);
+                    mAdapter.notifyItemInserted(books.size() - 1);
+                }
+                Toast.makeText(getActivity(), getString(R.string.add_book_successful), Toast.LENGTH_SHORT).show();
+            } else if (requestCode == BOOK_ACTION.EDIT.getCode()) {
+                Book book = BookDataTransferHelper.receive(getActivity().getApplicationContext());
+                List<Book> books = vm.getBooks().getValue();
+                if (books != null && editBookIndex >= 0) {
+                    books.set(editBookIndex, book);
+                    mAdapter.notifyItemChanged(editBookIndex);
+                    editBookIndex = -1;
+                }
+                Toast.makeText(getActivity(), getString(R.string.edit_book_successful), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -78,11 +82,16 @@ public class OwnedListFragment extends Fragment {
     /**
      * function allows user to jump into the add/edit screen when click on the floating button
      */
-    private void openAddEditActivity() {
-        // TODO: Change the enum when calling the activity for editing
+    private void openAddEditActivity(@Nullable Book book) {
         Intent intent = new Intent(this.getActivity(), AddEditActivity.class);
-        intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.ADD);
-        startActivityForResult(intent, BOOK_ACTION.ADD.getCode());
+        if (book == null) {
+            intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.ADD);
+            startActivityForResult(intent, BOOK_ACTION.ADD.getCode());
+        } else {
+            intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.EDIT);
+            BookDataTransferHelper.transfer(book, getActivity().getApplicationContext());
+            startActivityForResult(intent, BOOK_ACTION.EDIT.getCode());
+        }
     }
 
     @Override
@@ -97,10 +106,10 @@ public class OwnedListFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         // set a temporary adapter
-        recyclerView.setAdapter(new OwnedListAdapter(new ArrayList<>(), this::onDeleteBook));
+        recyclerView.setAdapter(new OwnedListAdapter(new ArrayList<>(), this::onItemClick, this::onDeleteBook));
 
         vm.getBooks().observe(getViewLifecycleOwner(), (List<Book> books) -> {
-            mAdapter = new OwnedListAdapter(books, this::onDeleteBook);
+            mAdapter = new OwnedListAdapter(books, this::onItemClick, this::onDeleteBook);
             recyclerView.setAdapter(mAdapter);
         });
 
@@ -115,6 +124,17 @@ public class OwnedListFragment extends Fragment {
                 Toast.makeText(getActivity(), getString(R.string.fail_to_get_books), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void onItemClick(int position) {
+        if (position != RecyclerView.NO_POSITION) {
+            List<Book> books = vm.getBooks().getValue();
+            if (books != null) {
+                Book book = books.get(position);
+                editBookIndex = position;
+                openAddEditActivity(book);
+            }
+        }
     }
 
     public void onDeleteBook(Book book) {

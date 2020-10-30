@@ -20,18 +20,25 @@ public class OwnedListAdapter extends BaseBookListAdapter {
     public interface onDeleteListener {
         void run(Book book);
     }
-    private onDeleteListener deleteListener;
 
-    public OwnedListAdapter(List<Book> books, onDeleteListener onDeleteListener) {
+    public interface onItemClickListener {
+        void run(int position);
+    }
+
+    private onDeleteListener deleteListener;
+    private onItemClickListener itemClickListener;
+
+    public OwnedListAdapter(List<Book> books, onItemClickListener itemClickListener, onDeleteListener deleteListener) {
         super(books);
-        deleteListener = onDeleteListener;
+        this.itemClickListener = itemClickListener;
+        this.deleteListener = deleteListener;
     }
 
     @NonNull
     @Override
     public OwnedListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_list, parent, false);
-        return new OwnedListAdapter.ViewHolder(itemView, deleteListener);
+        return new OwnedListAdapter.ViewHolder(itemView, itemClickListener, deleteListener);
     }
 
 
@@ -39,10 +46,11 @@ public class OwnedListAdapter extends BaseBookListAdapter {
         final ImageButton moreBtn;
         final onDeleteListener deleteListener;
 
-        public ViewHolder(View v, onDeleteListener deleteListener) {
+        public ViewHolder(View v, onItemClickListener itemClickListener, onDeleteListener deleteListener) {
             super(v);
             moreBtn = v.findViewById(R.id.item_book_more_btn);
             moreBtn.setOnClickListener(this::showPopup);
+            v.setOnClickListener(view -> itemClickListener.run(getAdapterPosition()));
             this.deleteListener = deleteListener;
         }
 
@@ -52,10 +60,10 @@ public class OwnedListAdapter extends BaseBookListAdapter {
             inflater.inflate(R.menu.library_owned_book_item_menu, popup.getMenu());
             popup.setGravity(Gravity.END);
             popup.show();
-            popup.setOnMenuItemClickListener(this::onItemDelete);
+            popup.setOnMenuItemClickListener(this::onMenuItemClick);
         }
 
-        private boolean onItemDelete(MenuItem menuItem) {
+        private boolean onMenuItemClick(MenuItem menuItem) {
             int itemId = menuItem.getItemId();
             if (itemId == R.id.library_owned_book_menu_delete) {
                 deleteListener.run(book);

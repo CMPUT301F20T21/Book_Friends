@@ -4,7 +4,7 @@
  * github URL: https://github.com/CMPUT301F20T21/Book_Friends
  */
 
-package com.cmput301f20t21.bookfriends.serializer;
+package com.cmput301f20t21.bookfriends.datatransfer;
 
 import android.net.Uri;
 
