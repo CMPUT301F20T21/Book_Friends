@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cmput301f20t21.bookfriends">
     <!-- Adding Read External Storage Permission -->
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -17,6 +18,12 @@
         <activity
             android:name="com.cmput301f20t21.bookfriends.MainActivity"
             android:label="@string/app_name">
+        </activity>
+        <activity
+            android:name="com.cmput301f20t21.bookfriends.ui.scanner.ScannerAddActivity"
+            android:label="@string/title_scanner_add"
+            android:parentActivityName=".ui.add.AddEditActivity"
+            >
         </activity>
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.profile.ProfileViewUserActivity"
