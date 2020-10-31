@@ -4,6 +4,7 @@
     <string name="tab_title_my_library">My Books</string>
     <string name="tab_title_borrowed_library">Borrowed Books</string>
     <string name="title_borrow">Borrow</string>
+    <string name="title_scanner_add">Scan to Add</string>
     <string name="title_profile">Me</string>
     <string name="title_notifications">Notifications</string>
     <string name="login_title">Book Friends</string>
@@ -64,4 +65,5 @@
     <string name="delete_book_successful">Book Successfully Deleted</string>
     <string name="fail_to_delete_book">Book Failed to delete</string>
     <string name="fail_to_edit_book">Failed to edit book</string>
+    <string name="scanner_scanning">Scanning...</string>
 </resources>
