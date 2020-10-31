@@ -19,9 +19,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cmput301f20t21.bookfriends.R;
 
 public class BrowseFragment extends Fragment {
-    private BrowseViewModel mViewModel;
+    private BrowseViewModel bookViewModel;
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.Adapter bookAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private SearchView searchView;
     private FragmentContainerView searchContainer;
@@ -33,7 +33,7 @@ public class BrowseFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                                  @Nullable Bundle savedInstanceState) {
-        mViewModel = new ViewModelProvider(this).get(BrowseViewModel.class);
+        bookViewModel = new ViewModelProvider(this).get(BrowseViewModel.class);
         inflateSearchedList();
         View view = inflater.inflate(R.layout.fragment_browse, container, false);
         return view;
@@ -49,8 +49,8 @@ public class BrowseFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         // specify an adapter (see also next example)
-        mAdapter = new SearchedBookListAdapter(mViewModel.getBooks());
-        recyclerView.setAdapter(mAdapter);
+        bookAdapter = new SearchedBookListAdapter(bookViewModel.getBooks());
+        recyclerView.setAdapter(bookAdapter);
     }
 
     private void inflateSearchedList() {

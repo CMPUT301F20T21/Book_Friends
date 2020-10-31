@@ -1,17 +1,13 @@
 package com.cmput301f20t21.bookfriends.ui.browse;
-
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
-
 import com.cmput301f20t21.bookfriends.ui.component.BaseBookListAdapter;
 
 import java.util.ArrayList;

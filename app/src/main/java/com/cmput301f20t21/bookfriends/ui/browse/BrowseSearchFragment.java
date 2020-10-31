@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cmput301f20t21.bookfriends.R;
 
 public class BrowseSearchFragment extends Fragment {
-    private BrowseViewModel vm;
+    private BrowseViewModel browseSearch;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -30,7 +30,7 @@ public class BrowseSearchFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        vm = new ViewModelProvider(this).get(BrowseViewModel.class);
+        browseSearch = new ViewModelProvider(this).get(BrowseViewModel.class);
         setHasOptionsMenu(true);
         return inflater.inflate(R.layout.list_search_book, container, false);
     }
