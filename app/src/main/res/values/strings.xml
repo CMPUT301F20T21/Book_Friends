@@ -62,5 +62,8 @@
     <string name="fail_to_add_image">Fail to add book image, book is added without image</string>
     <string name="unexpected_error">Something unexpected happened, please try again</string>
     <string name="fail_to_get_books">Failed to get a list of books from server</string>
+    <string name="delete_book_successful">Book Successfully Deleted</string>
+    <string name="fail_to_delete_book">Book Failed to delete</string>
+    <string name="fail_to_edit_book">Failed to edit book</string>
     <string name="scanner_scanning">Scanning...</string>
 </resources>
