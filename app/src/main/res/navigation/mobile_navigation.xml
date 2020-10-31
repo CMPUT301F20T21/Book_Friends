@@ -9,7 +9,7 @@
         android:id="@+id/navigation_library"
         android:name="com.cmput301f20t21.bookfriends.ui.library.LibraryFragment"
         android:label="@string/title_library"
-        tools:layout="@layout/fragment_library" />
+        tools:layout="@layout/fragment_tab" />
 
     <fragment
         android:id="@+id/navigation_borrow"

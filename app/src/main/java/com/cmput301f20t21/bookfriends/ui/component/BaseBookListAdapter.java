@@ -41,7 +41,6 @@ public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapte
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        // TODO flesh out book view card
         final TextView title;
         final TextView author;
         final TextView isbn;

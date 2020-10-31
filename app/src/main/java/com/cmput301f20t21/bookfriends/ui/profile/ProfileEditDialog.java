@@ -2,6 +2,7 @@ package com.cmput301f20t21.bookfriends.ui.profile;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,18 +14,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.cmput301f20t21.bookfriends.R;
+import com.cmput301f20t21.bookfriends.entities.User;
+import com.cmput301f20t21.bookfriends.services.AuthService;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.jetbrains.annotations.NotNull;
 
 public class ProfileEditDialog extends DialogFragment {
+    private static final String TAG = "UpDateTag";
     private EditText editEmail;
     private EditText editPhone;
     private TextView cancel;
     private TextView confirm;
-    private TextView existEmail;
-    private TextView existPhone;
     private EditListener listener;
 
     @NotNull
@@ -35,9 +43,17 @@ public class ProfileEditDialog extends DialogFragment {
         editPhone = view.findViewById(R.id.edit_phone);
         cancel = view.findViewById(R.id.text_cancel);
         confirm = view.findViewById(R.id.text_confirm);
-        existEmail = view.findViewById(R.id.email);
-        existPhone = view.findViewById(R.id.phone);
 
+        ProfileViewModel profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+
+        //set value from the fragment
+        Bundle argument  = getArguments();
+        if (argument != null) {
+            editEmail.setText(argument.getString("email"));
+            editPhone.setText(argument.getString("phone"));
+        }
+
+        //if cancel is clicked on the dialog
         getDialog().getWindow().setBackgroundDrawableResource(R.drawable.button_round_corner);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,6 +61,8 @@ public class ProfileEditDialog extends DialogFragment {
                 getDialog().dismiss();
             }
         });
+
+        //if confirm is clicked on the dialog, pass value
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,6 +74,12 @@ public class ProfileEditDialog extends DialogFragment {
                     listener.onEdit(inputEmail, inputPhone);
                     getDialog().dismiss();
                 }
+
+                //update email authentication
+                profileViewModel.updateCurrentUserEmail(inputEmail, TAG);
+                //update field "email"
+                profileViewModel.updateFirestoreUserEmail(inputEmail, TAG);
+
             }
         });
         return view;
