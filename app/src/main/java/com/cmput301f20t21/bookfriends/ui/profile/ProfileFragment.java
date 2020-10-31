@@ -75,7 +75,7 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.EditL
             name.setText(username);
             emailAddress.setText(email);
 
-            // search for field "phone"
+            /*search for field "phone"  --- delete
             final DocumentReference docReference = FirebaseFirestore.getInstance().collection("users").document(userId);
             docReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
@@ -99,7 +99,7 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.EditL
                         }
                     }
                 }
-            });
+            });*/
         }
 
 
