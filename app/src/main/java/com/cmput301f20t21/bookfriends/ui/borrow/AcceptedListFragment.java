@@ -1,4 +1,5 @@
-package com.cmput301f20t21.bookfriends.ui.library;
+package com.cmput301f20t21.bookfriends.ui.borrow;
+
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,29 +14,26 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
-import com.cmput301f20t21.bookfriends.entities.Book;
 
-import java.util.ArrayList;
-import java.util.List;
 
-public class BorrowedListFragment extends Fragment {
-    private BorrowedViewModel vm;
+public class AcceptedListFragment extends Fragment {
+    private AcceptedListViewModel mViewModel;
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+    private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        vm = new ViewModelProvider(this).get(BorrowedViewModel.class);
-        return inflater.inflate(R.layout.borrowed_list_book, container, false);
+        mViewModel = new ViewModelProvider(this).get(AcceptedListViewModel.class);
+        return inflater.inflate(R.layout.accepted_list_book, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        recyclerView = (RecyclerView) view.findViewById(R.id.borrowed_recycler_list_book);
+        recyclerView = (RecyclerView) view.findViewById(R.id.accept_recycler_view);
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         recyclerView.setHasFixedSize(true);
@@ -45,16 +43,8 @@ public class BorrowedListFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         // specify an adapter (see also next example)
-        vm.getBooks().observe(getViewLifecycleOwner(), (List<Book> books) -> {
-            adapter = new BorrowedListAdapter(books);
-            recyclerView.setAdapter(adapter);
-        });
-
-        vm.getUpdatedPosition().observe(getViewLifecycleOwner(), (Integer pos) -> {
-            if (adapter != null) {
-                adapter.notifyItemChanged(pos);
-            }
-        });
+        mAdapter = new AcceptedListAdapter(mViewModel.getBooks());
+        recyclerView.setAdapter(mAdapter);
     }
 }
 

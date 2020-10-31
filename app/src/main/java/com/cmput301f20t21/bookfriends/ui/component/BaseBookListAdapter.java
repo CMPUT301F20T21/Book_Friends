@@ -1,4 +1,4 @@
-package com.cmput301f20t21.bookfriends.ui.library;
+package com.cmput301f20t21.bookfriends.ui.component;
 
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -41,7 +41,6 @@ public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapte
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        // TODO flesh out book view card
         final TextView title;
         final TextView author;
         final TextView isbn;
