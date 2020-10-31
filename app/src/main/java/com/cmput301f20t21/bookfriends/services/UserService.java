@@ -1,7 +1,6 @@
 package com.cmput301f20t21.bookfriends.services;
 
-import android.util.Log;
-
+import com.cmput301f20t21.bookfriends.entities.User;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -48,5 +47,14 @@ public class UserService {
                 .whereGreaterThanOrEqualTo("username", username)
                 .whereLessThan("username", username.concat("~")) // ascii ~ is way larger than 'z'
                 .limit(10).get();
+    }
+
+    public Task<Void> updateUser(String email){
+        User firebaseUser = AuthService.getInstance().getCurrentUser();
+        if (firebaseUser != null) {
+            String userId = firebaseUser.getUid();
+            return userCollection.document(userId).update("email", email);
+        }
+        return null;
     }
 }
