@@ -69,7 +69,7 @@ public class OwnedViewModel extends ViewModel {
         );
     }
 
-    public void fetchBooks() {
+    private void fetchBooks() {
         String currentUsername = authService.getCurrentUser().getUsername();
         bookService.getBooksOfOwnerId(currentUsername).addOnCompleteListener(
                 getBookTask -> {

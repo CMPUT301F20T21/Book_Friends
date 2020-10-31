@@ -1,10 +1,7 @@
 package com.cmput301f20t21.bookfriends.ui.library;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -152,8 +149,8 @@ public class OwnedListFragment extends Fragment {
         List<Book> books = vm.getBooks().getValue();
         if (books != null) {
             books.remove(book);
-            mAdapter.notifyDataSetChanged();
         }
+        mAdapter.notifyDataSetChanged();
 
     }
 
