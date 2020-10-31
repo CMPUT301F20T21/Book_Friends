@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -85,13 +86,10 @@ public class ProfileViewModel extends ViewModel {
         });
     }
 
-    /*public void updateCurrentUserEmail(String username, String TAG){
-
+    public void updateCurrentUserEmail(String inputEmail, String TAG){
         //update email authentication
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            user.updateEmail(username)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+        Task<Void> updateEmail = AuthService.getInstance().updateEmail(inputEmail);
+        updateEmail.addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
@@ -99,18 +97,19 @@ public class ProfileViewModel extends ViewModel {
                             }
                         }
                     });
+    }
 
-        }
-    }*/
-    public void updateFirestoreUser(String inputEmail, String inputPhone){
-        User firebaseUser = AuthService.getInstance().getCurrentUser();
-        if (firebaseUser != null) {
-            String userId = firebaseUser.getUid();
-            FirebaseFirestore.getInstance().collection("users").document(userId)
-                    .update(
-                            "email", inputEmail,
-                            "phone", inputPhone
-                    );
-        }
+    public void updateFirestoreUser(String inputEmail, String TAG){
+        //update "email" field
+        Task<Void> updateUser = userService.updateUser(inputEmail);
+        updateUser.addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "User email address updated.");
+                }
+            }
+        });
+
     }
 }
