@@ -77,7 +77,7 @@ public class ScannerBaseActivity extends AppCompatActivity {
         surfaceView = findViewById(R.id.scanner_preview_surface);
         isbnText = findViewById(R.id.scanner_isbn_result_text);
 
-        isbnText.setText("Scanning...");
+        isbnText.setText(R.string.scanner_scanning);
 
         barcodeDetector = new BarcodeDetector.Builder(getApplicationContext()).setBarcodeFormats(Barcode.ALL_FORMATS).build();
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
