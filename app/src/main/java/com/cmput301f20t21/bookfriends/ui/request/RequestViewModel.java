@@ -38,15 +38,9 @@ public class RequestViewModel extends ViewModel {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
-                    String author = (String) document.get("author");
-                    String description = (String) document.get("description");
                     String imageName = (String) document.get("imageName");
-                    String isbn = (String) document.get("isbn");
-                    String owner = (String) document.get("owner");
-                    String status = (String) document.get("status");
-                    String title = (String) document.get("title");
                     bookService.getImage(imageName).addOnSuccessListener(uri -> imageUri.setValue(uri));
-                    book.setValue(new Book(bookId, isbn, title, author, description, owner, BOOK_STATUS.valueOf(status)));
+                    book.setValue(bookService.getBookFromDocument(document));
                 }
             }
         });
