@@ -101,7 +101,7 @@ public class ProfileViewModel extends ViewModel {
 
     public void updateFirestoreUserEmail(String inputEmail, String TAG){
         //update "email" field
-        Task<Void> updateUser = userService.updateUser(inputEmail);
+        Task<Void> updateUser = userService.updateUserEmail(inputEmail);
         updateUser.addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
