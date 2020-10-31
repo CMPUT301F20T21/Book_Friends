@@ -78,7 +78,7 @@ public class ProfileEditDialog extends DialogFragment {
                 //update email authentication
                 profileViewModel.updateCurrentUserEmail(inputEmail, TAG);
                 //update field "email"
-                profileViewModel.updateFirestoreUser(inputEmail, TAG);
+                profileViewModel.updateFirestoreUserEmail(inputEmail, TAG);
 
             }
         });
