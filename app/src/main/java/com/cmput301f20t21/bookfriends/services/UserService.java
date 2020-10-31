@@ -49,7 +49,7 @@ public class UserService {
                 .limit(10).get();
     }
 
-    public Task<Void> updateUser(String email){
+    public Task<Void> updateUserEmail(String email){
         User firebaseUser = AuthService.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             String userId = firebaseUser.getUid();
