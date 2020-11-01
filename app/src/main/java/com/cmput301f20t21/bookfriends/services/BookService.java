@@ -55,8 +55,22 @@ public class BookService {
         return bookCollection.document(bookId).update(data);
     }
 
+    public Task<Void> editBook(String bookId, String isbn, String title, String author, String description) {
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("isbn", isbn);
+        data.put("title", title);
+        data.put("author", author);
+        data.put("description", description);
+        return bookCollection.document(bookId).update(data);
+    }
+
     public Task<Void> delete(String id) {
         return bookCollection.document(id).delete();
+    }
+
+    public Task<Void> deleteImage(String bookId) {
+        StorageReference fileReference = imageStorageReference.child(bookId + "cover");
+        return fileReference.delete();
     }
 
     public Book getBookFromDocument(DocumentSnapshot document) {

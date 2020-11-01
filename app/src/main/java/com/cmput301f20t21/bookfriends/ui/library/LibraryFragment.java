@@ -1,8 +1,5 @@
 package com.cmput301f20t21.bookfriends.ui.library;
 
-import androidx.lifecycle.ViewModelProvider;
-
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,9 +14,6 @@ import android.view.ViewGroup;
 import com.cmput301f20t21.bookfriends.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
-import com.cmput301f20t21.bookfriends.ui.add.AddEditActivity;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class LibraryFragment extends Fragment {
 
@@ -34,7 +28,7 @@ public class LibraryFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_library, container, false);
+        return inflater.inflate(R.layout.fragment_tab, container, false);
     }
 
     @Override
@@ -46,8 +40,8 @@ public class LibraryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         tabsAdapter = new LibraryTabCollectionAdapter(this);
 
-        viewPager = view.findViewById(R.id.viewpager2_library);
-        tabLayout = view.findViewById(R.id.tab_layout_library);
+        viewPager = view.findViewById(R.id.viewpager_borrow);
+        tabLayout = view.findViewById(R.id.tab_layout);
 
         viewPager.setAdapter(tabsAdapter);
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {

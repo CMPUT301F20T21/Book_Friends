@@ -20,6 +20,7 @@ public class AuthService {
         return instance;
     }
 
+
     public User getCurrentUser() {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         return new User(
@@ -42,5 +43,13 @@ public class AuthService {
 
     public void signOut() {
         mAuth.signOut();
+    }
+
+    public Task<Void> updateEmail(String email) {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            return user.updateEmail(email);
+        }
+        return null;
     }
 }

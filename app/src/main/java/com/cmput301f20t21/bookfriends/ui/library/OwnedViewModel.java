@@ -1,9 +1,13 @@
 package com.cmput301f20t21.bookfriends.ui.library;
 
+import android.net.Uri;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.cmput301f20t21.bookfriends.callbacks.OnFailCallback;
+import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.services.AuthService;
@@ -46,6 +50,25 @@ public class OwnedViewModel extends ViewModel {
         return errorMessageObserver;
     }
 
+    public void deleteBook(Book book, OnSuccessCallbackWithMessage<Book> successCallback, OnFailCallback failCallback) {
+        bookService.delete(book.getId()).addOnCompleteListener(
+                deleteBookTask -> {
+                    if (deleteBookTask.isSuccessful()) {
+                        Uri imageUri = book.getImageUri();
+                        if (imageUri != null) {
+                            bookService.deleteImage(book.getId()).addOnCompleteListener(
+                                    deleteImageTask -> successCallback.run(book)
+                            );
+                        } else {
+                            successCallback.run(book);
+                        }
+                    } else {
+                        failCallback.run();
+                    }
+                }
+        );
+    }
+
     private void fetchBooks() {
         String currentUsername = authService.getCurrentUser().getUsername();
         bookService.getBooksOfOwnerId(currentUsername).addOnCompleteListener(
@@ -74,5 +97,5 @@ public class OwnedViewModel extends ViewModel {
                 }
         );
     }
-  
+
 }
