@@ -33,7 +33,7 @@ public class ConfirmDialog extends AppCompatDialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.confirm_dialog, null);
         builder.setView(v)
-                .setTitle("Accept this request?")
+                .setTitle(getString(R.string.accept_this_request))
                 .setNegativeButton(getString(R.string.edit_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
