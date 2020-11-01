@@ -58,7 +58,7 @@ public class BrowseFragment extends Fragment {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         searchedBookListFragment = new BrowseSearchFragment();
         fragmentTransaction
-            .add(R.id.browse_search_list_container_fragment, searchedBookListFragment)
+            .add(R.id.browse_search_list_container_fragment,searchedBookListFragment)
             .commit();
     }
 }

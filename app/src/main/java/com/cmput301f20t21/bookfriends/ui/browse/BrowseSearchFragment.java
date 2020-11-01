@@ -32,24 +32,18 @@ public class BrowseSearchFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         browseSearch = new ViewModelProvider(this).get(BrowseViewModel.class);
         setHasOptionsMenu(true);
-        return inflater.inflate(R.layout.list_search_book, container, false);
+        // set the page with original book list for now
+        return inflater.inflate(R.layout.fragment_browse, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        recyclerView = (RecyclerView) view.findViewById(R.id.search_book_recycler);
-        recyclerView.setHasFixedSize(false);
-
-        layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
-
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.browse_search_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
-
         searchContainer = getActivity().findViewById(R.id.browse_search_list_container_fragment);
         searchView = (SearchView) menu.findItem(R.id.book_search_bar).getActionView();
         // show or hide the searched user list fragment (container)
@@ -60,8 +54,5 @@ public class BrowseSearchFragment extends Fragment {
                 searchContainer.setVisibility(View.GONE);
             }
         });
-
-        // whenever the input update, let's search users
-
     }
 }
