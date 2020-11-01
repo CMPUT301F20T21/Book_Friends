@@ -34,13 +34,13 @@ public class ConfirmDialog extends AppCompatDialogFragment {
         View v = inflater.inflate(R.layout.confirm_dialog, null);
         builder.setView(v)
                 .setTitle("Accept this request?")
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.edit_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // does not do anything
                     }
                 })
-                .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.edit_confirm), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         confirmDialogListener.setConfirm(requesterId, idsToRemove);
