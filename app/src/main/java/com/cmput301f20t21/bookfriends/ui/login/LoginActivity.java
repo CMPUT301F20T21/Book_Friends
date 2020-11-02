@@ -135,7 +135,6 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void onLoginFail(LOGIN_ERROR error) {
         progressButton.onError();
-        String errorMessage;
         switch (error) {
             case CANNOT_FIND_USERNAME:
                 usernameLayout.setError(getString(R.string.login_username_error));
