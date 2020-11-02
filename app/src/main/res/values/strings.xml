@@ -11,6 +11,8 @@
     <string name="title_notifications">Notifications</string>
     <string name="login_title">Book Friends</string>
     <string name="login_description">Books for friends, but also not friends</string>
+    <string name="login_username_error">Cannot find username</string>
+    <string name="login_password_error">Password is incorrect</string>
     <string name="create_account_title">Create Account</string>
     <string name="username_empty_error">Username cannot be empty</string>
     <string name="password_empty_error">Password cannot be empty</string>
