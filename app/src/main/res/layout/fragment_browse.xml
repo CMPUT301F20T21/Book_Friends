@@ -11,12 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/browse_search_list_container_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:elevation="2dp"
-        android:visibility="gone"
-        android:layout_gravity="top" />
+<!--    <androidx.fragment.app.FragmentContainerView-->
+<!--        android:id="@+id/browse_search_list_container_fragment"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_gravity="top"-->
+<!--        android:elevation="2dp"-->
+<!--        android:visibility="visible" />-->
 </FrameLayout>
 

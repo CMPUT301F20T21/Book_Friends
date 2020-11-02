@@ -2,16 +2,20 @@ package com.cmput301f20t21.bookfriends.ui.browse;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.cmput301f20t21.bookfriends.R;
 
 public class BrowseFragment extends Fragment {
@@ -19,14 +23,16 @@ public class BrowseFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter bookAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    private BrowseSearchFragment searchedBookListFragment;
+    private SearchView searchView;
     private FragmentManager fragmentManager;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                                  @Nullable Bundle savedInstanceState) {
         bookViewModel = new ViewModelProvider(this).get(BrowseViewModel.class);
+        setHasOptionsMenu(true);
         inflateSearchedList();
         View view = inflater.inflate(R.layout.fragment_browse, container, false);
         return view;
@@ -46,12 +52,13 @@ public class BrowseFragment extends Fragment {
         recyclerView.setAdapter(bookAdapter);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.browse_search_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+        searchView = (SearchView) menu.findItem(R.id.book_search_bar).getActionView();
+    }
     private void inflateSearchedList() {
         fragmentManager = getChildFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        searchedBookListFragment = new BrowseSearchFragment();
-        fragmentTransaction
-           .add(R.id.browse_search_list_container_fragment,searchedBookListFragment)
-           .commit();
     }
 }

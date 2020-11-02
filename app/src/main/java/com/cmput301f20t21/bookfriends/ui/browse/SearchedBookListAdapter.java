@@ -11,12 +11,10 @@ import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.ui.component.BaseBookListAdapter;
 
 import java.util.ArrayList;
-
 public class SearchedBookListAdapter extends BaseBookListAdapter {
     public SearchedBookListAdapter(ArrayList<Book> books) {
         super(books);
     }
-
     @NonNull
     @Override
     public SearchedBookListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -27,8 +25,6 @@ public class SearchedBookListAdapter extends BaseBookListAdapter {
     public static class ViewHolder extends BaseBookListAdapter.ViewHolder {
         final ImageButton moreBtn;
         final TextView owner;
-
-
         public ViewHolder(View v) {
             super(v);
             owner = v.findViewById(R.id.item_book_owner);
