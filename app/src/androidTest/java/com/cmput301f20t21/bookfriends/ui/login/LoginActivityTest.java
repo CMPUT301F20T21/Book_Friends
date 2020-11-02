@@ -38,17 +38,17 @@ public class LoginActivityTest {
 
     @Test
     public void testLoginSuccess() throws InterruptedException {
-        ViewInteraction textInputEditText = onView(
+        ViewInteraction usernameField = onView(
                 allOf(withId(R.id.login_username_field), isDisplayed()));
-        textInputEditText.perform(replaceText("test"), closeSoftKeyboard());
+        usernameField.perform(replaceText("test"), closeSoftKeyboard());
 
-        ViewInteraction textInputEditText2 = onView(
+        ViewInteraction passwordField = onView(
                 allOf(withId(R.id.login_password_field), isDisplayed()));
-        textInputEditText2.perform(replaceText("bookfriendstest"), closeSoftKeyboard());
+        passwordField.perform(replaceText("bookfriendstest"), closeSoftKeyboard());
 
-        ViewInteraction constraintLayout = onView(
+        ViewInteraction loginButton = onView(
                 allOf(withId(R.id.login_btn), isDisplayed()));
-        constraintLayout.perform(click());
+        loginButton.perform(click());
 
         // needed for async operations (i.e. authentication)
         Thread.sleep(3000);
@@ -60,53 +60,53 @@ public class LoginActivityTest {
 
     @Test
     public void testIncorrectPassword() throws InterruptedException {
-        ViewInteraction textInputEditText = onView(
+        ViewInteraction usernameField = onView(
                 allOf(withId(R.id.login_username_field), isDisplayed()));
-        textInputEditText.perform(replaceText("test"), closeSoftKeyboard());
+        usernameField.perform(replaceText("test"), closeSoftKeyboard());
 
-        ViewInteraction textInputEditText2 = onView(
+        ViewInteraction passwordField = onView(
                 allOf(withId(R.id.login_password_field), isDisplayed()));
-        textInputEditText2.perform(replaceText("incorrect password"), closeSoftKeyboard());
+        passwordField.perform(replaceText("incorrect password"), closeSoftKeyboard());
 
-        ViewInteraction constraintLayout = onView(
+        ViewInteraction loginButton = onView(
                 allOf(withId(R.id.login_btn), isDisplayed()));
-        constraintLayout.perform(click());
+        loginButton.perform(click());
 
         // needed for async operations (i.e. authentication)
         Thread.sleep(3000);
 
-        ViewInteraction textView = onView(
+        ViewInteraction errorTextView = onView(
                 allOf(withId(R.id.textinput_error), withText("Password is incorrect"), isDisplayed()));
-        textView.check(matches(withText("Password is incorrect")));
+        errorTextView.check(matches(withText("Password is incorrect")));
     }
 
     @Test
     public void testIncorrectUsername() throws InterruptedException {
-        ViewInteraction textInputEditText = onView(
+        ViewInteraction usernameField = onView(
                 allOf(withId(R.id.login_username_field), isDisplayed()));
-        textInputEditText.perform(replaceText("Username WiTh Spaces"), closeSoftKeyboard());
+        usernameField.perform(replaceText("Username WiTh Spaces"), closeSoftKeyboard());
 
-        ViewInteraction textInputEditText2 = onView(
+        ViewInteraction passwordField = onView(
                 allOf(withId(R.id.login_password_field), isDisplayed()));
-        textInputEditText2.perform(replaceText("password does not matter"), closeSoftKeyboard());
+        passwordField.perform(replaceText("password does not matter"), closeSoftKeyboard());
 
-        ViewInteraction constraintLayout = onView(
+        ViewInteraction loginButton = onView(
                 allOf(withId(R.id.login_btn), isDisplayed()));
-        constraintLayout.perform(click());
+        loginButton.perform(click());
 
         // needed for async operations (i.e. authentication)
         Thread.sleep(3000);
 
-        ViewInteraction textView = onView(
+        ViewInteraction errorTextView = onView(
                 allOf(withId(R.id.textinput_error), withText("Cannot find username"), isDisplayed()));
-        textView.check(matches(withText("Cannot find username")));
+        errorTextView.check(matches(withText("Cannot find username")));
     }
 
     @Test
     public void testOpenSignup() {
-        ViewInteraction constraintLayout = onView(
+        ViewInteraction createAccountButton = onView(
                 allOf(withId(R.id.create_account_button), isDisplayed()));
-        constraintLayout.perform(click());
+        createAccountButton.perform(click());
 
         ViewInteraction createButton = onView(
                 allOf(withId(R.id.signup_create), isDisplayed()));
