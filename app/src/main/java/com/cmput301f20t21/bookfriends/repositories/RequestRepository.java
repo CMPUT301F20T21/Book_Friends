@@ -1,7 +1,6 @@
-package com.cmput301f20t21.bookfriends.services;
+package com.cmput301f20t21.bookfriends.repositories;
 
 import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -9,20 +8,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class RequestService {
+public class RequestRepository {
     private CollectionReference requestCollection;
 
-    private static final RequestService instance = new RequestService();
+    private static final RequestRepository instance = new RequestRepository();
 
-    private RequestService() {
+    private RequestRepository() {
         requestCollection = FirebaseFirestore.getInstance().collection("requests");
     }
 
-    public static RequestService getInstance() {
+    public static RequestRepository getInstance() {
         return instance;
     }
 

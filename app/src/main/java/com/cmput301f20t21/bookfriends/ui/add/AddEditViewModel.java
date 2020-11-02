@@ -15,8 +15,8 @@ import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
-import com.cmput301f20t21.bookfriends.services.AuthService;
-import com.cmput301f20t21.bookfriends.services.BookService;
+import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
+import com.cmput301f20t21.bookfriends.repositories.BookRepository;
 import com.google.firebase.firestore.DocumentReference;
 
 public class AddEditViewModel extends ViewModel {
@@ -26,15 +26,15 @@ public class AddEditViewModel extends ViewModel {
         void run(BOOK_ERROR error);
     }
 
-    private final AuthService authService = AuthService.getInstance();
-    private final BookService bookService = BookService.getInstance();
+    private final AuthRepository authRepository = AuthRepository.getInstance();
+    private final BookRepository bookRepository = BookRepository.getInstance();
 
     public void handleAddBook(
             final String isbn, final String title, final String author, final String description,
             @Nullable Uri imageUri, OnSuccessCallbackWithMessage<Book> successCallback, OnFailCallback failCallback
     ) {
-        String owner = authService.getCurrentUser().getUsername();
-        bookService.add(isbn, title, author, description, owner).addOnCompleteListener(
+        String owner = authRepository.getCurrentUser().getUsername();
+        bookRepository.add(isbn, title, author, description, owner).addOnCompleteListener(
                 addBookTask -> {
                     if (addBookTask.isSuccessful()) {
                         DocumentReference result = addBookTask.getResult();
@@ -44,10 +44,10 @@ public class AddEditViewModel extends ViewModel {
                             if(imageUri != null) {
                                 // not using string resource because this is not displayed to user
                                 String imageName = bookId + "cover";
-                                bookService.addImage(imageName, imageUri).addOnCompleteListener(
+                                bookRepository.addImage(imageName, imageUri).addOnCompleteListener(
                                         addImageTask -> {
                                             if (addImageTask.isSuccessful()) {
-                                                bookService.addImageNameToBook(bookId, imageName).addOnCompleteListener(
+                                                bookRepository.addImageNameToBook(bookId, imageName).addOnCompleteListener(
                                                         addNameTask -> {
                                                             successCallback.run(book);
                                                         }
@@ -75,7 +75,7 @@ public class AddEditViewModel extends ViewModel {
             @Nullable Uri newUri, OnSuccessCallbackWithMessage<Book> successCallback, OnFailCallback failCallback
     ) {
             String bookId = oldBook.getId();
-            bookService.editBook(bookId, isbn, title, author, description).addOnCompleteListener(
+            bookRepository.editBook(bookId, isbn, title, author, description).addOnCompleteListener(
                     editBookTask -> {
                         if (editBookTask.isSuccessful()) {
                             Book book = new Book(bookId, isbn, title, author, description, oldBook.getOwner(), BOOK_STATUS.AVAILABLE, newUri);
@@ -87,10 +87,10 @@ public class AddEditViewModel extends ViewModel {
                                 } else { // image is being added or replaced
                                     String imageName = bookId + "cover";
                                     // addImage will also replace if file with imageName already exist
-                                    bookService.addImage(imageName, newUri).addOnCompleteListener(
+                                    bookRepository.addImage(imageName, newUri).addOnCompleteListener(
                                             addImageTask -> {
                                                 if (addImageTask.isSuccessful()) {
-                                                    bookService.addImageNameToBook(bookId, imageName).addOnCompleteListener(
+                                                    bookRepository.addImageNameToBook(bookId, imageName).addOnCompleteListener(
                                                             addNameTask -> successCallback.run(book)
                                                     );
                                                 } else {

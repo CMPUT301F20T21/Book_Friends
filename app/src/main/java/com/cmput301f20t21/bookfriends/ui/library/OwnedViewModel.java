@@ -10,8 +10,8 @@ import com.cmput301f20t21.bookfriends.callbacks.OnFailCallback;
 import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
-import com.cmput301f20t21.bookfriends.services.AuthService;
-import com.cmput301f20t21.bookfriends.services.BookService;
+import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
+import com.cmput301f20t21.bookfriends.repositories.BookRepository;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -21,8 +21,8 @@ import java.util.stream.IntStream;
 
 public class OwnedViewModel extends ViewModel {
   
-    private final AuthService authService = AuthService.getInstance();
-    private final BookService bookService = BookService.getInstance();
+    private final AuthRepository authRepository = AuthRepository.getInstance();
+    private final BookRepository bookRepository = BookRepository.getInstance();
     
     private MutableLiveData<List<Book>> books;
     private MutableLiveData<Integer> updatedPosition;
@@ -51,12 +51,12 @@ public class OwnedViewModel extends ViewModel {
     }
 
     public void deleteBook(Book book, OnSuccessCallbackWithMessage<Book> successCallback, OnFailCallback failCallback) {
-        bookService.delete(book.getId()).addOnCompleteListener(
+        bookRepository.delete(book.getId()).addOnCompleteListener(
                 deleteBookTask -> {
                     if (deleteBookTask.isSuccessful()) {
                         Uri imageUri = book.getImageUri();
                         if (imageUri != null) {
-                            bookService.deleteImage(book.getId()).addOnCompleteListener(
+                            bookRepository.deleteImage(book.getId()).addOnCompleteListener(
                                     deleteImageTask -> successCallback.run(book)
                             );
                         } else {
@@ -70,8 +70,8 @@ public class OwnedViewModel extends ViewModel {
     }
 
     private void fetchBooks() {
-        String currentUsername = authService.getCurrentUser().getUsername();
-        bookService.getBooksOfOwnerId(currentUsername).addOnCompleteListener(
+        String currentUsername = authRepository.getCurrentUser().getUsername();
+        bookRepository.getBooksOfOwnerId(currentUsername).addOnCompleteListener(
                 getBookTask -> {
                     if (getBookTask.isSuccessful()) {
                         QuerySnapshot result = getBookTask.getResult();
@@ -82,9 +82,9 @@ public class OwnedViewModel extends ViewModel {
                         List<DocumentSnapshot> documents = result.getDocuments();
                         books.setValue(IntStream.range(0, documents.size()).mapToObj(i -> {
                             DocumentSnapshot document = documents.get(i);
-                            Book book = bookService.getBookFromDocument(document);
+                            Book book = bookRepository.getBookFromDocument(document);
                             if (document.get("imageName") != null) {
-                                bookService.getImage((String) document.get("imageName")).addOnSuccessListener(uri -> {
+                                bookRepository.getImage((String) document.get("imageName")).addOnSuccessListener(uri -> {
                                     book.setImageUri(uri);
                                     updatedPosition.setValue(i);
                                 });
