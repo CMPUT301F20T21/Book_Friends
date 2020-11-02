@@ -7,15 +7,12 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.cmput301f20t21.bookfriends.R;
 
 public class BrowseSearchFragment extends Fragment {
@@ -46,7 +43,7 @@ public class BrowseSearchFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         searchContainer = getActivity().findViewById(R.id.browse_search_list_container_fragment);
         searchView = (SearchView) menu.findItem(R.id.book_search_bar).getActionView();
-        // show or hide the searched user list fragment (container)
+        // show or hide the searched book list fragment (container)
         searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 searchContainer.setVisibility(View.VISIBLE);

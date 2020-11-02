@@ -4,18 +4,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.cmput301f20t21.bookfriends.R;
 
 public class BrowseFragment extends Fragment {
@@ -23,11 +19,8 @@ public class BrowseFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter bookAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    private SearchView searchView;
-    private FragmentContainerView searchContainer;
     private BrowseSearchFragment searchedBookListFragment;
     private FragmentManager fragmentManager;
-
 
     @Nullable
     @Override
@@ -58,7 +51,7 @@ public class BrowseFragment extends Fragment {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         searchedBookListFragment = new BrowseSearchFragment();
         fragmentTransaction
-            .add(R.id.browse_search_list_container_fragment,searchedBookListFragment)
-            .commit();
+           .add(R.id.browse_search_list_container_fragment,searchedBookListFragment)
+           .commit();
     }
 }

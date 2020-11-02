@@ -41,12 +41,12 @@ public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapte
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        final TextView title;
-        final TextView author;
-        final TextView isbn;
-        final ImageView bookImage;
-        View holderView;
-        Book book;
+        protected final TextView title;
+        protected final TextView author;
+        protected final TextView isbn;
+        protected final ImageView bookImage;
+        protected View holderView;
+        protected Book book;
 
 
         public ViewHolder(View v) {

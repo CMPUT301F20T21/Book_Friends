@@ -13,7 +13,6 @@ import com.cmput301f20t21.bookfriends.ui.component.BaseBookListAdapter;
 import java.util.ArrayList;
 
 public class SearchedBookListAdapter extends BaseBookListAdapter {
-
     public SearchedBookListAdapter(ArrayList<Book> books) {
         super(books);
     }
@@ -25,9 +24,9 @@ public class SearchedBookListAdapter extends BaseBookListAdapter {
         return new SearchedBookListAdapter.ViewHolder(itemView);
     }
 
-        public static class ViewHolder extends BaseBookListAdapter.ViewHolder {
-            final ImageButton moreBtn;
-            final TextView owner;
+    public static class ViewHolder extends BaseBookListAdapter.ViewHolder {
+        final ImageButton moreBtn;
+        final TextView owner;
 
 
         public ViewHolder(View v) {
