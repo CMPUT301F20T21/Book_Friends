@@ -14,7 +14,7 @@ import com.cmput301f20t21.bookfriends.entities.Request;
 
 import java.util.ArrayList;
 
-public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestHolder> {
+public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHolder> {
     private ArrayList<Request> requestItems;
     private OnItemClickListener listener;
     public interface OnItemClickListener{
@@ -26,11 +26,11 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestH
         this.listener = listener;
     }
 
-    public static class RequestHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
         public Button acceptButton;
         public Button rejectButton;
-        public RequestHolder(View v, final OnItemClickListener listener) {
+        public ViewHolder(View v, final OnItemClickListener listener) {
             super(v);
             textView = v.findViewById(R.id.request_text_view);
             acceptButton = v.findViewById(R.id.accept_button);
@@ -62,21 +62,19 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestH
 
     @NonNull
     @Override
-    public RequestHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.request_item, parent, false);
 
-        RequestHolder r = new RequestHolder(v, listener);
+        ViewHolder r = new ViewHolder(v, listener);
         return r;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RequestHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Request currentItem = requestItems.get(position);
-        String toPrint  = currentItem.getRequesterId() + " " +
-                holder.itemView.getContext().getResources().getString(R.string.ask_to_borrow);
-        holder.textView.setText(toPrint);
+        holder.textView.setText(holder.itemView.getContext().getResources().getString(R.string.ask_to_borrow, currentItem.getRequester()));
     }
 
     @Override

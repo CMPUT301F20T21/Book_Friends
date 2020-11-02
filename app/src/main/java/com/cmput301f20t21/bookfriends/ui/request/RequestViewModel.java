@@ -2,19 +2,14 @@ package com.cmput301f20t21.bookfriends.ui.request;
 
 import android.net.Uri;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.entities.Request;
-import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
-import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 import com.cmput301f20t21.bookfriends.services.BookService;
 import com.cmput301f20t21.bookfriends.services.RequestService;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.List;
@@ -24,7 +19,8 @@ import java.util.stream.IntStream;
 public class RequestViewModel extends ViewModel {
     private MutableLiveData<Book> book;
     private MutableLiveData<Uri> imageUri;
-    private MutableLiveData<List<Request>> requesters;
+    private MutableLiveData<List<Request>> requests;
+    private MutableLiveData<Integer> updatedPosition;
 
     private final RequestService requestService = RequestService.getInstance();
     private final BookService bookService = BookService.getInstance();
@@ -33,7 +29,7 @@ public class RequestViewModel extends ViewModel {
      * Function to get the book information from FireStore
      * @param bookId we will query the book information based on the bookID
      */
-    public void getBookInfo(String bookId) {
+    public void fetchBook(String bookId) {
         bookService.getBookById(bookId).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
@@ -53,12 +49,20 @@ public class RequestViewModel extends ViewModel {
     public void fetchRequesters(String bookId) {
         requestService.getByBookId(bookId).addOnSuccessListener(requesterDocumentsSnapShots -> {
            List<DocumentSnapshot> documents = requesterDocumentsSnapShots.getDocuments();
-           requesters.setValue(IntStream.range(0, documents.size()).mapToObj(i -> {
+           requests.setValue(IntStream.range(0, documents.size()).mapToObj(i -> {
                DocumentSnapshot document = documents.get(i);
                Request request = requestService.getRequestFromDocument(document);
+               updatedPosition.setValue(i);
                return request;
            }).collect(Collectors.toList()));
         });
+    }
+
+    public MutableLiveData<Integer> getUpdatedPosition() {
+        if (updatedPosition == null) {
+            updatedPosition = new MutableLiveData<>(0);
+        }
+        return updatedPosition;
     }
 
     /**
@@ -69,7 +73,7 @@ public class RequestViewModel extends ViewModel {
     public MutableLiveData<Book> getBook(String bookId) {
         if (book == null) {
             book = new MutableLiveData<>();
-            getBookInfo(bookId);
+            fetchBook(bookId);
         }
         return this.book;
     }
@@ -91,11 +95,11 @@ public class RequestViewModel extends ViewModel {
      * @return
      */
     public MutableLiveData<List<Request>> getRequesters(String bookId) {
-        if (requesters == null) {
-            requesters = new MutableLiveData<>();
+        if (requests == null) {
+            requests = new MutableLiveData<>();
             fetchRequesters(bookId);
         }
-        return this.requesters;
+        return this.requests;
     }
 
     /**

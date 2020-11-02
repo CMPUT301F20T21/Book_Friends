@@ -23,7 +23,7 @@ public class Request {
         return bookId;
     }
 
-    public String getRequesterId() {
+    public String getRequester() {
         return requester;
     }
 
