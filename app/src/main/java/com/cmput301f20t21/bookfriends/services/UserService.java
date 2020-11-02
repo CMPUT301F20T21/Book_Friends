@@ -42,7 +42,7 @@ public class UserService {
             // because username is alphanumeric, according to ascii table, @ is less than 'a' and 0
             return userCollection.whereEqualTo("username", "@").get();
         }
-        // return a list if
+        // return a list if 
         return userCollection
                 .whereGreaterThanOrEqualTo("username", username)
                 .whereLessThan("username", username.concat("~")) // ascii ~ is way larger than 'z'
