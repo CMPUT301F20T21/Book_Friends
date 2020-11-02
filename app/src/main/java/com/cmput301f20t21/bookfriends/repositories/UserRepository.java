@@ -1,4 +1,4 @@
-package com.cmput301f20t21.bookfriends.services;
+package com.cmput301f20t21.bookfriends.repositories;
 
 import com.cmput301f20t21.bookfriends.entities.User;
 import com.google.android.gms.tasks.Task;
@@ -9,16 +9,16 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 
-public class UserService {
+public class UserRepository {
     private CollectionReference userCollection;
 
-    private static final UserService instance = new UserService();
+    private static final UserRepository instance = new UserRepository();
 
-    private UserService() {
+    private UserRepository() {
         userCollection = FirebaseFirestore.getInstance().collection("users");
     }
 
-    public static UserService getInstance() {
+    public static UserRepository getInstance() {
         return instance;
     }
 
@@ -50,7 +50,7 @@ public class UserService {
     }
 
     public Task<Void> updateUserEmail(String email){
-        User firebaseUser = AuthService.getInstance().getCurrentUser();
+        User firebaseUser = AuthRepository.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             String userId = firebaseUser.getUid();
             return userCollection.document(userId).update("email", email);

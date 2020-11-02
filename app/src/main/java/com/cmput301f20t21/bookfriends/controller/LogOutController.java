@@ -1,10 +1,9 @@
 package com.cmput301f20t21.bookfriends.controller;
 
-import com.cmput301f20t21.bookfriends.services.AuthService;
-import com.cmput301f20t21.bookfriends.services.UserService;
+import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
 
 public class LogOutController {
-    private AuthService authService;
+    private AuthRepository authRepository;
     private ILogOutListener listener;
 
     public interface ILogOutListener {
@@ -13,13 +12,13 @@ public class LogOutController {
     }
 
     public LogOutController(ILogOutListener listener) {
-        authService = AuthService.getInstance();
+        authRepository = AuthRepository.getInstance();
         this.listener = listener;
     }
 
     public void handleLogOut() {
         try {
-            authService.signOut();
+            authRepository.signOut();
             listener.onLogOutSuccess();
         } catch (Exception e) {
             listener.onLogOutFail();

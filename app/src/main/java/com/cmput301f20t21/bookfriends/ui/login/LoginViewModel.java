@@ -13,20 +13,19 @@ import android.widget.EditText;
 
 import androidx.lifecycle.ViewModel;
 
-import com.cmput301f20t21.bookfriends.callbacks.OnFailCallback;
 import com.cmput301f20t21.bookfriends.callbacks.OnFailCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallback;
 import com.cmput301f20t21.bookfriends.enums.LOGIN_ERROR;
-import com.cmput301f20t21.bookfriends.services.AuthService;
-import com.cmput301f20t21.bookfriends.services.UserService;
+import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
+import com.cmput301f20t21.bookfriends.repositories.UserRepository;
 import com.google.android.material.textfield.TextInputLayout;
 
 /**
  * A view model for the LoginActivity, handles validation and authentication
  */
 public class LoginViewModel extends ViewModel {
-    private final AuthService authService = AuthService.getInstance();
-    private final UserService userService = UserService.getInstance();
+    private final AuthRepository authRepository = AuthRepository.getInstance();
+    private final UserRepository userRepository = UserRepository.getInstance();
 
     /**
      * Check whether the provided layout's text field is empty
@@ -52,11 +51,11 @@ public class LoginViewModel extends ViewModel {
                             final OnSuccessCallback successCallback,
                             final OnFailCallbackWithMessage<LOGIN_ERROR> failureCallback
     ) {
-        userService.getByUsername(username).addOnCompleteListener(usernameTask -> {
+        userRepository.getByUsername(username).addOnCompleteListener(usernameTask -> {
             if (usernameTask.isSuccessful()) {
                 if (!usernameTask.getResult().isEmpty()) {
                     String email = usernameTask.getResult().getDocuments().get(0).get("email").toString();
-                    authService.signIn(username, email, password).addOnCompleteListener(authTask -> {
+                    authRepository.signIn(username, email, password).addOnCompleteListener(authTask -> {
                         if (authTask.isSuccessful()) {
                             successCallback.run();
                         } else {
