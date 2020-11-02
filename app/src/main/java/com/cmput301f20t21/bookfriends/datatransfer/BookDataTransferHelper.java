@@ -16,7 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 // https://stackoverflow.com/a/18463758
-public class BookDataTransferHelper {
+    public class BookDataTransferHelper {
     public static final String BOOK_OBJECT_KEY = "com.cmput301f20t21.bookfriends.BOOK_OBJECT";
 
     public static void transfer(Book book, Context context) {
