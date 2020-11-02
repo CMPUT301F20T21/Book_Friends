@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel;
 import com.cmput301f20t21.bookfriends.callbacks.OnFailCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallback;
 import com.cmput301f20t21.bookfriends.enums.SIGNUP_ERROR;
-import com.cmput301f20t21.bookfriends.services.AuthService;
-import com.cmput301f20t21.bookfriends.services.UserService;
+import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
+import com.cmput301f20t21.bookfriends.repositories.UserRepository;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
@@ -15,8 +15,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 
 public class CreateAccountViewModel extends ViewModel {
-    private final AuthService authService = AuthService.getInstance();
-    private final UserService userService = UserService.getInstance();
+    private final AuthRepository authRepository = AuthRepository.getInstance();
+    private final UserRepository userRepository = UserRepository.getInstance();
     private final String TAG = "SIGNUP_ERROR";
     /**
      * check the input field for emptiness, adding error message if field is empty
@@ -86,15 +86,15 @@ public class CreateAccountViewModel extends ViewModel {
     public void handleSignUp(final String username, final String email, final String password,
                              OnSuccessCallback successCallback, OnFailCallbackWithMessage<SIGNUP_ERROR> failCallback) {
         // check if username is registered
-        userService.getByUsername(username).addOnCompleteListener(usernameTask -> {
+        userRepository.getByUsername(username).addOnCompleteListener(usernameTask -> {
             if (usernameTask.isSuccessful()) {
                 if (usernameTask.getResult().isEmpty()) {
                     // create authentication
-                    authService.createUserAuth(email, password).addOnCompleteListener(authTask -> {
+                    authRepository.createUserAuth(email, password).addOnCompleteListener(authTask -> {
                         if (authTask.isSuccessful()) {
                             FirebaseUser user = authTask.getResult().getUser();
                             // create username after create auth successful
-                            userService.add(user.getUid(), username, email).addOnCompleteListener(addUserTask -> {
+                            userRepository.add(user.getUid(), username, email).addOnCompleteListener(addUserTask -> {
                                 if (addUserTask.isSuccessful()) {
                                     successCallback.run();
                                 } else {

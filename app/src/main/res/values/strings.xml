@@ -3,12 +3,17 @@
     <string name="title_library">Your Library</string>
     <string name="tab_title_my_library">My Books</string>
     <string name="tab_title_borrowed_library">Borrowed Books</string>
+    <string name="tab_title_requested">Requested</string>
+    <string name="tab_title_accepted">Accepted</string>
     <string name="title_borrow">Borrow</string>
+    <string name="title_browse">Browse</string>
     <string name="title_scanner_add">Scan to Add</string>
     <string name="title_profile">Me</string>
     <string name="title_notifications">Notifications</string>
     <string name="login_title">Book Friends</string>
     <string name="login_description">Books for friends, but also not friends</string>
+    <string name="login_username_error">Cannot find username</string>
+    <string name="login_password_error">Password is incorrect</string>
     <string name="create_account_title">Create Account</string>
     <string name="username_empty_error">Username cannot be empty</string>
     <string name="password_empty_error">Password cannot be empty</string>

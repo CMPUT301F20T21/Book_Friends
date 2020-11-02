@@ -1,4 +1,4 @@
-package com.cmput301f20t21.bookfriends.services;
+package com.cmput301f20t21.bookfriends.repositories;
 
 import android.net.Uri;
 
@@ -18,17 +18,17 @@ import com.google.firebase.storage.UploadTask;
 import java.util.HashMap;
 import java.util.List;
 
-public class BookService {
+public class BookRepository {
 
-    private static final BookService instance = new BookService();
+    private static final BookRepository instance = new BookRepository();
     private final StorageReference imageStorageReference = FirebaseStorage.getInstance().getReference();
     private final CollectionReference bookCollection;
 
-    private BookService() {
+    private BookRepository() {
         bookCollection = FirebaseFirestore.getInstance().collection("books");
     }
 
-    public static BookService getInstance() {
+    public static BookRepository getInstance() {
         return instance;
     }
 
@@ -103,5 +103,12 @@ public class BookService {
     }
     public Task<QuerySnapshot> batchGetBooks( List<String> bookIds){
         return bookCollection.whereIn(FieldPath.documentId(), bookIds).get();
+    }
+
+// get all the books, will be used in browse
+    public Task<QuerySnapshot> getAvailableBooks() {
+        return bookCollection
+                .whereEqualTo("status", BOOK_STATUS.AVAILABLE.toString())
+                .whereEqualTo("status", BOOK_STATUS.REQUESTED.toString()).get();
     }
 }

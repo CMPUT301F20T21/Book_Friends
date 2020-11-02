@@ -1,36 +1,30 @@
-package com.cmput301f20t21.bookfriends.ui.library;
-
+package com.cmput301f20t21.bookfriends.ui.browse;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.ui.component.BaseBookListAdapter;
 
-import java.util.List;
-
-public class BorrowedListAdapter extends BaseBookListAdapter {
-
-    public BorrowedListAdapter(List<Book> books) {
+import java.util.ArrayList;
+public class SearchedBookListAdapter extends BaseBookListAdapter {
+    public SearchedBookListAdapter(ArrayList<Book> books) {
         super(books);
     }
-
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public SearchedBookListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_list, parent, false);
-        return new ViewHolder(itemView);
+        return new SearchedBookListAdapter.ViewHolder(itemView);
     }
 
     public static class ViewHolder extends BaseBookListAdapter.ViewHolder {
         final ImageButton moreBtn;
         final TextView owner;
-
         public ViewHolder(View v) {
             super(v);
             owner = v.findViewById(R.id.item_book_owner);
@@ -45,3 +39,4 @@ public class BorrowedListAdapter extends BaseBookListAdapter {
         }
     }
 }
+

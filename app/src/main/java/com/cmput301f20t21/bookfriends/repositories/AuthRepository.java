@@ -1,4 +1,4 @@
-package com.cmput301f20t21.bookfriends.services;
+package com.cmput301f20t21.bookfriends.repositories;
 
 import com.cmput301f20t21.bookfriends.entities.User;
 import com.google.android.gms.tasks.Task;
@@ -6,19 +6,20 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class AuthService {
+public class AuthRepository {
     private FirebaseAuth mAuth;
     private String username;
 
-    private static final AuthService instance = new AuthService();
+    private static final AuthRepository instance = new AuthRepository();
 
-    private AuthService() {
+    private AuthRepository() {
         mAuth = FirebaseAuth.getInstance();
     }
 
-    public static AuthService getInstance() {
+    public static AuthRepository getInstance() {
         return instance;
     }
+
 
     public User getCurrentUser() {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
@@ -42,5 +43,13 @@ public class AuthService {
 
     public void signOut() {
         mAuth.signOut();
+    }
+
+    public Task<Void> updateEmail(String email) {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            return user.updateEmail(email);
+        }
+        return null;
     }
 }

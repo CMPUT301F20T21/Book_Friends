@@ -1,18 +1,13 @@
 package com.cmput301f20t21.bookfriends.ui.library;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.entities.Book;
-import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
-import com.cmput301f20t21.bookfriends.services.AuthService;
-import com.cmput301f20t21.bookfriends.services.BookService;
-import com.cmput301f20t21.bookfriends.services.RequestService;
+import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
+import com.cmput301f20t21.bookfriends.repositories.BookRepository;
+import com.cmput301f20t21.bookfriends.repositories.RequestRepository;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
@@ -22,9 +17,9 @@ import java.util.stream.IntStream;
 
 
 public class BorrowedViewModel extends ViewModel {
-    private RequestService requestService = RequestService.getInstance();
-    private BookService bookService = BookService.getInstance();
-    private AuthService authService = AuthService.getInstance();
+    private RequestRepository requestRepository = RequestRepository.getInstance();
+    private BookRepository bookRepository = BookRepository.getInstance();
+    private AuthRepository authRepository = AuthRepository.getInstance();
 
     private MutableLiveData<List<Book>> books;
     private MutableLiveData<Integer> updatedPosition;
@@ -45,9 +40,9 @@ public class BorrowedViewModel extends ViewModel {
     }
 
     private void fetchBooks() {
-        String username = authService.getCurrentUser().getUsername();
+        String username = authRepository.getCurrentUser().getUsername();
 
-        requestService.getBorrowedRequestByUsername(username).addOnSuccessListener(requestDocumentSnapshots -> {
+        requestRepository.getBorrowedRequestByUsername(username).addOnSuccessListener(requestDocumentSnapshots -> {
             // TODO: uncomment when request is implemented
 //            List<String> bookIds = requestDocumentSnapshots.getDocuments().stream()
 //                    .map(documentSnapshot -> documentSnapshot.get("bookId").toString())
@@ -65,13 +60,13 @@ public class BorrowedViewModel extends ViewModel {
                 return;
             }
 
-            bookService.batchGetBooks(bookIds).addOnSuccessListener(bookDocumentsSnapshots -> {
+            bookRepository.batchGetBooks(bookIds).addOnSuccessListener(bookDocumentsSnapshots -> {
                 List<DocumentSnapshot> documents = bookDocumentsSnapshots.getDocuments();
                 books.setValue(IntStream.range(0, documents.size()).mapToObj(i -> {
                     DocumentSnapshot document = documents.get(i);
-                    Book book = bookService.getBookFromDocument(document);
+                    Book book = bookRepository.getBookFromDocument(document);
                     if (document.get("imageName") != null) {
-                        bookService.getImage((String) document.get("imageName")).addOnSuccessListener(uri -> {
+                        bookRepository.getImage((String) document.get("imageName")).addOnSuccessListener(uri -> {
                             book.setImageUri(uri);
                             updatedPosition.setValue(i);
                         });

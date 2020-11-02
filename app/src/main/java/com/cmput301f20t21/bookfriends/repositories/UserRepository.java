@@ -1,7 +1,6 @@
-package com.cmput301f20t21.bookfriends.services;
+package com.cmput301f20t21.bookfriends.repositories;
 
-import android.util.Log;
-
+import com.cmput301f20t21.bookfriends.entities.User;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -10,16 +9,16 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 
-public class UserService {
+public class UserRepository {
     private CollectionReference userCollection;
 
-    private static final UserService instance = new UserService();
+    private static final UserRepository instance = new UserRepository();
 
-    private UserService() {
+    private UserRepository() {
         userCollection = FirebaseFirestore.getInstance().collection("users");
     }
 
-    public static UserService getInstance() {
+    public static UserRepository getInstance() {
         return instance;
     }
 
@@ -43,10 +42,19 @@ public class UserService {
             // because username is alphanumeric, according to ascii table, @ is less than 'a' and 0
             return userCollection.whereEqualTo("username", "@").get();
         }
-        // return a list if
+        // return a list if 
         return userCollection
                 .whereGreaterThanOrEqualTo("username", username)
                 .whereLessThan("username", username.concat("~")) // ascii ~ is way larger than 'z'
                 .limit(10).get();
+    }
+
+    public Task<Void> updateUserEmail(String email){
+        User firebaseUser = AuthRepository.getInstance().getCurrentUser();
+        if (firebaseUser != null) {
+            String userId = firebaseUser.getUid();
+            return userCollection.document(userId).update("email", email);
+        }
+        return null;
     }
 }
