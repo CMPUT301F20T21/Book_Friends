@@ -121,14 +121,21 @@ public class RequestViewModel extends ViewModel {
 
     /**
      * When the requester is accepted, update the status of this requester to ACCEPTED
-     * @param requesterId
+     * @param position
      */
-    public void acceptRequest(String requesterId) {
-        requestService.accept(requesterId).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-
+    public void acceptRequest(Integer position) {
+        Request request = requestsData.get(position);
+        requestService.accept(request.getId()).addOnSuccessListener(aVoid -> {
+            requestsData.remove(request);
+            requests.setValue(requestsData);
+            List<String> ids = new ArrayList<>();
+            for (int i = 0; i < requestsData.size(); i++) {
+                ids.add(requestsData.get(i).getId());
             }
+            requestService.batchDeny(ids).addOnSuccessListener(aVoid1 -> {
+                requestsData.clear();
+                requests.setValue(requestsData);
+            });
         });
     }
 

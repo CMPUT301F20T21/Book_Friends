@@ -20,7 +20,7 @@ import com.cmput301f20t21.bookfriends.ui.library.OwnedListFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RequestActivity extends AppCompatActivity implements ConfirmDialog.ConfirmDialogListener {
+public class RequestActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RequestAdapter requestAdapter;
 //    private final ArrayList<Request> requestDataList = new ArrayList<>();
@@ -82,7 +82,7 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
 
                 @Override
                 public void onAcceptClick(int position) {
-//                openDialog(position);
+                    openDialog(position);
                 }
             });
         });
@@ -119,36 +119,22 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
             requestAdapter.notifyItemRemoved(position);
         }
     }
-//
-//    /**
-//     * When user click on the accept button
-//     * popup a dialog to prompt user about their action:
-//     * accept one item and remove all other items
-//     * @param position that we accept the item
-//     */
-//    public void openDialog(int position) {
-//        String acceptedId = requestDataList.get(position).getId();
+
+    /**
+     * When user click on the accept button
+     * popup a dialog to prompt user about their action:
+     * accept one item and remove all other items
+     * @param position that we accept the item
+     */
+    public void openDialog(int position) {
 //        List<String> idsToRemove = new ArrayList<>();
 //        for (int i = 0; i < requestDataList.size();i++) {
 //            idsToRemove.add(requestDataList.get(i).getId());
 //        }
 //        idsToRemove.remove(acceptedId);
-//        ConfirmDialog confirmDialog = new ConfirmDialog(acceptedId, idsToRemove);
-//        confirmDialog.show(getSupportFragmentManager(), "Confirm Dialog");
-//    }
-//
-//    /**
-//     * function is called whenever the user confirms to accept a request
-//     * remove all other requests
-//     */
-    @Override
-    public void setConfirm(String id, List<String> idsToRemove) {
-//        vm.acceptRequest(id);
-//        int size = requestDataList.size();
-//        if (size > 0) {
-//            vm.removeAllRequest(idsToRemove);
-//            requestDataList.subList(0, size).clear();
-//            requestAdapter.notifyItemRangeRemoved(0, size);
-//        }
+        ConfirmDialog confirmDialog = new ConfirmDialog(position);
+        confirmDialog.show(getSupportFragmentManager(), "Confirm Dialog");
+//        requestAdapter.notifyDataSetChanged();
     }
+
 }

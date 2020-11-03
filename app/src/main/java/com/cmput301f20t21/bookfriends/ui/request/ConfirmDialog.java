@@ -11,19 +11,17 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.cmput301f20t21.bookfriends.R;
 
 import java.util.List;
 
 public class ConfirmDialog extends AppCompatDialogFragment {
-    private ConfirmDialogListener confirmDialogListener;
-    private String requesterId;
-    private List<String> idsToRemove;
+    private Integer position;
 
-    public ConfirmDialog(String id, List<String> idsToRemove) {
-        this.requesterId = id;
-        this.idsToRemove = idsToRemove;
+    public ConfirmDialog(Integer position) {
+        this.position = position;
     }
 
     @NonNull
@@ -32,6 +30,9 @@ public class ConfirmDialog extends AppCompatDialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.confirm_dialog, null);
+
+        RequestViewModel vm = new ViewModelProvider(this).get(RequestViewModel.class);
+
         builder.setView(v)
                 .setTitle(getString(R.string.accept_this_request))
                 .setNegativeButton(getString(R.string.edit_cancel), new DialogInterface.OnClickListener() {
@@ -43,25 +44,10 @@ public class ConfirmDialog extends AppCompatDialogFragment {
                 .setPositiveButton(getString(R.string.edit_confirm), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        confirmDialogListener.setConfirm(requesterId, idsToRemove);
+                        vm.acceptRequest(position);
                     }
                 });
         return builder.create();
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-
-        try {
-            confirmDialogListener = (ConfirmDialogListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() +
-                    "Must implement ConfirmDialogListener");
-        }
-    }
-
-    public interface ConfirmDialogListener {
-        void setConfirm(String id, List<String> idsToRemove);
-    }
 }
