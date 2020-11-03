@@ -12,6 +12,7 @@ import com.cmput301f20t21.bookfriends.repositories.RequestRepository;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -98,7 +99,7 @@ public class RequestViewModel extends ViewModel {
      */
     public MutableLiveData<List<Request>> getRequests(String bookId) {
         if (requests == null) {
-            requests = new MutableLiveData<>();
+            requests = new MutableLiveData<>(new ArrayList<>());
             requestsData = requests.getValue();
             fetchRequesters(bookId);
         }
