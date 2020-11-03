@@ -1,13 +1,18 @@
 package com.cmput301f20t21.bookfriends.ui.request;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,12 +23,11 @@ import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.ui.library.OwnedListFragment;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class RequestActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RequestAdapter requestAdapter;
-//    private final ArrayList<Request> requestDataList = new ArrayList<>();
+    //    private final ArrayList<Request> requestDataList = new ArrayList<>();
     private RecyclerView.LayoutManager layoutManager;
     private TextView titleTextView;
     private TextView authorTextView;
@@ -67,35 +71,34 @@ public class RequestActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.request_recycler_view);
         recyclerView.setHasFixedSize(true);
+
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        vm.getRequests(bookId).observe(this, requests -> {
-            requestAdapter = new RequestAdapter((ArrayList<Request>) requests);
-            recyclerView.setAdapter(requestAdapter);
+        // the requests live data. fetched once, but we keep the reference for multiple usage
+        LiveData<ArrayList<Request>> requestsLiveData = vm.getRequests(bookId);
+        requestAdapter = new RequestAdapter(requestsLiveData.getValue());
+        requestAdapter.setOnItemClickLisener(new RequestAdapter.OnItemClickListener() {
+            @Override
+            public void onRejectClick(int position) {
+                removeItem(position);
+            }
 
-            requestAdapter.setOnItemClickLisener(new RequestAdapter.OnItemClickListener() {
-                @Override
-                public void onRejectClick(int position) {
-                    removeItem(position);
-                }
-
-                @Override
-                public void onAcceptClick(int position) {
-                    openDialog(position);
-                }
-            });
-        });
-
-        vm.getUpdatedPosition().observe(this, (Integer pos) -> {
-            if (requestAdapter != null) {
-                requestAdapter.notifyItemChanged(pos);
+            @Override
+            public void onAcceptClick(int position) {
+                openDialog(position);
             }
         });
+
+        recyclerView.setAdapter(requestAdapter);
+        // see https://github.com/CMPUT301F20T21/Book_Friends/pull/90/files#r516310260
+        requestsLiveData.observe(this, requests -> requestAdapter.notifyDataSetChanged());
+        // we don't update a single item for simplicity, instead, just update requests array and let recycler figure out what changed
     }
 
     /**
      * setup the back button on the title
+     *
      * @param item
      * @return
      */
@@ -111,12 +114,13 @@ public class RequestActivity extends AppCompatActivity {
 
     /**
      * function to remove an item when we click on Reject button
+     *
      * @param position that needs removing
      */
     public void removeItem(int position) {
         if (position != RecyclerView.NO_POSITION) {
             vm.removeRequest(position);
-            requestAdapter.notifyItemRemoved(position);
+            // don't notify changes, let's let the requests array observer do everything for us
         }
     }
 
@@ -124,17 +128,23 @@ public class RequestActivity extends AppCompatActivity {
      * When user click on the accept button
      * popup a dialog to prompt user about their action:
      * accept one item and remove all other items
+     *
      * @param position that we accept the item
      */
     public void openDialog(int position) {
-//        List<String> idsToRemove = new ArrayList<>();
-//        for (int i = 0; i < requestDataList.size();i++) {
-//            idsToRemove.add(requestDataList.get(i).getId());
-//        }
-//        idsToRemove.remove(acceptedId);
-        ConfirmDialog confirmDialog = new ConfirmDialog(position);
-        confirmDialog.show(getSupportFragmentManager(), "Confirm Dialog");
-//        requestAdapter.notifyDataSetChanged();
+        LayoutInflater inflater = getLayoutInflater();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(inflater.inflate(R.layout.confirm_dialog, null))
+                .setTitle(getString(R.string.accept_this_request))
+                .setPositiveButton(R.string.edit_confirm, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(RequestActivity.this, "Accepted Request", Toast.LENGTH_SHORT).show();
+                        vm.acceptRequest(position);
+                    }
+                })
+                .setNegativeButton(R.string.edit_cancel, null)
+                .show();
     }
 
 }

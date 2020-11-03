@@ -2,6 +2,7 @@ package com.cmput301f20t21.bookfriends.ui.request;
 
 import android.net.Uri;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -18,11 +19,10 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class RequestViewModel extends ViewModel {
-    private MutableLiveData<Book> book;
-    private MutableLiveData<Uri> imageUri;
-    private MutableLiveData<List<Request>> requests;
-    private List<Request> requestsData;
-    private MutableLiveData<Integer> updatedPosition;
+    private final MutableLiveData<Book> book = new MutableLiveData<>();
+    private final MutableLiveData<Uri> imageUri = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<Request>> requests = new MutableLiveData<>(new ArrayList<>());
+    private final ArrayList<Request> requestsData = requests.getValue();
 
     private final RequestRepository requestService = RequestRepository.getInstance();
     private final BookRepository bookService = BookRepository.getInstance();
@@ -31,13 +31,13 @@ public class RequestViewModel extends ViewModel {
      * Function to get the book information from FireStore
      * @param bookId we will query the book information based on the bookID
      */
-    public void fetchBook(String bookId) {
+    private void fetchBook(String bookId) {
         bookService.getBookById(bookId).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
+                if (document != null && document.exists()) {
                     String imageName = (String) document.get("imageName");
-                    bookService.getImage(imageName).addOnSuccessListener(uri -> imageUri.setValue(uri));
+                    bookService.getImage(imageName).addOnSuccessListener(imageUri::setValue);
                     book.setValue(bookService.getBookFromDocument(document));
                 }
             }
@@ -48,36 +48,26 @@ public class RequestViewModel extends ViewModel {
      * get all the requesters of a book based on its bookId
      * @param bookId
      */
-    public void fetchRequesters(String bookId) {
+    private void fetchRequests(String bookId) {
         requestService.getByBookId(bookId).addOnSuccessListener(requesterDocumentsSnapShots -> {
            List<DocumentSnapshot> documents = requesterDocumentsSnapShots.getDocuments();
+           requestsData.clear(); // we are sure to always refresh the requests list
            requestsData.addAll(IntStream.range(0, documents.size()).mapToObj(i -> {
                DocumentSnapshot document = documents.get(i);
-               Request request = requestService.getRequestFromDocument(document);
-               updatedPosition.setValue(i);
-               return request;
+               return requestService.getRequestFromDocument(document);
            }).collect(Collectors.toList()));
            requests.setValue(requestsData);
         });
     }
 
-    public MutableLiveData<Integer> getUpdatedPosition() {
-        if (updatedPosition == null) {
-            updatedPosition = new MutableLiveData<>(0);
-        }
-        return updatedPosition;
-    }
 
     /**
      * function to notify the content displayed on device when the data is changed
      * @param bookId we get book information by book ID then pass the content to display
      * @return
      */
-    public MutableLiveData<Book> getBook(String bookId) {
-        if (book == null) {
-            book = new MutableLiveData<>();
-            fetchBook(bookId);
-        }
+    public LiveData<Book> getBook(String bookId) {
+        fetchBook(bookId);
         return this.book;
     }
 
@@ -85,10 +75,7 @@ public class RequestViewModel extends ViewModel {
      * similar, we get the image of the current book
      * @return
      */
-    public MutableLiveData<Uri> getImageUri() {
-        if (imageUri == null) {
-            imageUri = new MutableLiveData<>();
-        }
+    public LiveData<Uri> getImageUri() {
         return this.imageUri;
     }
 
@@ -97,12 +84,8 @@ public class RequestViewModel extends ViewModel {
      * @param bookId
      * @return
      */
-    public MutableLiveData<List<Request>> getRequests(String bookId) {
-        if (requests == null) {
-            requests = new MutableLiveData<>(new ArrayList<>());
-            requestsData = requests.getValue();
-            fetchRequesters(bookId);
-        }
+    public LiveData<ArrayList<Request>> getRequests(String bookId) {
+        fetchRequests(bookId);
         return this.requests;
     }
 
@@ -127,28 +110,20 @@ public class RequestViewModel extends ViewModel {
         Request request = requestsData.get(position);
         requestService.accept(request.getId()).addOnSuccessListener(aVoid -> {
             requestsData.remove(request);
-            requests.setValue(requestsData);
+            // deny all other requests
             List<String> ids = new ArrayList<>();
             for (int i = 0; i < requestsData.size(); i++) {
                 ids.add(requestsData.get(i).getId());
             }
+            // clear the requests array anyways
             requestService.batchDeny(ids).addOnSuccessListener(aVoid1 -> {
                 requestsData.clear();
                 requests.setValue(requestsData);
+            }).addOnFailureListener(err -> {
+                err.printStackTrace();
+                requestsData.clear();
+                requests.setValue(requestsData);
             });
-        });
-    }
-
-    /**
-     * function is called when 1 requester is accepted, remove all other requests
-     * @param ids
-     */
-    public void removeAllRequest(List<String> ids) {
-        requestService.batchDeny(ids).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-
-            }
         });
     }
 }
