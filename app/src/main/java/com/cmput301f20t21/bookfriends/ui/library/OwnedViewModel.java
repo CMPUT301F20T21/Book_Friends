@@ -21,8 +21,8 @@ public class OwnedViewModel extends ViewModel {
     private final AuthRepository authRepository = AuthRepository.getInstance();
     private final BookRepository bookRepository = BookRepository.getInstance();
 
-    private MutableLiveData<List<Book>> books = new MutableLiveData<>(new ArrayList<>());
-    private List<Book> bookData = books.getValue();
+    private final MutableLiveData<List<Book>> books = new MutableLiveData<>(new ArrayList<>());
+    private final List<Book> bookData = books.getValue();
 
     private MutableLiveData<Integer> updatedPosition = new MutableLiveData<>(0);
     private MutableLiveData<BOOK_ERROR> errorMessageObserver = new MutableLiveData<>();

@@ -27,7 +27,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class OwnedListFragment extends Fragment {
     public static final String BOOK_ACTION_KEY = "com.cmput301f20t21.bookfriends.BOOK_ACTION";
-    public static final String BOOK_EDIT_KEY = "BOOK_EDIT";
+    public static final String BOOK_EDIT_KEY = "com.cmput301f20t21.bookfriends.BOOK_EDIT";
 
     private OwnedViewModel vm;
     private RecyclerView recyclerView;

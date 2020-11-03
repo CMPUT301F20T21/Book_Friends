@@ -19,7 +19,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.cmput301f20t21.bookfriends.R;
-import com.cmput301f20t21.bookfriends.datatransfer.BookDataTransferHelper;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
@@ -44,9 +43,9 @@ public class AddEditActivity extends AppCompatActivity {
     private static final int IMAGE_PICK_CODE = 1000;
     private static final int PERMISSION_CODE = 1001;
 
-    public static final String NEW_BOOK_INTENT_KEY = "NEW_BOOK";
-    public static final String OLD_BOOK_INTENT_KEY = "OLD_BOOK";
-    public static final String UPDATED_BOOK_INTENT_KEY = "UPDATED_BOOK";
+    public static final String NEW_BOOK_INTENT_KEY = "com.cmput301f20t21.bookfriends.NEW_BOOK";
+    public static final String OLD_BOOK_INTENT_KEY = "com.cmput301f20t21.bookfriends.OLD_BOOK";
+    public static final String UPDATED_BOOK_INTENT_KEY = "com.cmput301f20t21.bookfriends.UPDATED_BOOK";
 
 
     @Override
