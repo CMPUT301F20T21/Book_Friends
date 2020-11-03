@@ -19,16 +19,12 @@ import java.util.stream.IntStream;
 public class RequestViewModel extends ViewModel {
     private MutableLiveData<Book> book;
     private MutableLiveData<Uri> imageUri;
-    private MutableLiveData<List<Request>> requests = new MutableLiveData<>();
-    private List<Request> requestsData = requests.getValue();
+    private MutableLiveData<List<Request>> requests;
+    private List<Request> requestsData;
     private MutableLiveData<Integer> updatedPosition;
 
     private final RequestRepository requestService = RequestRepository.getInstance();
     private final BookRepository bookService = BookRepository.getInstance();
-
-    public RequestViewModel() {
-//        fetchRequesters();
-    }
 
     /**
      * Function to get the book information from FireStore
@@ -54,12 +50,13 @@ public class RequestViewModel extends ViewModel {
     public void fetchRequesters(String bookId) {
         requestService.getByBookId(bookId).addOnSuccessListener(requesterDocumentsSnapShots -> {
            List<DocumentSnapshot> documents = requesterDocumentsSnapShots.getDocuments();
-           requests.setValue(IntStream.range(0, documents.size()).mapToObj(i -> {
+           requestsData.addAll(IntStream.range(0, documents.size()).mapToObj(i -> {
                DocumentSnapshot document = documents.get(i);
                Request request = requestService.getRequestFromDocument(document);
                updatedPosition.setValue(i);
                return request;
            }).collect(Collectors.toList()));
+           requests.setValue(requestsData);
         });
     }
 
@@ -101,7 +98,8 @@ public class RequestViewModel extends ViewModel {
      */
     public MutableLiveData<List<Request>> getRequests(String bookId) {
         if (requests == null) {
-//            requests = new MutableLiveData<>();
+            requests = new MutableLiveData<>();
+            requestsData = requests.getValue();
             fetchRequesters(bookId);
         }
         return this.requests;
@@ -113,12 +111,10 @@ public class RequestViewModel extends ViewModel {
      * @param position
      */
     public void removeRequest(Integer position) {
-        Request request = requests.getValue().get(position);
-        requestService.deny(request.getId()).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                requests.setValue(requests.getValue().remove(request));
-            }
+        Request request = requestsData.get(position);
+        requestService.deny(request.getId()).addOnSuccessListener(aVoid -> {
+            requestsData.remove(request);
+            requests.setValue(requestsData);
         });
     }
 
