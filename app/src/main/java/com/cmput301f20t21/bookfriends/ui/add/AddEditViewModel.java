@@ -17,6 +17,7 @@ import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.BookRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.IAuthRepository;
 import com.google.firebase.firestore.DocumentReference;
 
 public class AddEditViewModel extends ViewModel {
@@ -26,7 +27,7 @@ public class AddEditViewModel extends ViewModel {
         void run(BOOK_ERROR error);
     }
 
-    private final AuthRepository authRepository = AuthRepository.getInstance();
+    private final IAuthRepository authRepository = AuthRepository.getInstance();
     private final BookRepository bookRepository = BookRepository.getInstance();
 
     public void handleAddBook(

@@ -12,6 +12,7 @@ import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.BookRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.IAuthRepository;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -21,7 +22,7 @@ import java.util.stream.IntStream;
 
 public class OwnedViewModel extends ViewModel {
   
-    private final AuthRepository authRepository = AuthRepository.getInstance();
+    private final IAuthRepository authRepository = AuthRepository.getInstance();
     private final BookRepository bookRepository = BookRepository.getInstance();
     
     private MutableLiveData<List<Book>> books;

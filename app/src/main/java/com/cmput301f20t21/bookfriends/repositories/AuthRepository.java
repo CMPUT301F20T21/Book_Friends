@@ -1,22 +1,25 @@
 package com.cmput301f20t21.bookfriends.repositories;
 
 import com.cmput301f20t21.bookfriends.entities.User;
+import com.cmput301f20t21.bookfriends.enums.LOGIN_ERROR;
+import com.cmput301f20t21.bookfriends.exceptions.InvalidLoginCredentialsException;
+import com.cmput301f20t21.bookfriends.repositories.api.IAuthRepository;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class AuthRepository {
+public class AuthRepository implements IAuthRepository{
     private FirebaseAuth mAuth;
     private String username;
 
-    private static final AuthRepository instance = new AuthRepository();
+    private static final IAuthRepository instance = new AuthRepository();
 
     private AuthRepository() {
         mAuth = FirebaseAuth.getInstance();
     }
 
-    public static AuthRepository getInstance() {
+    public static IAuthRepository getInstance() {
         return instance;
     }
 
@@ -38,7 +41,13 @@ public class AuthRepository {
 
     public Task<AuthResult> signIn(String username, String email, String password) {
         return mAuth.signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener(authResult -> this.username = username);
+                .addOnSuccessListener(authResult -> this.username = username).continueWith(authResultTask -> {
+                    if (authResultTask.isSuccessful()) {
+                        return authResultTask.getResult();
+                    } else {
+                        throw new InvalidLoginCredentialsException();
+                    }
+                });
     }
 
     public void signOut() {
