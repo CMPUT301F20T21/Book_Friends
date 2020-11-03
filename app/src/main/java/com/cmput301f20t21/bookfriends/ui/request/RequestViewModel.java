@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.entities.Request;
-import com.cmput301f20t21.bookfriends.services.BookService;
-import com.cmput301f20t21.bookfriends.services.RequestService;
+import com.cmput301f20t21.bookfriends.repositories.BookRepository;
+import com.cmput301f20t21.bookfriends.repositories.RequestRepository;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -19,11 +19,16 @@ import java.util.stream.IntStream;
 public class RequestViewModel extends ViewModel {
     private MutableLiveData<Book> book;
     private MutableLiveData<Uri> imageUri;
-    private MutableLiveData<List<Request>> requests;
+    private MutableLiveData<List<Request>> requests = new MutableLiveData<>();
+    private List<Request> requestsData = requests.getValue();
     private MutableLiveData<Integer> updatedPosition;
 
-    private final RequestService requestService = RequestService.getInstance();
-    private final BookService bookService = BookService.getInstance();
+    private final RequestRepository requestService = RequestRepository.getInstance();
+    private final BookRepository bookService = BookRepository.getInstance();
+
+    public RequestViewModel() {
+//        fetchRequesters();
+    }
 
     /**
      * Function to get the book information from FireStore
@@ -94,9 +99,9 @@ public class RequestViewModel extends ViewModel {
      * @param bookId
      * @return
      */
-    public MutableLiveData<List<Request>> getRequesters(String bookId) {
+    public MutableLiveData<List<Request>> getRequests(String bookId) {
         if (requests == null) {
-            requests = new MutableLiveData<>();
+//            requests = new MutableLiveData<>();
             fetchRequesters(bookId);
         }
         return this.requests;
@@ -105,13 +110,14 @@ public class RequestViewModel extends ViewModel {
     /**
      * When the requester is denied, remove his/her request.
      * update the status of this requester to DENIED
-     * @param requesterId
+     * @param position
      */
-    public void removeRequest(String requesterId) {
-        requestService.deny(requesterId).addOnSuccessListener(new OnSuccessListener<Void>() {
+    public void removeRequest(Integer position) {
+        Request request = requests.getValue().get(position);
+        requestService.deny(request.getId()).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                // not sure what to put here xD
+                requests.setValue(requests.getValue().remove(request));
             }
         });
     }

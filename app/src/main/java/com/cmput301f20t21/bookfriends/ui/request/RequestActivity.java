@@ -49,19 +49,6 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
 
         // getting book ID from previous activity
         String bookId = getIntent().getStringExtra(OwnedListFragment.VIEW_REQUEST_KEY);
-        displayBookInfo(bookId);
-        // set up the back button
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_white_18);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        buildRecyclerView(bookId);
-    }
-
-    /**
-     * display book information by getting it from FireStore based on bookId
-     * @param bookId
-     */
-    public void displayBookInfo(String bookId) {
         // since the data is mutable live, set the observer so the content will change accordingly
         vm.getBook(bookId).observe(this, book -> {
             titleTextView.setText(book.getTitle());
@@ -73,6 +60,37 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
         // also getting the image
         vm.getImageUri().observe(this, uri -> {
             Glide.with(this).load(uri).into(bookImage);
+        });
+        // set up the back button
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_white_18);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        recyclerView = findViewById(R.id.request_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        vm.getRequests(bookId).observe(this, requests -> {
+            requestAdapter = new RequestAdapter((ArrayList<Request>) requests);
+            recyclerView.setAdapter(requestAdapter);
+
+            requestAdapter.setOnItemClickLisener(new RequestAdapter.OnItemClickListener() {
+                @Override
+                public void onRejectClick(int position) {
+                    removeItem(position);
+                }
+
+                @Override
+                public void onAcceptClick(int position) {
+//                openDialog(position);
+                }
+            });
+        });
+
+        vm.getUpdatedPosition().observe(this, (Integer pos) -> {
+            if (requestAdapter != null) {
+                requestAdapter.notifyItemChanged(pos);
+            }
         });
     }
 
@@ -90,49 +108,17 @@ public class RequestActivity extends AppCompatActivity implements ConfirmDialog.
         return super.onOptionsItemSelected(item);
     }
 
+
     /**
-     * Function to set view by ID, set adapter and build recycler view
+     * function to remove an item when we click on Reject button
+     * @param position that needs removing
      */
-    public void buildRecyclerView(String bookId) {
-        recyclerView = findViewById(R.id.request_recycler_view);
-        recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-
-        vm.getRequesters(bookId).observe(this, requests -> {
-            requestAdapter = new RequestAdapter((ArrayList<Request>) requests);
-            recyclerView.setAdapter(requestAdapter);
-        });
-
-        vm.getUpdatedPosition().observe(this, (Integer pos) -> {
-            if (requestAdapter != null) {
-                requestAdapter.notifyItemChanged(pos);
-            }
-        });
-
-//        requestAdapter.setOnItemClickLisener(new RequestAdapter.OnItemClickListener() {
-//            @Override
-//            public void onRejectClick(int position) {
-////                removeItem(position);
-//            }
-//
-//            @Override
-//            public void onAcceptClick(int position) {
-////                openDialog(position);
-//            }
-//        });
+    public void removeItem(int position) {
+        if (position != RecyclerView.NO_POSITION) {
+            vm.removeRequest(position);
+            requestAdapter.notifyItemRemoved(position);
+        }
     }
-
-//    /**
-//     * function to remove an item when we click on Reject button
-//     * @param position that needs removing
-//     */
-//    public void removeItem(int position) {
-//        Request request = requestDataList.get(position);
-//        vm.removeRequest(request.getId());
-//        requestDataList.remove(position);
-//        requestAdapter.notifyItemRemoved(position);
-//    }
 //
 //    /**
 //     * When user click on the accept button
