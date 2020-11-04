@@ -1,9 +1,12 @@
 package com.cmput301f20t21.bookfriends.repositories;
 
+import com.cmput301f20t21.bookfriends.entities.Request;
+import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
@@ -25,12 +28,12 @@ public class RequestRepository {
     }
 
     /**
-     * get request by bookId
+     * get request by bookId, only for books that are opened
      * @param bookId
      * @return Task QuerySnapshot for request
      */
     public Task<QuerySnapshot> getByBookId(String bookId) {
-        return requestCollection.whereEqualTo("bookId", bookId).get();
+        return requestCollection.whereEqualTo("bookId", bookId).whereEqualTo("status", "OPENED").get();
     }
 
     public Task<QuerySnapshot> getBorrowedRequestByUsername(String username) {
@@ -82,6 +85,18 @@ public class RequestRepository {
             batch.update(request, "status", REQUEST_STATUS.DENIED.toString());
         }
         return batch.commit();
+    }
+
+    public Request getRequestFromDocument(DocumentSnapshot documentSnapshot) {
+        String requestId = documentSnapshot.getId();
+        String requester = (String) documentSnapshot.get("requester");
+        String bookId = (String) documentSnapshot.get("bookId");
+        String status = (String) documentSnapshot.get("status");
+        return new Request(requestId, requester, bookId, status);
+    }
+
+    public String getRequesterFromDocument(DocumentSnapshot documentSnapshot) {
+        return (String) documentSnapshot.get("requester");
     }
 
 }

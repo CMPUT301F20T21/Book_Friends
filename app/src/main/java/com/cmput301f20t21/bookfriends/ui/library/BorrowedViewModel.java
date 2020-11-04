@@ -14,7 +14,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 
 public class BorrowedViewModel extends ViewModel {
@@ -63,17 +62,11 @@ public class BorrowedViewModel extends ViewModel {
 
             bookRepository.batchGetBooks(bookIds).addOnSuccessListener(bookDocumentsSnapshots -> {
                 List<DocumentSnapshot> documents = bookDocumentsSnapshots.getDocuments();
-                books.setValue(IntStream.range(0, documents.size()).mapToObj(i -> {
-                    DocumentSnapshot document = documents.get(i);
-                    Book book = bookRepository.getBookFromDocument(document);
-                    if (document.get("imageName") != null) {
-                        bookRepository.getImage((String) document.get("imageName")).addOnSuccessListener(uri -> {
-                            book.setImageUri(uri);
-                            updatedPosition.setValue(i);
-                        });
-                    }
-                    return book;
-                }).collect(Collectors.toList()));
+                books.setValue(
+                        documents.stream()
+                                .map(document -> document.toObject(Book.class))
+                                .collect(Collectors.toList())
+                );
             }).addOnFailureListener(e -> {
                 // TODO: handle failure here
             });

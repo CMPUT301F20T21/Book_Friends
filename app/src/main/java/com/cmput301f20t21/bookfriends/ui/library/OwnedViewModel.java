@@ -67,9 +67,7 @@ public class OwnedViewModel extends ViewModel {
         bookRepository.delete(book.getId())
                 .addOnSuccessListener(
                         res -> {
-                            if (book.getImageUri() != null) {
-                                bookRepository.deleteImage(book.getId());
-                            }
+                            bookRepository.deleteImage(book.getCoverImageName());
                             bookData.remove(book);
                             books.setValue(bookData);
                         })
@@ -86,17 +84,12 @@ public class OwnedViewModel extends ViewModel {
                                 return;
                             }
                             List<DocumentSnapshot> documents = result.getDocuments();
-                            bookData.addAll(IntStream.range(0, documents.size()).mapToObj(i -> {
-                                DocumentSnapshot document = documents.get(i);
-                                Book book = bookRepository.getBookFromDocument(document);
-                                if (document.get("imageName") != null) {
-                                    bookRepository.getImage((String) document.get("imageName")).addOnSuccessListener(uri -> {
-                                        book.setImageUri(uri);
-                                        updatedPosition.setValue(i);
-                                    });
-                                }
-                                return book;
-                            }).collect(Collectors.toList()));
+                            bookData.clear();
+                            bookData.addAll(
+                                    documents.stream()
+                                            .map(document -> document.toObject(Book.class))
+                                            .collect(Collectors.toList())
+                            );
                             books.setValue(bookData);
                         })
                 .addOnFailureListener(e -> errorMessageObserver.setValue(BOOK_ERROR.FAIL_TO_GET_BOOKS));

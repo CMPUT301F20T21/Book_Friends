@@ -40,7 +40,7 @@
     <string name="scan_add">Scan and autofill</string>
     <string name="upload_img">Upload cover image</string>
     <string name="empty_error">Cannot be empty</string>
-    <string name="permission_denied">Permission denied...!</string>
+    <string name="permission_denied">Permission denied…!</string>
     <string name ="string_confirm_password">Confirm Password</string>
     <string name="string_email">Email</string>
     <string name="create">Create</string>
@@ -50,6 +50,8 @@
     <string name="password_match_error">Password does not match</string>
     <string name="username_already_registered_error">Username already registered</string>
     <string name="email_already_registered_error">Email already registered</string>
+    <string name="accept">Accept</string>
+    <string name="reject">Reject</string>
     <string name="book_list_item_author">by %1$s</string>
     <string name="book_list_item_owner">owner: %1$s</string>
     <string name="book_item_menu_delete">Delete</string>
@@ -63,9 +65,13 @@
     <string name="operation_failed">Operation failed, Please try again</string>
     <string name="fail_to_add_image">Fail to add book image, book is added without image</string>
     <string name="unexpected_error">Something unexpected happened, please try again</string>
+    <string name="confirm_request_text">Accepting it will reject all other requests for this book and you will be prompted to mark a place to meet</string>
+    <string name="book_status">status</string>
     <string name="fail_to_get_books">Failed to get a list of books from server</string>
+    <string name="ask_to_borrow">%1$s asked to borrow the book</string>
     <string name="delete_book_successful">Book Successfully Deleted</string>
     <string name="fail_to_delete_book">Book Failed to delete</string>
     <string name="fail_to_edit_book">Failed to edit book</string>
     <string name="scanner_scanning">Scanning...</string>
+    <string name="accept_this_request">Accept this request?</string>
 </resources>

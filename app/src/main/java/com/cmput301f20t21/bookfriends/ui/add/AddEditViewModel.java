@@ -11,6 +11,7 @@ import android.net.Uri;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModel;
 
+import com.cmput301f20t21.bookfriends.callbacks.OnFailCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
@@ -21,18 +22,12 @@ import com.cmput301f20t21.bookfriends.repositories.api.IAuthRepository;
 import com.google.firebase.firestore.DocumentReference;
 
 public class AddEditViewModel extends ViewModel {
-
-    /** called by handlers when async request failed */
-    public interface OnFailCallback {
-        void run(BOOK_ERROR error);
-    }
-
     private final IAuthRepository authRepository = AuthRepository.getInstance();
     private final BookRepository bookRepository = BookRepository.getInstance();
 
     public void handleAddBook(
             final String isbn, final String title, final String author, final String description,
-            @Nullable Uri imageUri, OnSuccessCallbackWithMessage<Book> successCallback, OnFailCallback failCallback
+            @Nullable Uri imageUri, OnSuccessCallbackWithMessage<Book> successCallback, OnFailCallbackWithMessage<BOOK_ERROR> failCallback
     ) {
         String owner = authRepository.getCurrentUser().getUsername();
         bookRepository.add(isbn, title, author, description, owner).addOnCompleteListener(
@@ -41,26 +36,16 @@ public class AddEditViewModel extends ViewModel {
                         DocumentReference result = addBookTask.getResult();
                         if (result != null) {
                             String bookId = result.getId();
-                            Book book = new Book(bookId, isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE, imageUri);
-                            if(imageUri != null) {
-                                // not using string resource because this is not displayed to user
-                                String imageName = bookId + "cover";
-                                bookRepository.addImage(imageName, imageUri).addOnCompleteListener(
-                                        addImageTask -> {
-                                            if (addImageTask.isSuccessful()) {
-                                                bookRepository.addImageNameToBook(bookId, imageName).addOnCompleteListener(
-                                                        addNameTask -> {
-                                                            successCallback.run(book);
-                                                        }
-                                                );
-                                            } else {
-                                                failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
-                                            }
+                            Book book = new Book(bookId, isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE);
+                            bookRepository.addImage(book.getCoverImageName(), imageUri).addOnCompleteListener(
+                                    addImageTask -> {
+                                        if (addImageTask.isSuccessful()) {
+                                            successCallback.run(book);
+                                        } else {
+                                            failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
                                         }
-                                );
-                            } else {
-                                successCallback.run(book);
-                            }
+                                    }
+                            );
                         } else {
                             failCallback.run(BOOK_ERROR.UNEXPECTED);
                         }
@@ -73,43 +58,34 @@ public class AddEditViewModel extends ViewModel {
 
     public void handleEditBook(
             final Book oldBook, final String isbn, final String title, final String author, final String description,
-            @Nullable Uri newUri, OnSuccessCallbackWithMessage<Book> successCallback, OnFailCallback failCallback
+            @Nullable Uri newUri, OnSuccessCallbackWithMessage<Book> successCallback, OnFailCallbackWithMessage<BOOK_ERROR> failCallback
     ) {
-            String bookId = oldBook.getId();
-            bookRepository.editBook(bookId, isbn, title, author, description).addOnCompleteListener(
-                    editBookTask -> {
-                        if (editBookTask.isSuccessful()) {
-                            Book book = new Book(bookId, isbn, title, author, description, oldBook.getOwner(), BOOK_STATUS.AVAILABLE, newUri);
-                            Uri oldUri = oldBook.getImageUri();
-                            if (newUri != null) {
-                                // image not changed
-                                if (oldUri != null && oldUri.equals(newUri)) {
-                                    successCallback.run(book);
-                                } else { // image is being added or replaced
-                                    String imageName = bookId + "cover";
-                                    // addImage will also replace if file with imageName already exist
-                                    bookRepository.addImage(imageName, newUri).addOnCompleteListener(
-                                            addImageTask -> {
-                                                if (addImageTask.isSuccessful()) {
-                                                    bookRepository.addImageNameToBook(bookId, imageName).addOnCompleteListener(
-                                                            addNameTask -> successCallback.run(book)
-                                                    );
-                                                } else {
-                                                    failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
-                                                }
-                                            }
-                                    );
-                                }
-                            } else if (oldUri != null && newUri == null){
-                                // user deletes image (not yet implemented)
-                            } else { // no image before edit and no image after edit
-                                successCallback.run(book);
-                            }
+        String bookId = oldBook.getId();
+        bookRepository.editBook(bookId, isbn, title, author, description).addOnCompleteListener(
+                editBookTask -> {
+                    if (editBookTask.isSuccessful()) {
+                        Book book = new Book(bookId, isbn, title, author, description, oldBook.getOwner(), BOOK_STATUS.AVAILABLE);
+                        // addImage will also replace if file with imageName already exist
+                        if (newUri != null) {
+                            // when the image is updated
+                            bookRepository.addImage(book.getCoverImageName(), newUri).addOnCompleteListener(
+                                    addImageTask -> {
+                                        if (addImageTask.isSuccessful()) {
+                                            successCallback.run(book);
+                                        } else {
+                                            failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
+                                        }
+                                    }
+                            );
                         } else {
-                            failCallback.run(BOOK_ERROR.FAIL_TO_EDIT_BOOK);
+                            // image is not changed
+                            successCallback.run(book);
                         }
+                    } else {
+                        failCallback.run(BOOK_ERROR.FAIL_TO_EDIT_BOOK);
                     }
-            );
+                }
+        );
     }
 
 }
