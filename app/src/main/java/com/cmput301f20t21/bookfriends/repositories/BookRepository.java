@@ -49,12 +49,6 @@ public class BookRepository {
         return fileReference.putFile(imageUri);
     }
 
-    public Task<Void> addImageNameToBook(String bookId, String imageName) {
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("imageName", imageName);
-        return bookCollection.document(bookId).update(data);
-    }
-
     public Task<Void> editBook(String bookId, String isbn, String title, String author, String description) {
         HashMap<String, Object> data = new HashMap<>();
         data.put("isbn", isbn);
@@ -68,8 +62,8 @@ public class BookRepository {
         return bookCollection.document(id).delete();
     }
 
-    public Task<Void> deleteImage(String bookId) {
-        StorageReference fileReference = imageStorageReference.child(bookId + "cover");
+    public Task<Void> deleteImage(String imageName) {
+        StorageReference fileReference = imageStorageReference.child(imageName);
         return fileReference.delete();
     }
 
@@ -92,6 +86,17 @@ public class BookRepository {
     public Task<QuerySnapshot> getBooksOfOwnerId(String username) {
         return bookCollection.whereEqualTo("owner", username).get();
     }
+
+//  TODO ============ the possibly ideal way of us mapping doc directly to entities, works now but not enabled in this PR ========
+//    public Task<ArrayList<Book>> getBooksOfOwnerIdParsed(String username) {
+//        return bookCollection.whereEqualTo("owner", username).get().continueWith(qSnap -> {
+//            List<DocumentSnapshot> docs = qSnap.getResult().getDocuments();
+//            return (ArrayList<Book>) docs
+//                    .stream()
+//                    .map(doc -> doc.toObject(Book.class))
+//                    .collect(Collectors.toList());
+//        });
+//    }
 
     public Task<QuerySnapshot> getBookOfBorrowerId(String uid) {
         // TODO placeholder here

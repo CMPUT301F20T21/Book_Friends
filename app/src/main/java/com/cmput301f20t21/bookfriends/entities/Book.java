@@ -1,12 +1,15 @@
 package com.cmput301f20t21.bookfriends.entities;
 
-import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
+import com.google.firebase.firestore.DocumentId;
 
-import javax.annotation.Nullable;
+import java.util.Objects;
 
-public class Book {
+public class Book implements Parcelable {
+    @DocumentId
     private String id;
     private String isbn;
     private String title;
@@ -14,7 +17,10 @@ public class Book {
     private String description;
     private String owner; // the owner's username
     private BOOK_STATUS status;
-    private Uri imageUri;
+
+    // used for firebase document toObject call
+    public Book() {
+    }
 
     public Book(String id, String isbn, String title, String author, String description, String owner, BOOK_STATUS status) {
         this.id = id;
@@ -26,14 +32,10 @@ public class Book {
         this.status = status;
     }
 
-    public Book(String id, String isbn, String title, String author, String description, String owner, BOOK_STATUS status, Uri imageUri) {
-        this(id, isbn, title, author, description, owner, status);
-        this.imageUri = imageUri;
-    }
-
     public String getId() {
         return id;
     }
+
     public String getIsbn() {
         return isbn;
     }
@@ -54,16 +56,67 @@ public class Book {
         return owner;
     }
 
-    public BOOK_STATUS getBookStatus() {
+    public BOOK_STATUS getStatus() {
         return status;
     }
 
-    @Nullable
-    public Uri getImageUri() {
-        return imageUri;
+    public String getCoverImageName() {
+        return getId() + "cover";
     }
 
-    public void setImageUri(Uri imageUri) {
-        this.imageUri = imageUri;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return id.equals(book.id) &&
+                isbn.equals(book.isbn) &&
+                title.equals(book.title) &&
+                author.equals(book.author) &&
+                Objects.equals(description, book.description) &&
+                owner.equals(book.owner) &&
+                status == book.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, isbn, title, author, description, owner, status);
+    }
+
+    // Implement parcelable boilerplate
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(isbn);
+        dest.writeString(title);
+        dest.writeString(author);
+        dest.writeString(description);
+        dest.writeString(owner);
+        dest.writeString(status.toString());
+    }
+
+    public static final Parcelable.Creator<Book> CREATOR = new Parcelable.Creator<Book>() {
+        public Book createFromParcel(Parcel in) {
+            return new Book(in);
+        }
+
+        public Book[] newArray(int size) {
+            return new Book[size];
+        }
+    };
+
+    private Book(Parcel in) {
+        id = in.readString();
+        isbn = in.readString();
+        title = in.readString();
+        author = in.readString();
+        description = in.readString();
+        owner = in.readString();
+        status = BOOK_STATUS.valueOf(in.readString());
     }
 }
