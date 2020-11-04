@@ -1,4 +1,4 @@
-package com.cmput301f20t21.bookfriends;
+package com.cmput301f20t21.bookfriends.utils;
 
 import android.content.Context;
 
@@ -13,7 +13,6 @@ import java.io.InputStream;
 
 @GlideModule
 public class BookFriendsAppGlideModule extends AppGlideModule {
-
     @Override
     public void registerComponents(Context context, Glide glide, Registry registry) {
         // Register FirebaseImageLoader to handle StorageReference

@@ -8,6 +8,7 @@ import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.RequestRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.IAuthRepository;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 public class BorrowedViewModel extends ViewModel {
     private RequestRepository requestRepository = RequestRepository.getInstance();
     private BookRepository bookRepository = BookRepository.getInstance();
-    private AuthRepository authRepository = AuthRepository.getInstance();
+    private IAuthRepository authRepository = AuthRepository.getInstance();
 
     private MutableLiveData<List<Book>> books;
     private MutableLiveData<Integer> updatedPosition;

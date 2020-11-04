@@ -25,7 +25,6 @@ public class ProfileViewUserActivity extends AppCompatActivity {
     // views
     private TextView usernameView;
     private TextView emailAddress;
-    private TextView phoneNumber;
     private Button logoutBtn;
     private ImageView editProfile;
 
@@ -37,7 +36,7 @@ public class ProfileViewUserActivity extends AppCompatActivity {
         setFieldViews();
 
         Intent intent = getIntent();
-        String uid = (String) intent.getStringExtra(UID_KEY);
+        String uid = intent.getStringExtra(UID_KEY);
 
         if (uid != null) {
             vm.getUserByUid(uid, user -> {
@@ -59,7 +58,6 @@ public class ProfileViewUserActivity extends AppCompatActivity {
     private void setFieldViews() {
         emailAddress = findViewById(R.id.email);
         usernameView = findViewById(R.id.username);
-        phoneNumber = findViewById(R.id.phone);
         logoutBtn = findViewById(R.id.logout_button);
         editProfile = findViewById(R.id.image_edit);
 
@@ -70,6 +68,5 @@ public class ProfileViewUserActivity extends AppCompatActivity {
     private void bindUser(User u) {
         usernameView.setText(u.getUsername());
         emailAddress.setText(u.getEmail());
-        phoneNumber.setText(u.getPhoneNumber());
     }
 }

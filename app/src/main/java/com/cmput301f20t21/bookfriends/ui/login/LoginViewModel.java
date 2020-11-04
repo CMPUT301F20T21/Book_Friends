@@ -16,16 +16,31 @@ import androidx.lifecycle.ViewModel;
 import com.cmput301f20t21.bookfriends.callbacks.OnFailCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallback;
 import com.cmput301f20t21.bookfriends.enums.LOGIN_ERROR;
+import com.cmput301f20t21.bookfriends.exceptions.InvalidLoginCredentialsException;
+import com.cmput301f20t21.bookfriends.exceptions.UsernameNotExistException;
 import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.UserRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.IAuthRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.IUserRepository;
 import com.google.android.material.textfield.TextInputLayout;
 
 /**
  * A view model for the LoginActivity, handles validation and authentication
  */
 public class LoginViewModel extends ViewModel {
-    private final AuthRepository authRepository = AuthRepository.getInstance();
-    private final UserRepository userRepository = UserRepository.getInstance();
+    private final IAuthRepository authRepository;
+    private final IUserRepository userRepository;
+
+    // production
+    public LoginViewModel() {
+        this(AuthRepository.getInstance(), UserRepository.getInstance());
+    }
+
+    // test - allow us to inject repository dependency in test
+    public LoginViewModel(IAuthRepository authRepository, IUserRepository userRepository) {
+        this.authRepository = authRepository;
+        this.userRepository = userRepository;
+    }
 
     /**
      * Check whether the provided layout's text field is empty
@@ -51,23 +66,21 @@ public class LoginViewModel extends ViewModel {
                             final OnSuccessCallback successCallback,
                             final OnFailCallbackWithMessage<LOGIN_ERROR> failureCallback
     ) {
-        userRepository.getByUsername(username).addOnCompleteListener(usernameTask -> {
-            if (usernameTask.isSuccessful()) {
-                if (!usernameTask.getResult().isEmpty()) {
-                    String email = usernameTask.getResult().getDocuments().get(0).get("email").toString();
-                    authRepository.signIn(username, email, password).addOnCompleteListener(authTask -> {
-                        if (authTask.isSuccessful()) {
-                            successCallback.run();
-                        } else {
+        userRepository.getByUsername(username).addOnSuccessListener(user -> {
+            String email = user.getEmail();
+            authRepository.signIn(username, email, password)
+                    .addOnSuccessListener(authResult -> successCallback.run())
+                    .addOnFailureListener(e -> {
+                        if (e instanceof InvalidLoginCredentialsException) {
                             failureCallback.run(LOGIN_ERROR.INCORRECT_PASSWORD);
                         }
                     });
-                } else {
+            }).addOnFailureListener(e -> {
+                if (e instanceof UsernameNotExistException) {
                     failureCallback.run(LOGIN_ERROR.CANNOT_FIND_USERNAME);
+                } else {
+                    failureCallback.run(LOGIN_ERROR.UNEXPECTED);
                 }
-            } else {
-                failureCallback.run(LOGIN_ERROR.UNEXPECTED);
-            }
-        });
+            });
     }
 }
