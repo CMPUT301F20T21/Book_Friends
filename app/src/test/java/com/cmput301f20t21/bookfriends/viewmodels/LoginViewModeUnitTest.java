@@ -64,9 +64,9 @@ public class LoginViewModeUnitTest {
     public void loginFail_usernameDoesNotExist() {
         LoginViewModel model = new LoginViewModel(mockAuthRepository, mockUserRepository);
 
-        FakeFailTask fakeUserDocumentTask = new FakeFailTask(new UsernameNotExistException());
+        FakeFailTask fakeUserTask = new FakeFailTask(new UsernameNotExistException());
 
-        when(mockUserRepository.getByUsername(username)).thenReturn(fakeUserDocumentTask);
+        when(mockUserRepository.getByUsername(username)).thenReturn(fakeUserTask);
 
         model.handleLogIn(username, password, mockSuccessCallback, mockFailCallbackWithMessage);
 
@@ -77,9 +77,9 @@ public class LoginViewModeUnitTest {
     public void loginFail_unexpectedError() {
         LoginViewModel model = new LoginViewModel(mockAuthRepository, mockUserRepository);
 
-        FakeFailTask fakeUserDocumentTask = new FakeFailTask(new UnexpectedException());
+        FakeFailTask fakeUserTask = new FakeFailTask(new UnexpectedException());
 
-        when(mockUserRepository.getByUsername(username)).thenReturn(fakeUserDocumentTask);
+        when(mockUserRepository.getByUsername(username)).thenReturn(fakeUserTask);
 
         model.handleLogIn(username, password, mockSuccessCallback, mockFailCallbackWithMessage);
 

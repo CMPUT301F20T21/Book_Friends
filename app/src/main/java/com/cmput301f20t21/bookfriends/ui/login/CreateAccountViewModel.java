@@ -100,7 +100,7 @@ public class CreateAccountViewModel extends ViewModel {
         // check if username is registered
         // only success if username exist in database
         userRepository.getByUsername(username)
-                .addOnSuccessListener(userDocument -> failCallback.run(SIGNUP_ERROR.USERNAME_EXISTS))
+                .addOnSuccessListener(user -> failCallback.run(SIGNUP_ERROR.USERNAME_EXISTS))
                 .addOnFailureListener(e -> {
                     if (e instanceof UsernameNotExistException) {
                         authRepository.createUserAuth(email, password).addOnSuccessListener(authResult -> {

@@ -66,8 +66,8 @@ public class LoginViewModel extends ViewModel {
                             final OnSuccessCallback successCallback,
                             final OnFailCallbackWithMessage<LOGIN_ERROR> failureCallback
     ) {
-        userRepository.getByUsername(username).addOnSuccessListener(userDocument -> {
-            String email = userDocument.getEmail();
+        userRepository.getByUsername(username).addOnSuccessListener(user -> {
+            String email = user.getEmail();
             authRepository.signIn(username, email, password)
                     .addOnSuccessListener(authResult -> successCallback.run())
                     .addOnFailureListener(e -> {
