@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cmput301f20t21.bookfriends.GlideApp;
+import com.cmput301f20t21.bookfriends.utils.GlideApp;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.ui.library.OwnedListFragment;

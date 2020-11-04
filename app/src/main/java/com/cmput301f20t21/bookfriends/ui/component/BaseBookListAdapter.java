@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cmput301f20t21.bookfriends.GlideApp;
+import com.cmput301f20t21.bookfriends.utils.GlideApp;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.google.firebase.storage.FirebaseStorage;
