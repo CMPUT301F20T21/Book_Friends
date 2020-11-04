@@ -17,18 +17,6 @@
         android:hint="@string/edit_email"
         android:inputType="textEmailAddress" />
 
-    <EditText
-        android:id="@+id/edit_phone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/edit_email"
-
-        android:layout_centerInParent="true"
-        android:layout_marginTop="70dp"
-        android:autofillHints="phone"
-        android:hint="@string/edit_phone"
-        android:inputType="phone" />
-
     <TextView
         android:id="@+id/edit_title"
         android:layout_width="match_parent"
@@ -43,7 +31,7 @@
         android:id="@+id/text_confirm"
         android:layout_width="70dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/edit_phone"
+        android:layout_below="@id/edit_email"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
@@ -58,15 +46,14 @@
         android:id="@+id/text_cancel"
         android:layout_width="70dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/edit_phone"
+        android:layout_below="@id/edit_email"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginTop="55dp"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="55dp"
         android:gravity="start"
         android:text="@string/edit_cancel"
-        android:textColor="@color/colorPrimary"
-         />
+        android:textColor="@color/colorPrimary" />
 </RelativeLayout>

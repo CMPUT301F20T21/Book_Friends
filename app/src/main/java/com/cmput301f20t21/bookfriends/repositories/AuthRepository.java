@@ -29,9 +29,7 @@ public class AuthRepository implements IAuthRepository{
         return new User(
                 firebaseUser.getUid(),
                 username,
-                firebaseUser.getDisplayName(),
-                firebaseUser.getEmail(),
-                firebaseUser.getPhoneNumber()
+                firebaseUser.getEmail()
         );
     }
 

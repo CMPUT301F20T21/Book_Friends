@@ -1,15 +1,9 @@
 package com.cmput301f20t21.bookfriends.repositories;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-
 import com.cmput301f20t21.bookfriends.entities.User;
-import com.cmput301f20t21.bookfriends.entities.UserDocument;
 import com.cmput301f20t21.bookfriends.exceptions.UnexpectedException;
 import com.cmput301f20t21.bookfriends.exceptions.UsernameNotExistException;
 import com.cmput301f20t21.bookfriends.repositories.api.IUserRepository;
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -38,13 +32,16 @@ public class UserRepository implements IUserRepository {
         return userCollection.document(uid).set(data);
     }
 
-    public Task<UserDocument> getByUsername(String username) {
+    public Task<User> getByUsername(String username) {
         return userCollection.whereEqualTo("username", username).get().continueWith(task -> {
             if (task.isSuccessful()) {
                 if (!task.getResult().isEmpty()) {
                     DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                    UserDocument userDocument = document.toObject(UserDocument.class);
-                    return userDocument;
+                    try {
+                        return document.toObject(User.class);
+                    } catch (Exception e) {
+                        throw new UnexpectedException();
+                    }
                 } else {
                     throw new UsernameNotExistException();
                 }

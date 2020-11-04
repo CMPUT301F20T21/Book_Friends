@@ -20,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 public class ProfileEditDialog extends DialogFragment {
     private static final String TAG = "UpDateTag";
     private EditText editEmail;
-    private EditText editPhone;
     private TextView cancel;
     private TextView confirm;
     private EditListener listener;
@@ -30,7 +29,6 @@ public class ProfileEditDialog extends DialogFragment {
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container,Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_editprofile,container,false);
         editEmail = view.findViewById(R.id.edit_email);
-        editPhone = view.findViewById(R.id.edit_phone);
         cancel = view.findViewById(R.id.text_cancel);
         confirm = view.findViewById(R.id.text_confirm);
 
@@ -40,37 +38,26 @@ public class ProfileEditDialog extends DialogFragment {
         Bundle argument  = getArguments();
         if (argument != null) {
             editEmail.setText(argument.getString("email"));
-            editPhone.setText(argument.getString("phone"));
         }
 
         //if cancel is clicked on the dialog
         getDialog().getWindow().setBackgroundDrawableResource(R.drawable.button_round_corner);
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDialog().dismiss();
-            }
-        });
+        cancel.setOnClickListener(v -> getDialog().dismiss());
 
         //if confirm is clicked on the dialog, pass value
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String inputEmail = editEmail.getText().toString();
-                String inputPhone = editPhone.getText().toString();
-                isEmailValid(inputEmail);
-                isPhoneValid(inputPhone);
-                if (isEmailValid(inputEmail) && isPhoneValid(inputPhone)){
-                    listener.onEdit(inputEmail, inputPhone);
-                    getDialog().dismiss();
-                }
-
-                //update email authentication
-                profileViewModel.updateCurrentUserEmail(inputEmail, TAG);
-                //update field "email"
-                profileViewModel.updateFirestoreUserEmail(inputEmail, TAG);
-
+        confirm.setOnClickListener(v -> {
+            String inputEmail = editEmail.getText().toString();
+            isEmailValid(inputEmail);
+            if (isEmailValid(inputEmail)){
+                listener.onEdit(inputEmail);
+                getDialog().dismiss();
             }
+
+            //update email authentication
+            profileViewModel.updateCurrentUserEmail(inputEmail, TAG);
+            //update field "email"
+            profileViewModel.updateFirestoreUserEmail(inputEmail, TAG);
+
         });
         return view;
 
@@ -87,7 +74,7 @@ public class ProfileEditDialog extends DialogFragment {
     }
 
     public interface EditListener{
-        void onEdit(String email, String phone);
+        void onEdit(String email);
     }
 
     // check if entered email address is valid or not
@@ -104,18 +91,4 @@ public class ProfileEditDialog extends DialogFragment {
         }
         return true;
     }
-    /// check if entered phone number is valid or not
-    // if not, show message
-    boolean isPhoneValid(String phone) {
-        if (phone.length() == 0){
-            return true;
-        }
-        boolean valid =  android.util.Patterns.PHONE.matcher(phone).matches();
-        if (!valid){
-            editPhone.setError(getString(R.string.m_not_valid_phone));
-            return false;
-        }
-        return true;
-    }
-
 }

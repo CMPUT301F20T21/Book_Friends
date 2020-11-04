@@ -44,9 +44,7 @@ public class ProfileViewModel extends ViewModel {
                         users.add(new User(
                                 document.getId(),
                                 document.get("username").toString(),
-                                "",
-                                document.get("email").toString(),
-                                ""
+                                document.get("email").toString()
                         ));
                     }
                     searchedUsers.setValue(users);
@@ -75,9 +73,7 @@ public class ProfileViewModel extends ViewModel {
             User u = new User(
                     document.getId(),
                     document.get("username").toString(),
-                    "",
-                    document.get("email").toString(),
-                    ""
+                    document.get("email").toString()
             );
             onSuccess.run(u);
         });
@@ -86,25 +82,19 @@ public class ProfileViewModel extends ViewModel {
     public void updateCurrentUserEmail(String inputEmail, String TAG){
         //update email authentication
         Task<Void> updateEmail = AuthRepository.getInstance().updateEmail(inputEmail);
-        updateEmail.addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Log.d(TAG, "User email address updated.");
-                            }
-                        }
-                    });
+        updateEmail.addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.d(TAG, "User email address updated.");
+            }
+        });
     }
 
     public void updateFirestoreUserEmail(String inputEmail, String TAG){
         //update "email" field
         Task<Void> updateUser = userRepository.updateUserEmail(inputEmail);
-        updateUser.addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Log.d(TAG, "User email address updated.");
-                }
+        updateUser.addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.d(TAG, "User email address updated.");
             }
         });
 

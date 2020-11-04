@@ -1,6 +1,6 @@
 package com.cmput301f20t21.bookfriends.viewmodels;
 
-import com.cmput301f20t21.bookfriends.entities.UserDocument;
+import com.cmput301f20t21.bookfriends.entities.User;
 import com.cmput301f20t21.bookfriends.enums.LOGIN_ERROR;
 import com.cmput301f20t21.bookfriends.exceptions.InvalidLoginCredentialsException;
 import com.cmput301f20t21.bookfriends.exceptions.UnexpectedException;
@@ -25,6 +25,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoginViewModeUnitTest {
+    private String uid = "uid";
     private String username = "username";
     private String email = "email";
     private String password = "password";
@@ -46,13 +47,13 @@ public class LoginViewModeUnitTest {
         LoginViewModel model = new LoginViewModel(mockAuthRepository, mockUserRepository);
 
 
-        UserDocument userDocument = new UserDocument("1", email, username);
+        User user = new User(uid, email, username);
 
-        FakeSuccessTask<UserDocument> fakeUserDocumentTask = new FakeSuccessTask(userDocument);
+        FakeSuccessTask<User> fakeUserTask = new FakeSuccessTask(user);
         FakeSuccessTask<AuthResult> fakeAuthResultTask = new FakeSuccessTask(null);
 
 
-        when(mockUserRepository.getByUsername(username)).thenReturn(fakeUserDocumentTask);
+        when(mockUserRepository.getByUsername(username)).thenReturn(fakeUserTask);
         when(mockAuthRepository.signIn(username, email, password)).thenReturn(fakeAuthResultTask);
 
         model.handleLogIn(username, password, mockSuccessCallback, mockFailCallbackWithMessage);
@@ -88,12 +89,12 @@ public class LoginViewModeUnitTest {
     @Test
     public void loginFail_incorrectPassword() {
         LoginViewModel model = new LoginViewModel(mockAuthRepository, mockUserRepository);
-        UserDocument userDocument = new UserDocument("1", email, username);
+        User user = new User(uid, email, username);
 
-        FakeSuccessTask fakeUserDocumentTask = new FakeSuccessTask(userDocument);
+        FakeSuccessTask<User> fakeUserTask = new FakeSuccessTask(user);
         FakeFailTask fakeAuthResultTask = new FakeFailTask(new InvalidLoginCredentialsException());
 
-        when(mockUserRepository.getByUsername(username)).thenReturn(fakeUserDocumentTask);
+        when(mockUserRepository.getByUsername(username)).thenReturn(fakeUserTask);
         when(mockAuthRepository.signIn(username, email, password)).thenReturn(fakeAuthResultTask);
 
         model.handleLogIn(username, password, mockSuccessCallback, mockFailCallbackWithMessage);

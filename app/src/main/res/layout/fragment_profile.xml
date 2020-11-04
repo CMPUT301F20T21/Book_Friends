@@ -88,41 +88,6 @@
                  />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/layout_phone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_email"
-            app:layout_constraintVertical_bias="0.182"
-            tools:ignore="UseCompoundDrawables">
-
-            <ImageView
-                android:id="@+id/image_phone"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginStart="60dp"
-                android:layout_marginLeft="60dp"
-                android:contentDescription="@string/icon_phone"
-                android:src="@drawable/ic_baseline_phone_24"
-                tools:src="@tools:sample/avatars"
-                tools:srcCompat="@drawable/ic_baseline_phone_24" />
-
-            <TextView
-                android:id="@+id/phone"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="6dp"
-                android:layout_weight="1"
-                />
-        </LinearLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.fragment.app.FragmentContainerView

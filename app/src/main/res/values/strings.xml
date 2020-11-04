@@ -27,12 +27,10 @@
     <string name="icon_phone">icon_phone</string>
     <string name="profile_edit">profile_edit</string>
     <string name="edit_email">Edit Email</string>
-    <string name="edit_phone">Edit Phone Number</string>
     <string name="title_edit_profile">Edit Contact Information</string>
     <string name="edit_cancel">CANCEL</string>
     <string name="edit_confirm">CONFIRM</string>
     <string name="m_not_valid_email">Email address is INVALID</string>
-    <string name="m_not_valid_phone">Phone number is INVALID</string>
     <string name="string_isbn">ISBN:</string>
     <string name="string_title">Title:</string>
     <string name="string_author">Author:</string>
@@ -45,7 +43,6 @@
     <string name="permission_denied">Permission denied...!</string>
     <string name ="string_confirm_password">Confirm Password</string>
     <string name="string_email">Email</string>
-    <string name="string_phone_number">Phone Number</string>
     <string name="create">Create</string>
     <string name="cancel">Cancel</string>
     <string name="user_name">username</string>
