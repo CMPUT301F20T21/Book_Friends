@@ -37,15 +37,10 @@ public class AddEditViewModel extends ViewModel {
                         if (result != null) {
                             String bookId = result.getId();
                             Book book = new Book(bookId, isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE);
-                            String imageName = bookId + "cover";
-                            bookRepository.addImage(imageName, imageUri).addOnCompleteListener(
+                            bookRepository.addImage(book.getCoverImageName(), imageUri).addOnCompleteListener(
                                     addImageTask -> {
                                         if (addImageTask.isSuccessful()) {
-                                            bookRepository.addImageNameToBook(bookId, imageName).addOnCompleteListener(
-                                                    addNameTask -> {
-                                                        successCallback.run(book);
-                                                    }
-                                            );
+                                            successCallback.run(book);
                                         } else {
                                             failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
                                         }
@@ -70,19 +65,22 @@ public class AddEditViewModel extends ViewModel {
                 editBookTask -> {
                     if (editBookTask.isSuccessful()) {
                         Book book = new Book(bookId, isbn, title, author, description, oldBook.getOwner(), BOOK_STATUS.AVAILABLE);
-                        String imageName = bookId + "cover";
                         // addImage will also replace if file with imageName already exist
-                        bookRepository.addImage(imageName, newUri).addOnCompleteListener(
-                                addImageTask -> {
-                                    if (addImageTask.isSuccessful()) {
-                                        bookRepository.addImageNameToBook(bookId, imageName).addOnCompleteListener(
-                                                addNameTask -> successCallback.run(book)
-                                        );
-                                    } else {
-                                        failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
+                        if (newUri != null) {
+                            // when the image is updated
+                            bookRepository.addImage(book.getCoverImageName(), newUri).addOnCompleteListener(
+                                    addImageTask -> {
+                                        if (addImageTask.isSuccessful()) {
+                                            successCallback.run(book);
+                                        } else {
+                                            failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
+                                        }
                                     }
-                                }
-                        );
+                            );
+                        } else {
+                            // image is not changed
+                            successCallback.run(book);
+                        }
                     } else {
                         failCallback.run(BOOK_ERROR.FAIL_TO_EDIT_BOOK);
                     }
