@@ -190,7 +190,7 @@ public class AddEditActivity extends AppCompatActivity {
         titleLayout.getEditText().setText(editBook.getTitle());
         authorLayout.getEditText().setText(editBook.getAuthor());
         descriptionLayout.getEditText().setText(editBook.getDescription());
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference(editBook.getId() + "cover");
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference(editBook.getCoverImageName());
         GlideApp.with(this)
                 .load(storageReference)
                 .placeholder(R.drawable.no_image)
