@@ -10,8 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.cmput301f20t21.bookfriends.BookFriendsAppGlideModule;
 import com.cmput301f20t21.bookfriends.GlideApp;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
@@ -68,7 +66,7 @@ public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapte
             this.isbn.setText(book.getIsbn());
             this.book = book;
             StorageReference storageReference = FirebaseStorage.getInstance().getReference(book.getCoverImageName());
-            Glide.with(holderView)
+            GlideApp.with(holderView)
                     .load(storageReference)
                     .placeholder(R.drawable.no_image)
                     .into(bookImage);
