@@ -45,9 +45,7 @@ public class LoginViewModeUnitTest {
     @Test
     public void loginSuccess() {
         LoginViewModel model = new LoginViewModel(mockAuthRepository, mockUserRepository);
-
-
-        User user = new User(uid, email, username);
+        User user = new User(uid, username, email);
 
         FakeSuccessTask<User> fakeUserTask = new FakeSuccessTask(user);
         FakeSuccessTask<AuthResult> fakeAuthResultTask = new FakeSuccessTask(null);
@@ -89,7 +87,7 @@ public class LoginViewModeUnitTest {
     @Test
     public void loginFail_incorrectPassword() {
         LoginViewModel model = new LoginViewModel(mockAuthRepository, mockUserRepository);
-        User user = new User(uid, email, username);
+        User user = new User(uid, username, email);
 
         FakeSuccessTask<User> fakeUserTask = new FakeSuccessTask(user);
         FakeFailTask fakeAuthResultTask = new FakeFailTask(new InvalidLoginCredentialsException());
