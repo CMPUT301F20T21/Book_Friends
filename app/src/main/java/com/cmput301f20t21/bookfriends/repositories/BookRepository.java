@@ -93,6 +93,17 @@ public class BookRepository {
         return bookCollection.whereEqualTo("owner", username).get();
     }
 
+//  TODO ============ the possibly ideal way of us mapping doc directly to entities, works now but not enabled in this PR ========
+//    public Task<ArrayList<Book>> getBooksOfOwnerIdParsed(String username) {
+//        return bookCollection.whereEqualTo("owner", username).get().continueWith(qSnap -> {
+//            List<DocumentSnapshot> docs = qSnap.getResult().getDocuments();
+//            return (ArrayList<Book>) docs
+//                    .stream()
+//                    .map(doc -> doc.toObject(Book.class))
+//                    .collect(Collectors.toList());
+//        });
+//    }
+
     public Task<QuerySnapshot> getBookOfBorrowerId(String uid) {
         // TODO placeholder here
         return bookCollection.whereEqualTo("owner", uid).get();

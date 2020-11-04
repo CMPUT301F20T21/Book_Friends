@@ -11,8 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.cmput301f20t21.bookfriends.BookFriendsAppGlideModule;
+import com.cmput301f20t21.bookfriends.GlideApp;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
@@ -63,14 +67,11 @@ public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapte
             this.author.setText(this.itemView.getResources().getString(R.string.book_list_item_author, book.getAuthor()));
             this.isbn.setText(book.getIsbn());
             this.book = book;
-            Uri imageUri = book.getImageUri();
-            if (imageUri != null) {
-                Glide.with(holderView).load(imageUri).into(bookImage);
-            } else {
-                // there is a bug that one image is loaded into multiple imageViews
-                // must set the image to something default for each imageView if no image exist
-                Glide.with(holderView).load(R.drawable.no_image).into(bookImage);
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference(book.getId() + "cover");
+            Glide.with(holderView)
+                    .load(storageReference)
+                    .placeholder(R.drawable.no_image)
+                    .into(bookImage);
             }
         }
-    }
 }

@@ -1,16 +1,15 @@
 package com.cmput301f20t21.bookfriends.entities;
 
-import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
+import com.google.firebase.firestore.DocumentId;
 
 import java.util.Objects;
 
-import javax.annotation.Nullable;
-
 public class Book implements Parcelable {
+    @DocumentId
     private String id;
     private String isbn;
     private String title;
@@ -18,7 +17,10 @@ public class Book implements Parcelable {
     private String description;
     private String owner; // the owner's username
     private BOOK_STATUS status;
-    private Uri imageUri;
+
+    // used for firebase document toObject call
+    public Book() {
+    }
 
     public Book(String id, String isbn, String title, String author, String description, String owner, BOOK_STATUS status) {
         this.id = id;
@@ -30,14 +32,10 @@ public class Book implements Parcelable {
         this.status = status;
     }
 
-    public Book(String id, String isbn, String title, String author, String description, String owner, BOOK_STATUS status, Uri imageUri) {
-        this(id, isbn, title, author, description, owner, status);
-        this.imageUri = imageUri;
-    }
-
     public String getId() {
         return id;
     }
+
     public String getIsbn() {
         return isbn;
     }
@@ -58,17 +56,8 @@ public class Book implements Parcelable {
         return owner;
     }
 
-    public BOOK_STATUS getBookStatus() {
+    public BOOK_STATUS getStatus() {
         return status;
-    }
-
-    @Nullable
-    public Uri getImageUri() {
-        return imageUri;
-    }
-
-    public void setImageUri(Uri imageUri) {
-        this.imageUri = imageUri;
     }
 
     @Override
@@ -82,13 +71,12 @@ public class Book implements Parcelable {
                 author.equals(book.author) &&
                 Objects.equals(description, book.description) &&
                 owner.equals(book.owner) &&
-                status == book.status &&
-                Objects.equals(imageUri, book.imageUri);
+                status == book.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, isbn, title, author, description, owner, status, imageUri);
+        return Objects.hash(id, isbn, title, author, description, owner, status);
     }
 
     // Implement parcelable boilerplate
@@ -106,7 +94,6 @@ public class Book implements Parcelable {
         dest.writeString(description);
         dest.writeString(owner);
         dest.writeString(status.toString());
-        dest.writeParcelable(imageUri, flags);
     }
 
     public static final Parcelable.Creator<Book> CREATOR = new Parcelable.Creator<Book>() {
@@ -127,6 +114,5 @@ public class Book implements Parcelable {
         description = in.readString();
         owner = in.readString();
         status = BOOK_STATUS.valueOf(in.readString());
-        imageUri = in.readParcelable(Uri.class.getClassLoader());
     }
 }
