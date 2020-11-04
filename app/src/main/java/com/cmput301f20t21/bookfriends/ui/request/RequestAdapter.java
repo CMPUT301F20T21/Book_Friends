@@ -22,7 +22,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
         void onAcceptClick(int position);
     }
 
-    public void setOnItemClickLisener(OnItemClickListener listener) {
+    public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 

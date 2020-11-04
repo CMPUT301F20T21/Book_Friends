@@ -17,10 +17,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
+import com.cmput301f20t21.bookfriends.GlideApp;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.ui.library.OwnedListFragment;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -58,13 +60,15 @@ public class RequestActivity extends AppCompatActivity {
             titleTextView.setText(book.getTitle());
             authorTextView.setText(book.getAuthor());
             descriptionTextView.setText(book.getDescription());
-            bookStatus.setText(book.getBookStatus().toString());
+            bookStatus.setText(book.getStatus().toString());
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference(book.getCoverImageName());
+            GlideApp.with(this)
+                    .load(storageReference)
+                    .placeholder(R.drawable.no_image)
+                    .into(bookImage);
         });
 
-        // also getting the image
-        vm.getImageUri().observe(this, uri -> {
-            Glide.with(this).load(uri).into(bookImage);
-        });
+
         // set up the back button
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_white_18);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -78,7 +82,7 @@ public class RequestActivity extends AppCompatActivity {
         // the requests live data. fetched once, but we keep the reference for multiple usage
         LiveData<ArrayList<Request>> requestsLiveData = vm.getRequests(bookId);
         requestAdapter = new RequestAdapter(requestsLiveData.getValue());
-        requestAdapter.setOnItemClickLisener(new RequestAdapter.OnItemClickListener() {
+        requestAdapter.setOnItemClickListener(new RequestAdapter.OnItemClickListener() {
             @Override
             public void onRejectClick(int position) {
                 removeItem(position);

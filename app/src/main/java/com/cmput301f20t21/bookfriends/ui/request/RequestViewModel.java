@@ -1,7 +1,5 @@
 package com.cmput301f20t21.bookfriends.ui.request;
 
-import android.net.Uri;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -10,7 +8,6 @@ import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.repositories.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.RequestRepository;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
@@ -20,7 +17,6 @@ import java.util.stream.IntStream;
 
 public class RequestViewModel extends ViewModel {
     private final MutableLiveData<Book> book = new MutableLiveData<>();
-    private final MutableLiveData<Uri> imageUri = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<Request>> requests = new MutableLiveData<>(new ArrayList<>());
     private final ArrayList<Request> requestsData = requests.getValue();
 
@@ -35,11 +31,7 @@ public class RequestViewModel extends ViewModel {
         bookService.getBookById(bookId).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
-                if (document != null && document.exists()) {
-                    String imageName = (String) document.get("imageName");
-                    bookService.getImage(imageName).addOnSuccessListener(imageUri::setValue);
-                    book.setValue(bookService.getBookFromDocument(document));
-                }
+                book.setValue(bookService.getBookFromDocument(document));
             }
         });
     }
@@ -69,14 +61,6 @@ public class RequestViewModel extends ViewModel {
     public LiveData<Book> getBook(String bookId) {
         fetchBook(bookId);
         return this.book;
-    }
-
-    /**
-     * similar, we get the image of the current book
-     * @return
-     */
-    public LiveData<Uri> getImageUri() {
-        return this.imageUri;
     }
 
     /**
