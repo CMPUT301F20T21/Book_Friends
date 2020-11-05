@@ -49,24 +49,24 @@ public class CreateAccountActivityTest {
         ViewInteraction emailField = onView(
                 allOf(withId(R.id.email_field), isDisplayed()));
         emailField.perform(replaceText("testgmail"), closeSoftKeyboard());
-        // needed for async operations (i.e. authentication)
-
 
         ViewInteraction createButton = onView(
                 allOf(withId(R.id.signup_create), isDisplayed()));
         createButton.perform(click());
 
-        // needed for async operations (i.e. authentication)
         Thread.sleep(3000);
         ViewInteraction errorUser = onView(
                 allOf(withId(R.id.textinput_error), withText("Only letters and numbers are allowed"), isDisplayed()));
         errorUser.check(matches(withText("Only letters and numbers are allowed")));
+
         ViewInteraction passwordError = onView(
                 allOf(withId(R.id.textinput_error), withText("Password should be at least 6 characters"), isDisplayed()));
         passwordError.check(matches(withText("Password should be at least 6 characters")));
+
         ViewInteraction confirmPassword = onView(
                 allOf(withId(R.id.textinput_error), withText("Password does not match"), isDisplayed()));
         confirmPassword.check(matches(withText("Password does not match")));
+
         ViewInteraction emailError = onView(
                 allOf(withId(R.id.textinput_error), withText("Invalid Email"), isDisplayed()));
         emailError.check(matches(withText("Invalid Email")));
