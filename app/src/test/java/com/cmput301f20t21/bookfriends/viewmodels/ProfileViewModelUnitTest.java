@@ -27,6 +27,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -48,6 +49,9 @@ public class ProfileViewModelUnitTest {
     @Mock
     FakeSuccessCallbackWithMessage<User> fakeSuccessUserCallback;
 
+    /**
+     * The search bar should return nothing on empty input
+     */
     @Test
     public void searchSuccess_noResultsOnEmptyInput() {
         ProfileViewModel vm = new ProfileViewModel(mockUserRepository);
@@ -71,8 +75,11 @@ public class ProfileViewModelUnitTest {
         assertEquals(usersResult, new ArrayList<User>());
     }
 
+    /**
+     * The search bar should return multiple results as we type in the leading letters
+     */
     @Test
-    public void searchSuccess_noMultipleResults() {
+    public void searchSuccess_multipleResults() {
         ProfileViewModel vm = new ProfileViewModel(mockUserRepository);
 
         // start the mock observer
@@ -97,22 +104,42 @@ public class ProfileViewModelUnitTest {
         assertEquals(usersResult, usersResultReal);
     }
 
+    /**
+     * The getUserById should succeed given a user is returned by repo
+     */
     @Test
     public void getUserByUidSuccess() {
-        // TODO
+        ProfileViewModel vm = new ProfileViewModel(mockUserRepository);
+        String uid = "testUid";
+        User user = new User(uid, "testusername", "testemail");
+
+        // the task returned by the repo containing the fake data
+        FakeSuccessTask<User> fakeTask = new FakeSuccessTask<>(user);
+        when(mockUserRepository.getByUid(uid)).thenReturn(fakeTask);
+
+        vm.getUserByUid(uid, fakeSuccessUserCallback, fakeFailUserCallback);
+
+        verify(fakeSuccessUserCallback, times(1)).run(user);
+        verifyNoMoreInteractions(fakeFailUserCallback);
+        verifyNoMoreInteractions(fakeSuccessUserCallback);
     }
 
+    /**
+     * The getUserById should fail given that the repo threw an exception
+     */
     @Test
     public void getUserByUidFailure() {
         ProfileViewModel vm = new ProfileViewModel(mockUserRepository);
         String uid = "testUid";
 
-        FakeSuccessCallbackWithMessage<User> mockOnSuccess = new FakeSuccessCallbackWithMessage<>();
+        // the task returned by the repo containing the fake data
         FakeFailTask<User> fakeTask = new FakeFailTask<>(new UserNotExistException());
-
         when(mockUserRepository.getByUid(uid)).thenReturn(fakeTask);
-        vm.getUserByUid(uid, mockOnSuccess, fakeFailUserCallback);
+
+        vm.getUserByUid(uid, fakeSuccessUserCallback, fakeFailUserCallback);
 
         verify(fakeFailUserCallback, times(1)).run();
+        verifyNoMoreInteractions(fakeFailUserCallback);
+        verifyNoMoreInteractions(fakeSuccessUserCallback);
     }
 }
