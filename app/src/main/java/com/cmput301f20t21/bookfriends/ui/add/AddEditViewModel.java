@@ -37,15 +37,19 @@ public class AddEditViewModel extends ViewModel {
                         if (result != null) {
                             String bookId = result.getId();
                             Book book = new Book(bookId, isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE);
-                            bookRepository.addImage(book.getCoverImageName(), imageUri).addOnCompleteListener(
-                                    addImageTask -> {
-                                        if (addImageTask.isSuccessful()) {
-                                            successCallback.run(book);
-                                        } else {
-                                            failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
+                            if (imageUri != null) {
+                                bookRepository.addImage(book.getCoverImageName(), imageUri).addOnCompleteListener(
+                                        addImageTask -> {
+                                            if (addImageTask.isSuccessful()) {
+                                                successCallback.run(book);
+                                            } else {
+                                                failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
+                                            }
                                         }
-                                    }
-                            );
+                                );
+                            } else {
+                                successCallback.run(book);
+                            }
                         } else {
                             failCallback.run(BOOK_ERROR.UNEXPECTED);
                         }
