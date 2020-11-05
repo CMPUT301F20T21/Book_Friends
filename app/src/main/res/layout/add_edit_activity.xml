@@ -89,6 +89,7 @@
             app:layout_constraintTop_toBottomOf="@+id/title_layout">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/author_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/string_author"
@@ -115,6 +116,7 @@
             app:layout_constraintTop_toBottomOf="@+id/author_layout">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/description_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/string_description" />
@@ -140,6 +142,7 @@
             app:layout_constraintTop_toBottomOf="@+id/book_image_view">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/ISBN_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/string_isbn"
@@ -165,6 +168,7 @@
             app:layout_constraintTop_toBottomOf="@+id/ISBN_layout">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/title_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/string_title"

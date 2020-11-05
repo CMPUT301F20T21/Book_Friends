@@ -116,4 +116,8 @@ public class BookRepository {
                 .whereEqualTo("status", BOOK_STATUS.AVAILABLE.toString())
                 .whereEqualTo("status", BOOK_STATUS.REQUESTED.toString()).get();
     }
+
+    public Task<QuerySnapshot> getDocumentBy(String isbn, String title, String author) {
+        return bookCollection.whereEqualTo("isbn", isbn).whereEqualTo("title", title).whereEqualTo("author", author).get();
+    }
 }

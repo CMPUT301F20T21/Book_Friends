@@ -19,11 +19,18 @@ import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.IAuthRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.IBookRepository;
 import com.google.firebase.firestore.DocumentReference;
 
 public class AddEditViewModel extends ViewModel {
     private final IAuthRepository authRepository = AuthRepository.getInstance();
     private final BookRepository bookRepository = BookRepository.getInstance();
+
+    // test
+//    public AddEditViewModel(IBookRepository bookRepository, IAuthRepository authRepository) {
+//        this.authRepository = authRepository;
+//        this.bookRepository = bookRepository;
+//    }
 
     public void handleAddBook(
             final String isbn, final String title, final String author, final String description,
@@ -37,15 +44,20 @@ public class AddEditViewModel extends ViewModel {
                         if (result != null) {
                             String bookId = result.getId();
                             Book book = new Book(bookId, isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE);
-                            bookRepository.addImage(book.getCoverImageName(), imageUri).addOnCompleteListener(
-                                    addImageTask -> {
-                                        if (addImageTask.isSuccessful()) {
-                                            successCallback.run(book);
-                                        } else {
-                                            failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
+                            if (imageUri != null) {
+                                bookRepository.addImage(book.getCoverImageName(), imageUri).addOnCompleteListener(
+                                        addImageTask -> {
+                                            if (addImageTask.isSuccessful()) {
+                                                successCallback.run(book);
+                                            } else {
+                                                failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
+                                            }
                                         }
-                                    }
-                            );
+                                );
+
+                            } else {
+                                successCallback.run(book);
+                            }
                         } else {
                             failCallback.run(BOOK_ERROR.UNEXPECTED);
                         }
