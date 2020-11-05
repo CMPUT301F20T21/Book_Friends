@@ -23,14 +23,20 @@ import com.cmput301f20t21.bookfriends.repositories.api.IBookRepository;
 import com.google.firebase.firestore.DocumentReference;
 
 public class AddEditViewModel extends ViewModel {
-    private final IAuthRepository authRepository = AuthRepository.getInstance();
-    private final BookRepository bookRepository = BookRepository.getInstance();
+    private final IAuthRepository authRepository;
+    private final IBookRepository bookRepository;
 
-    // test
-//    public AddEditViewModel(IBookRepository bookRepository, IAuthRepository authRepository) {
-//        this.authRepository = authRepository;
-//        this.bookRepository = bookRepository;
-//    }
+    //production
+    public AddEditViewModel() {
+        this(AuthRepository.getInstance(), BookRepository.getInstance());
+    }
+
+    // test - allow us to inject repository dependecy in test
+    public AddEditViewModel(IAuthRepository authRepository, IBookRepository bookRepository) {
+        this.authRepository = authRepository;
+        this.bookRepository = bookRepository;
+    }
+
 
     public void handleAddBook(
             final String isbn, final String title, final String author, final String description,
