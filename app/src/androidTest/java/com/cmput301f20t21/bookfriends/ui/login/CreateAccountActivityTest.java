@@ -26,40 +26,7 @@ import static org.hamcrest.Matchers.allOf;
 @RunWith(AndroidJUnit4.class)
 public class CreateAccountActivityTest {
     @Rule
-    public ActivityScenarioRule<LoginActivity> mActivityTestRule = new ActivityScenarioRule<>(LoginActivity.class);
-
-    @Test
-    public void testCreateAccountSuccess() throws InterruptedException {
-        ViewInteraction createAccountButton = onView(
-                allOf(withId(R.id.create_account_button), isDisplayed()));
-        createAccountButton.perform(click());
-
-        ViewInteraction usernameField = onView(
-                allOf(withId(R.id.signup_username_field), isDisplayed()));
-        usernameField.perform(replaceText("test5User"), closeSoftKeyboard());
-
-        ViewInteraction passwordField = onView(
-                allOf(withId(R.id.signup_password_field), isDisplayed()));
-        passwordField.perform(replaceText("testPassword"), closeSoftKeyboard());
-
-        ViewInteraction confirmPasswordField = onView(
-                allOf(withId(R.id.confirm_password_field), isDisplayed()));
-        confirmPasswordField.perform(replaceText("testPassword"), closeSoftKeyboard());
-
-        ViewInteraction emailField = onView(
-                allOf(withId(R.id.email_field), isDisplayed()));
-        emailField.perform(replaceText("test3@gmail.com"), closeSoftKeyboard());
-
-        ViewInteraction createButton = onView(
-                allOf(withId(R.id.signup_create), isDisplayed()));
-        createButton.perform(click());
-
-        Thread.sleep(3000);
-
-        ViewInteraction loginButton = onView(
-                allOf(withId(R.id.login_btn), isDisplayed()));
-        loginButton.check(matches(isDisplayed()));
-    }
+    public ActivityScenarioRule<CreateAccountActivity> mActivityTestRule = new ActivityScenarioRule<>(CreateAccountActivity.class);
 
     @Test
     public void testIncorrectInput() throws InterruptedException {
