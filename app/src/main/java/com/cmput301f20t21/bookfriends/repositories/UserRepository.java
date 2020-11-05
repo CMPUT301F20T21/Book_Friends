@@ -69,6 +69,7 @@ public class UserRepository implements IUserRepository {
     public Task<List<User>> getByUsernameStartWith(String username) {
         final Query userQuery;
         if (username.length() == 0) {
+            // because username is alphanumeric, according to ascii table, @ is less than 'a' and 0
             userQuery = userCollection.whereEqualTo("username", "@");
         } else {
             userQuery = userCollection
