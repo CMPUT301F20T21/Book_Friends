@@ -18,10 +18,9 @@ import com.google.firebase.auth.FirebaseUser;
 
 
 public class CreateAccountViewModel extends ViewModel {
-    private IAuthRepository authRepository = AuthRepository.getInstance();
-    private IUserRepository userRepository = UserRepository.getInstance();
+    private final IAuthRepository authRepository;
+    private final IUserRepository userRepository;
     private final String TAG = "SIGNUP_ERROR";
-
 
     // production
     public CreateAccountViewModel() {
