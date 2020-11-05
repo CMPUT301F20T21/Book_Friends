@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "238565293652",
-    "firebase_url": "https://cmput301bookfriends.firebaseio.com",
-    "project_id": "cmput301bookfriends",
-    "storage_bucket": "cmput301bookfriends.appspot.com"
+    "project_number": "230744794862",
+    "firebase_url": "https://cmput301bookfriends-testing.firebaseio.com",
+    "project_id": "cmput301bookfriends-testing",
+    "storage_bucket": "cmput301bookfriends-testing.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:238565293652:android:a5c986499d96b07fec77c1",
+        "mobilesdk_app_id": "1:230744794862:android:c3165b29cab436a906b5ff",
         "android_client_info": {
           "package_name": "com.cmput301f20t21.bookfriends"
         }
       },
       "oauth_client": [
         {
-          "client_id": "238565293652-adqdtb54b8knk62l0sv7i0rhkvqs2bjg.apps.googleusercontent.com",
+          "client_id": "230744794862-1tbgfifm4idaq2buosppm3284go40b3s.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDfrTociN9vCxXesVwkuFkeMh2VGwE7DMA"
+          "current_key": "AIzaSyBBJmAI6toSaed5rSNHk5MCUlJUg5sf9Hc"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "238565293652-adqdtb54b8knk62l0sv7i0rhkvqs2bjg.apps.googleusercontent.com",
+              "client_id": "230744794862-1tbgfifm4idaq2buosppm3284go40b3s.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

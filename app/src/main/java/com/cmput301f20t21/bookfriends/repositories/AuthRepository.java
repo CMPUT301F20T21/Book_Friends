@@ -1,7 +1,6 @@
 package com.cmput301f20t21.bookfriends.repositories;
 
 import com.cmput301f20t21.bookfriends.entities.User;
-import com.cmput301f20t21.bookfriends.enums.LOGIN_ERROR;
 import com.cmput301f20t21.bookfriends.exceptions.InvalidLoginCredentialsException;
 import com.cmput301f20t21.bookfriends.repositories.api.IAuthRepository;
 import com.google.android.gms.tasks.Task;
@@ -22,7 +21,6 @@ public class AuthRepository implements IAuthRepository{
     public static IAuthRepository getInstance() {
         return instance;
     }
-
 
     public User getCurrentUser() {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
