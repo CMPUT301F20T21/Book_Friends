@@ -46,23 +46,14 @@ public class ProfileViewModel extends ViewModel {
     }
 
     public void getUserByUid(String uid, OnSuccessCallbackWithMessage<User> onSuccess, OnFailCallback onFail) {
-        userRepository.getByUid(uid).addOnCompleteListener(task -> {
-            if (!task.isSuccessful()) {
-                onFail.run();
-                return;
-            }
-            DocumentSnapshot document = task.getResult();
-            if (document == null) {
-                onFail.run();
-                return;
-            }
-            User u = new User(
-                    document.getId(),
-                    document.get("username").toString(),
-                    document.get("email").toString()
-            );
-            onSuccess.run(u);
-        });
+        userRepository.getByUid(uid)
+                .addOnSuccessListener(user -> {
+                    if (user != null) {
+                        onSuccess.run(user);
+                    } else {
+                        onFail.run();
+                    }
+                });
     }
 
     public void updateCurrentUserEmail(String inputEmail, String TAG){

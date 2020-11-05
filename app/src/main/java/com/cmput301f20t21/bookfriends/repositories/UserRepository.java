@@ -54,8 +54,15 @@ public class UserRepository implements IUserRepository {
         });
     }
 
-    public Task<DocumentSnapshot> getByUid(String uid) {
-        return userCollection.document(uid).get();
+    public Task<User> getByUid(String uid) {
+        return userCollection.document(uid)
+                .get()
+                .continueWith(task -> {
+                    if (task.getResult() != null) {
+                        return task.getResult().toObject(User.class);
+                    }
+                    return null;
+                });
     }
 
     public Task<List<User>> getByUsernameStartWith(String username) {

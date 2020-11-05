@@ -4,6 +4,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.Observer;
 
 import com.cmput301f20t21.bookfriends.entities.User;
+import com.cmput301f20t21.bookfriends.fakes.callbacks.FakeSuccessCallback;
+import com.cmput301f20t21.bookfriends.fakes.callbacks.FakeSuccessCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.fakes.repositories.FakeUserRepository;
 import com.cmput301f20t21.bookfriends.fakes.tasks.FakeSuccessTask;
 import com.cmput301f20t21.bookfriends.ui.profile.ProfileViewModel;
@@ -27,6 +29,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProfileViewModelUnitTest {
+    // https://medium.com/pxhouse/unit-testing-with-mutablelivedata-22b3283a7819
     @Rule
     public TestRule rule = new InstantTaskExecutorRule();
     @Mock
@@ -89,11 +92,11 @@ public class ProfileViewModelUnitTest {
 
     @Test
     public void getUserByUidSuccess() {
-
+        // TODO
     }
 
     @Test
     public void getUserByUidFailure() {
-
+        // TODO
     }
 }

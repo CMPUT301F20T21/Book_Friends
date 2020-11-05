@@ -20,7 +20,7 @@ public class FakeUserRepository implements IUserRepository {
     }
 
     @Override
-    public Task<DocumentSnapshot> getByUid(String uid) {
+    public Task<User> getByUid(String uid) {
         return null;
     }
 

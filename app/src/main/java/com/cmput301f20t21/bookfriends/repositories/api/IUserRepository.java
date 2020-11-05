@@ -10,7 +10,7 @@ import java.util.List;
 public interface IUserRepository {
     Task<Void> add(String uid, String username, String email);
     Task<User> getByUsername(String username);
-    Task<DocumentSnapshot> getByUid(String uid);
+    Task<User> getByUid(String uid);
     Task<List<User>> getByUsernameStartWith(String username);
     Task<Void> updateUserEmail(String email);
 }
