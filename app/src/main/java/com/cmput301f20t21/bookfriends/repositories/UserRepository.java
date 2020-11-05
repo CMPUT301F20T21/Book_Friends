@@ -2,6 +2,7 @@ package com.cmput301f20t21.bookfriends.repositories;
 
 import com.cmput301f20t21.bookfriends.entities.User;
 import com.cmput301f20t21.bookfriends.exceptions.UnexpectedException;
+import com.cmput301f20t21.bookfriends.exceptions.UserNotExistException;
 import com.cmput301f20t21.bookfriends.exceptions.UsernameNotExistException;
 import com.cmput301f20t21.bookfriends.repositories.api.IUserRepository;
 import com.google.android.gms.tasks.Task;
@@ -61,7 +62,7 @@ public class UserRepository implements IUserRepository {
                     if (task.getResult() != null) {
                         return task.getResult().toObject(User.class);
                     }
-                    return null;
+                    throw new UserNotExistException();
                 });
     }
 

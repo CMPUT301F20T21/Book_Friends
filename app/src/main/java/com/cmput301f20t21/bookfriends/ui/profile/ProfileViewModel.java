@@ -47,13 +47,8 @@ public class ProfileViewModel extends ViewModel {
 
     public void getUserByUid(String uid, OnSuccessCallbackWithMessage<User> onSuccess, OnFailCallback onFail) {
         userRepository.getByUid(uid)
-                .addOnSuccessListener(user -> {
-                    if (user != null) {
-                        onSuccess.run(user);
-                    } else {
-                        onFail.run();
-                    }
-                });
+                .addOnSuccessListener(onSuccess::run)
+                .addOnFailureListener(e -> onFail.run());
     }
 
     public void updateCurrentUserEmail(String inputEmail, String TAG){

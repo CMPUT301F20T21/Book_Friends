@@ -4,9 +4,11 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.Observer;
 
 import com.cmput301f20t21.bookfriends.entities.User;
-import com.cmput301f20t21.bookfriends.fakes.callbacks.FakeSuccessCallback;
+import com.cmput301f20t21.bookfriends.exceptions.UserNotExistException;
+import com.cmput301f20t21.bookfriends.fakes.callbacks.FakeFailCallback;
 import com.cmput301f20t21.bookfriends.fakes.callbacks.FakeSuccessCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.fakes.repositories.FakeUserRepository;
+import com.cmput301f20t21.bookfriends.fakes.tasks.FakeFailTask;
 import com.cmput301f20t21.bookfriends.fakes.tasks.FakeSuccessTask;
 import com.cmput301f20t21.bookfriends.ui.profile.ProfileViewModel;
 
@@ -40,6 +42,11 @@ public class ProfileViewModelUnitTest {
     // the captor is used specifically for the observer, to catch what the observer received, used to get value and assert
     @Captor
     ArgumentCaptor<ArrayList<User>> usersResultArgument;
+
+    @Mock
+    FakeFailCallback fakeFailUserCallback;
+    @Mock
+    FakeSuccessCallbackWithMessage<User> fakeSuccessUserCallback;
 
     @Test
     public void searchSuccess_noResultsOnEmptyInput() {
@@ -97,6 +104,15 @@ public class ProfileViewModelUnitTest {
 
     @Test
     public void getUserByUidFailure() {
-        // TODO
+        ProfileViewModel vm = new ProfileViewModel(mockUserRepository);
+        String uid = "testUid";
+
+        FakeSuccessCallbackWithMessage<User> mockOnSuccess = new FakeSuccessCallbackWithMessage<>();
+        FakeFailTask<User> fakeTask = new FakeFailTask<>(new UserNotExistException());
+
+        when(mockUserRepository.getByUid(uid)).thenReturn(fakeTask);
+        vm.getUserByUid(uid, mockOnSuccess, fakeFailUserCallback);
+
+        verify(fakeFailUserCallback, times(1)).run();
     }
 }
