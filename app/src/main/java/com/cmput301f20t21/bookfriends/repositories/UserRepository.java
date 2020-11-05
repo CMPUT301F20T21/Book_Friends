@@ -8,9 +8,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Query;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserRepository implements IUserRepository {
     private CollectionReference userCollection;
@@ -55,19 +58,30 @@ public class UserRepository implements IUserRepository {
         return userCollection.document(uid).get();
     }
 
-    public Task<QuerySnapshot> getByUsernameStartWith(String username) {
+    public Task<List<User>> getByUsernameStartWith(String username) {
+        final Query userQuery;
         if (username.length() == 0) {
-            // because username is alphanumeric, according to ascii table, @ is less than 'a' and 0
-            return userCollection.whereEqualTo("username", "@").get();
+            userQuery = userCollection.whereEqualTo("username", "@");
+        } else {
+            userQuery = userCollection
+                    .whereGreaterThanOrEqualTo("username", username)
+                    .whereLessThan("username", username.concat("~")) // ascii ~ is way larger than 'z'
+                    .limit(10);
         }
-        // return a list if 
-        return userCollection
-                .whereGreaterThanOrEqualTo("username", username)
-                .whereLessThan("username", username.concat("~")) // ascii ~ is way larger than 'z'
-                .limit(10).get();
+        return userQuery
+                .get()
+                .continueWith(task -> {
+                    if (!task.getResult().isEmpty()) {
+                        return (ArrayList<User>) task.getResult().getDocuments()
+                                .stream()
+                                .map(doc -> doc.toObject(User.class))
+                                .collect(Collectors.toList());
+                    }
+                    return new ArrayList<>();
+                });
     }
 
-    public Task<Void> updateUserEmail(String email){
+    public Task<Void> updateUserEmail(String email) {
         User firebaseUser = AuthRepository.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             String userId = firebaseUser.getUid();
