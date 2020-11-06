@@ -35,7 +35,7 @@ public class AddEditActivity extends AppCompatActivity {
     private ImageView bookImage;
     private Uri bookImageUri;
     private TextInputLayout isbnLayout;
-    private EditText isbnTextEdit;
+    private EditText isbnEditText;
     private TextInputLayout titleLayout;
     private TextInputLayout authorLayout;
     private TextInputLayout descriptionLayout;
@@ -62,7 +62,7 @@ public class AddEditActivity extends AppCompatActivity {
         uploadImgButton = findViewById(R.id.upload_cover_button);
         bookImage = findViewById(R.id.book_image_view); // will be replaced with actual image
         isbnLayout = findViewById(R.id.ISBN_layout);
-        isbnTextEdit = findViewById(R.id.isbn_edit_text);
+        isbnEditText = findViewById(R.id.isbn_edit_text);
         titleLayout = findViewById(R.id.title_layout);
         authorLayout = findViewById(R.id.author_layout);
         descriptionLayout = findViewById(R.id.description_layout);
@@ -255,7 +255,7 @@ public class AddEditActivity extends AppCompatActivity {
             }
         }
         else if (resultCode == RESULT_OK && requestCode == REQUEST_GET_SCANNED_ISBN) {
-            isbnTextEdit.setText(data.getStringExtra(ScannerAddActivity.ISBN_KEY));
+            isbnEditText.setText(data.getStringExtra(ScannerAddActivity.ISBN_KEY));
         }
     }
 
