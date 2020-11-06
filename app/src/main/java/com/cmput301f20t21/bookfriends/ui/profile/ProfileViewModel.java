@@ -25,7 +25,11 @@ public class ProfileViewModel extends ViewModel {
     private final MutableLiveData<ArrayList<User>> searchedUsers = new MutableLiveData<>(new ArrayList<>());
 
     public ProfileViewModel() {
-        userRepository = UserRepository.getInstance();
+        this(UserRepository.getInstance());
+    }
+
+    public ProfileViewModel(IUserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     // the data stream output for searched list views
@@ -36,47 +40,15 @@ public class ProfileViewModel extends ViewModel {
     // the update api for views
     public void updateSearchQuery(String query) {
         // start a search routine, update results
-        userRepository.getByUsernameStartWith(query).addOnCompleteListener(usernameTask -> {
-            if (usernameTask.isSuccessful()) {
-                if (!usernameTask.getResult().isEmpty()) {
-                    ArrayList<User> users = new ArrayList<>();
-                    for (QueryDocumentSnapshot document: usernameTask.getResult()) {
-                        users.add(new User(
-                                document.getId(),
-                                document.get("username").toString(),
-                                document.get("email").toString()
-                        ));
-                    }
-                    searchedUsers.setValue(users);
-                } else {
-                    // empty email, should never happen
-                    searchedUsers.setValue(new ArrayList<>());
-                }
-            } else {
-                // fail to get username
-                searchedUsers.setValue(new ArrayList<>());
-            }
+        userRepository.getByUsernameStartWith(query).addOnSuccessListener(users -> {
+            searchedUsers.setValue((ArrayList<User>) users);
         });
     }
 
     public void getUserByUid(String uid, OnSuccessCallbackWithMessage<User> onSuccess, OnFailCallback onFail) {
-        userRepository.getByUid(uid).addOnCompleteListener(task -> {
-            if (!task.isSuccessful()) {
-                onFail.run();
-                return;
-            }
-            DocumentSnapshot document = task.getResult();
-            if (document == null) {
-                onFail.run();
-                return;
-            }
-            User u = new User(
-                    document.getId(),
-                    document.get("username").toString(),
-                    document.get("email").toString()
-            );
-            onSuccess.run(u);
-        });
+        userRepository.getByUid(uid)
+                .addOnSuccessListener(onSuccess::run)
+                .addOnFailureListener(e -> onFail.run());
     }
 
     public void updateCurrentUserEmail(String inputEmail, String TAG){
