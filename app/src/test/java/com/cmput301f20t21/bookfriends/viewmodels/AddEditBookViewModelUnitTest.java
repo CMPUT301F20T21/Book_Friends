@@ -1,6 +1,7 @@
 package com.cmput301f20t21.bookfriends.viewmodels;
 
 import com.cmput301f20t21.bookfriends.entities.Book;
+import com.cmput301f20t21.bookfriends.entities.User;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.enums.LOGIN_ERROR;
@@ -24,6 +25,10 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AddEditBookViewModelUnitTest {
+    private String uid = "uid";
+    private String username = "username";
+    private String email = "email";
+    private String password = "password";
 
     @Mock
     FakeAuthRepository mockAuthRepository;
@@ -40,15 +45,16 @@ public class AddEditBookViewModelUnitTest {
     @Test
     public void addBookSuccess() {
         AddEditViewModel model = new AddEditViewModel(mockAuthRepository, mockBookRepository);
+        User user = new User(uid, username, email);
         String id = "id";
         String isbn = "isbn";
         String title = "title";
         String author = "author";
         String description = "description";
-        String owner = "owner";
+        String owner = user.getUsername();
         FakeSuccessTask<String> fakeAddBookTask = new FakeSuccessTask(id);
 
-        when(mockAuthRepository.getCurrentUser().getUsername()).thenReturn(owner);
+        when(mockAuthRepository.getCurrentUser()).thenReturn(user);
         when(mockBookRepository.add(isbn, title, author, description, owner)).thenReturn(fakeAddBookTask);
 
         model.handleAddBook(isbn, title, author, description, null, mockSuccessCallback, mockFailCallback);
