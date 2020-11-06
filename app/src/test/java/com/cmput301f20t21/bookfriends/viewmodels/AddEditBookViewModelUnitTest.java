@@ -1,7 +1,12 @@
 package com.cmput301f20t21.bookfriends.viewmodels;
 
 import com.cmput301f20t21.bookfriends.entities.Book;
+import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
+import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
+import com.cmput301f20t21.bookfriends.enums.LOGIN_ERROR;
+import com.cmput301f20t21.bookfriends.fakes.callbacks.FakeFailCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.fakes.callbacks.FakeSuccessCallback;
+import com.cmput301f20t21.bookfriends.fakes.callbacks.FakeSuccessCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.fakes.repositories.FakeAuthRepository;
 import com.cmput301f20t21.bookfriends.fakes.repositories.FakeBookRepository;
 import com.cmput301f20t21.bookfriends.fakes.tasks.FakeSuccessTask;
@@ -26,6 +31,12 @@ public class AddEditBookViewModelUnitTest {
     @Mock
     FakeBookRepository mockBookRepository;
 
+    @Mock
+    FakeSuccessCallbackWithMessage<Book> mockSuccessCallback;
+
+    @Mock
+    FakeFailCallbackWithMessage<BOOK_ERROR> mockFailCallback;
+
     @Test
     public void addBookSuccess() {
         AddEditViewModel model = new AddEditViewModel(mockAuthRepository, mockBookRepository);
@@ -35,13 +46,13 @@ public class AddEditBookViewModelUnitTest {
         String author = "author";
         String description = "description";
         String owner = "owner";
-        String imageName = id + "cover";
         FakeSuccessTask<String> fakeAddBookTask = new FakeSuccessTask(id);
-        FakeSuccessTask<String> fakeAddImageTask = new FakeSuccessTask(imageName);
 
         when(mockAuthRepository.getCurrentUser().getUsername()).thenReturn(owner);
         when(mockBookRepository.add(isbn, title, author, description, owner)).thenReturn(fakeAddBookTask);
-        when(mockBookRepository.addImage("id",null)).thenReturn(fakeAddImageTask);
+
+        model.handleAddBook(isbn, title, author, description, null, mockSuccessCallback, mockFailCallback);
+        verify(mockSuccessCallback, times(1)).run(new Book(id, isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE));
 
 
 
