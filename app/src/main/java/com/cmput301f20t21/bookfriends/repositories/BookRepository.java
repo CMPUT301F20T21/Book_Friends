@@ -7,14 +7,12 @@ import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.repositories.api.IBookRepository;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 import java.util.List;
@@ -50,9 +48,14 @@ public class BookRepository implements IBookRepository {
         });
     }
 
-    public UploadTask addImage(String bookId, Uri imageUri) {
-        StorageReference fileReference = imageStorageReference.child(bookId);
-        return fileReference.putFile(imageUri);
+    public Task<String> addImage(String imageName, Uri imageUri) {
+        StorageReference fileReference = imageStorageReference.child(imageName);
+        return fileReference.putFile(imageUri).continueWith(task -> {
+            if (task.isSuccessful()) {
+                return imageName;
+            }
+            throw new Exception();
+        });
     }
 
     public Task<Void> editBook(String bookId, String isbn, String title, String author, String description) {

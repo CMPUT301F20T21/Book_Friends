@@ -7,7 +7,6 @@ import com.cmput301f20t21.bookfriends.repositories.api.IBookRepository;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.UploadTask;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ public class FakeBookRepository implements IBookRepository {
     }
 
     @Override
-    public UploadTask addImage(String bookId, Uri imageUri) {
+    public Task<String> addImage(String bookId, Uri imageUri) {
         return null;
     }
 

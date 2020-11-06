@@ -29,12 +29,19 @@ public class AddEditBookViewModelUnitTest {
     @Test
     public void addBookSuccess() {
         AddEditViewModel model = new AddEditViewModel(mockAuthRepository, mockBookRepository);
-        FakeSuccessTask<String> task = new FakeSuccessTask<String>("id");
+        String id = "id";
+        String isbn = "isbn";
+        String title = "title";
+        String author = "author";
+        String description = "description";
+        String owner = "owner";
+        String imageName = id + "cover";
+        FakeSuccessTask<String> fakeAddBookTask = new FakeSuccessTask(id);
+        FakeSuccessTask<String> fakeAddImageTask = new FakeSuccessTask(imageName);
 
-
-        when(mockAuthRepository.getCurrentUser().getUsername()).thenReturn("Owner");
-        when(mockBookRepository.add("123456789", "Title", "Author", "Description", "Owner")).thenReturn(task);
-//        when(mockBookRepository.addImage("id",null)).thenReturn()
+        when(mockAuthRepository.getCurrentUser().getUsername()).thenReturn(owner);
+        when(mockBookRepository.add(isbn, title, author, description, owner)).thenReturn(fakeAddBookTask);
+        when(mockBookRepository.addImage("id",null)).thenReturn(fakeAddImageTask);
 
 
 

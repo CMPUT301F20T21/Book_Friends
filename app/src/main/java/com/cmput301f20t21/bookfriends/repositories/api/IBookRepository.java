@@ -4,16 +4,14 @@ import android.net.Uri;
 
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.UploadTask;
 
 import java.util.List;
 
 public interface IBookRepository {
     Task<String> add(String isbn, String title, String author, String description, String owner);
-    UploadTask addImage(String bookId, Uri imageUri);
+    Task<String> addImage(String bookId, Uri imageUri);
     Task<Void> editBook(String bookId, String isbn, String title, String author, String description);
     Task<Void> delete(String id);
     Task<Void> deleteImage(String imageName);
