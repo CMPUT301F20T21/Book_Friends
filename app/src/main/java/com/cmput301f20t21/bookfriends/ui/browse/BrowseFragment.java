@@ -18,6 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
 
+/**
+ * User can see the list of all of the books and search what they need
+ */
 public class BrowseFragment extends Fragment {
     private BrowseViewModel bookViewModel;
     private RecyclerView recyclerView;
@@ -26,7 +29,13 @@ public class BrowseFragment extends Fragment {
     private SearchView searchView;
     private FragmentManager fragmentManager;
 
-
+    /**
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,

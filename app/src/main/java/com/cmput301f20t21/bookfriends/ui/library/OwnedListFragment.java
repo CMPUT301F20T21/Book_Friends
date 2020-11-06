@@ -1,3 +1,12 @@
+/*
+ * OwnedListFragment.java
+ * Version: 1.0
+ * Date: November 4, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.ui.library;
 
 import android.content.Intent;
@@ -36,6 +45,13 @@ public class OwnedListFragment extends Fragment {
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
+    /**
+     * Called before creating the fragment view
+     * @param inflater the layout inflater
+     * @param container the view container
+     * @param savedInstanceState the saved objects, should contain nothing for this fragment
+     * @return the inflated view
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -51,6 +67,11 @@ public class OwnedListFragment extends Fragment {
         return root;
     }
 
+    /**
+     * called after creating the fragment view
+     * @param view the fragment's view
+     * @param savedInstanceState the saved objects, should contain nothing for this fragment
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         recyclerView = view.findViewById(R.id.owned_recycler_list_book);
@@ -78,6 +99,12 @@ public class OwnedListFragment extends Fragment {
         });
     }
 
+    /**
+     * called upon returning from the AddEditActivity, will add or update the book to the local data
+     * @param requestCode the request code that starts the activity
+     * @param resultCode the result code sent from the activity
+     * @param data the intent data that contains the added or updated book
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -98,6 +125,7 @@ public class OwnedListFragment extends Fragment {
 
     /**
      * function allows user to jump into the add/edit screen when click on the floating button
+     * @param book the book to edit, will be null if the action is add
      */
     private void openAddEditActivity(@Nullable Book book) {
         Intent intent = new Intent(this.getActivity(), AddEditActivity.class);
@@ -111,6 +139,10 @@ public class OwnedListFragment extends Fragment {
         }
     }
 
+    /**
+     * called when the user clicks on one of the books
+     * @param position the book's position
+     */
     public void onItemClick(int position) {
         if (position != RecyclerView.NO_POSITION) {
             Book book = vm.getBookByIndex(position);
@@ -118,6 +150,10 @@ public class OwnedListFragment extends Fragment {
         }
     }
 
+    /**
+     * called when the user deletes one of the book
+     * @param book the book to delete
+     */
     public void onDeleteBook(Book book) {
         vm.deleteBook(book);
     }
