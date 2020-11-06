@@ -70,31 +70,28 @@ public class AddEditViewModel extends ViewModel {
             @Nullable Uri newUri, OnSuccessCallbackWithMessage<Book> successCallback, OnFailCallbackWithMessage<BOOK_ERROR> failCallback
     ) {
         String bookId = oldBook.getId();
-        bookRepository.editBook(bookId, isbn, title, author, description).addOnCompleteListener(
-                editBookTask -> {
-                    if (editBookTask.isSuccessful()) {
-                        Book book = new Book(bookId, isbn, title, author, description, oldBook.getOwner(), BOOK_STATUS.AVAILABLE);
-                        // addImage will also replace if file with imageName already exist
-                        if (newUri != null) {
-                            // when the image is updated
-                            bookRepository.addImage(book.getCoverImageName(), newUri).addOnCompleteListener(
-                                    addImageTask -> {
-                                        if (addImageTask.isSuccessful()) {
-                                            successCallback.run(book);
-                                        } else {
-                                            failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
-                                        }
+        bookRepository.editBook(oldBook, isbn, title, author, description).addOnSuccessListener(
+                newBook -> {
+                    // addImage will also replace if file with imageName already exist
+                    if (newUri != null) {
+                        // when the image is updated
+                        bookRepository.addImage(newBook.getCoverImageName(), newUri).addOnCompleteListener(
+                                addImageTask -> {
+                                    if (addImageTask.isSuccessful()) {
+                                        successCallback.run(newBook);
+                                    } else {
+                                        failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
                                     }
-                            );
-                        } else {
-                            // image is not changed
-                            successCallback.run(book);
-                        }
+                                }
+                        );
                     } else {
-                        failCallback.run(BOOK_ERROR.FAIL_TO_EDIT_BOOK);
+                        // image is not changed
+                        successCallback.run(newBook);
                     }
                 }
-        );
+        ).addOnFailureListener(e -> {
+            failCallback.run(BOOK_ERROR.FAIL_TO_EDIT_BOOK);
+        });
     }
 
 }

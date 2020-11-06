@@ -12,7 +12,7 @@ import java.util.List;
 public interface IBookRepository {
     Task<String> add(String isbn, String title, String author, String description, String owner);
     Task<String> addImage(String bookId, Uri imageUri);
-    Task<Void> editBook(String bookId, String isbn, String title, String author, String description);
+    Task<Book> editBook(Book oldBook, String isbn, String title, String author, String description);
     Task<Void> delete(String id);
     Task<Void> deleteImage(String imageName);
     Book getBookFromDocument(DocumentSnapshot document);

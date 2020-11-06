@@ -23,7 +23,7 @@ public class FakeBookRepository implements IBookRepository {
     }
 
     @Override
-    public Task<Void> editBook(String bookId, String isbn, String title, String author, String description) {
+    public Task<Book> editBook(Book oldBook, String isbn, String title, String author, String description) {
         return null;
     }
 

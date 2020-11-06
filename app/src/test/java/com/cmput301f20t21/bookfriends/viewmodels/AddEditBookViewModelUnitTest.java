@@ -13,6 +13,7 @@ import com.cmput301f20t21.bookfriends.fakes.repositories.FakeBookRepository;
 import com.cmput301f20t21.bookfriends.fakes.tasks.FakeSuccessTask;
 import com.cmput301f20t21.bookfriends.ui.add.AddEditViewModel;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -25,10 +26,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AddEditBookViewModelUnitTest {
-    private String uid = "uid";
-    private String username = "username";
-    private String email = "email";
-    private String password = "password";
+    private User user;
 
     @Mock
     FakeAuthRepository mockAuthRepository;
@@ -42,10 +40,17 @@ public class AddEditBookViewModelUnitTest {
     @Mock
     FakeFailCallbackWithMessage<BOOK_ERROR> mockFailCallback;
 
+    @Before
+    public void setup() {
+        user = new User("uid", "username", "email");
+        when(mockAuthRepository.getCurrentUser()).thenReturn(user);
+    }
+
+
     @Test
     public void addBookSuccess() {
         AddEditViewModel model = new AddEditViewModel(mockAuthRepository, mockBookRepository);
-        User user = new User(uid, username, email);
+
         String id = "id";
         String isbn = "isbn";
         String title = "title";
@@ -54,18 +59,22 @@ public class AddEditBookViewModelUnitTest {
         String owner = user.getUsername();
         FakeSuccessTask<String> fakeAddBookTask = new FakeSuccessTask(id);
 
-        when(mockAuthRepository.getCurrentUser()).thenReturn(user);
         when(mockBookRepository.add(isbn, title, author, description, owner)).thenReturn(fakeAddBookTask);
 
         model.handleAddBook(isbn, title, author, description, null, mockSuccessCallback, mockFailCallback);
         verify(mockSuccessCallback, times(1)).run(new Book(id, isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE));
-
-
 
     }
 
     @Test
     public void editBookSuccess() {
         AddEditViewModel model = new AddEditViewModel(mockAuthRepository, mockBookRepository);
+        Book oldBook = new Book("oldId", "oldIsbn", "oldTitle", "oldAuthor", "oldDescription", "oldOwner",  BOOK_STATUS.AVAILABLE);
+        FakeSuccessTask<Book> fakeEditBookTask = new FakeSuccessTask(oldBook);
+
+        when(mockBookRepository.editBook(oldBook, "newIsbn", "newTitle", "newAuthor", "newDescription")).thenReturn(fakeEditBookTask);
+
+        model.handleEditBook(oldBook, "newIsbn", "newTitle", "newAuthor", "newDescription", null, mockSuccessCallback, mockFailCallback);
+        verify(mockSuccessCallback, times(1)).run(oldBook);
     }
 }

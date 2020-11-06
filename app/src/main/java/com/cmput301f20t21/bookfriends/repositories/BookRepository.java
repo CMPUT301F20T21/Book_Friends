@@ -58,13 +58,19 @@ public class BookRepository implements IBookRepository {
         });
     }
 
-    public Task<Void> editBook(String bookId, String isbn, String title, String author, String description) {
+    public Task<Book> editBook(Book oldBook, String isbn, String title, String author, String description) {
         HashMap<String, Object> data = new HashMap<>();
+        String id = oldBook.getId();
         data.put("isbn", isbn);
         data.put("title", title);
         data.put("author", author);
         data.put("description", description);
-        return bookCollection.document(bookId).update(data);
+        return bookCollection.document(id).update(data).continueWith(task -> {
+           if (task.isSuccessful()) {
+               return new Book(id, isbn, title, author, description, oldBook.getOwner(), BOOK_STATUS.AVAILABLE);
+           }
+           throw new Exception();
+        });
     }
 
     public Task<Void> delete(String id) {
