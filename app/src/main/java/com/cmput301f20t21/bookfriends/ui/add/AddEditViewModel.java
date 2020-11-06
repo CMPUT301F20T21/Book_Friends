@@ -43,34 +43,26 @@ public class AddEditViewModel extends ViewModel {
             @Nullable Uri imageUri, OnSuccessCallbackWithMessage<Book> successCallback, OnFailCallbackWithMessage<BOOK_ERROR> failCallback
     ) {
         String owner = authRepository.getCurrentUser().getUsername();
-        bookRepository.add(isbn, title, author, description, owner).addOnCompleteListener(
-                addBookTask -> {
-                    if (addBookTask.isSuccessful()) {
-                        DocumentReference result = addBookTask.getResult();
-                        if (result != null) {
-                            String bookId = result.getId();
-                            Book book = new Book(bookId, isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE);
-                            if (imageUri != null) {
-                                bookRepository.addImage(book.getCoverImageName(), imageUri).addOnCompleteListener(
-                                        addImageTask -> {
-                                            if (addImageTask.isSuccessful()) {
-                                                successCallback.run(book);
-                                            } else {
-                                                failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
-                                            }
-                                        }
-                                );
-                            } else {
-                                successCallback.run(book);
-                            }
-                        } else {
-                            failCallback.run(BOOK_ERROR.UNEXPECTED);
-                        }
+        bookRepository.add(isbn, title, author, description, owner).addOnSuccessListener(
+                id -> {
+                    Book book = new Book(id, isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE);
+                    if (imageUri != null) {
+                        bookRepository.addImage(book.getCoverImageName(), imageUri).addOnCompleteListener(
+                                addImageTask -> {
+                                    if (addImageTask.isSuccessful()) {
+                                        successCallback.run(book);
+                                    } else {
+                                        failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
+                                    }
+                                }
+                        );
                     } else {
-                        failCallback.run(BOOK_ERROR.FAIL_TO_ADD_BOOK);
+                        successCallback.run(book);
                     }
                 }
-        );
+        ).addOnFailureListener(e -> {
+            failCallback.run(BOOK_ERROR.FAIL_TO_ADD_BOOK);
+        });
     }
 
     public void handleEditBook(

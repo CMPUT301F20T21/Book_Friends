@@ -12,7 +12,7 @@ import com.google.firebase.storage.UploadTask;
 import java.util.List;
 
 public interface IBookRepository {
-    Task<DocumentReference> add(String isbn, String title, String author, String description, String owner);
+    Task<String> add(String isbn, String title, String author, String description, String owner);
     UploadTask addImage(String bookId, Uri imageUri);
     Task<Void> editBook(String bookId, String isbn, String title, String author, String description);
     Task<Void> delete(String id);

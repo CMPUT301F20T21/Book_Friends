@@ -29,8 +29,15 @@ public class AddEditBookViewModelUnitTest {
     @Test
     public void addBookSuccess() {
         AddEditViewModel model = new AddEditViewModel(mockAuthRepository, mockBookRepository);
-//        Book book = new Book()
-//        FakeSuccessTask<Book> task = new FakeSuccessTask<>();
+        FakeSuccessTask<String> task = new FakeSuccessTask<String>("id");
+
+
+        when(mockAuthRepository.getCurrentUser().getUsername()).thenReturn("Owner");
+        when(mockBookRepository.add("123456789", "Title", "Author", "Description", "Owner")).thenReturn(task);
+//        when(mockBookRepository.addImage("id",null)).thenReturn()
+
+
+
     }
 
     @Test

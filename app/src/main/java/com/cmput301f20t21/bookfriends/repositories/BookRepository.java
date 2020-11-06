@@ -33,7 +33,7 @@ public class BookRepository implements IBookRepository {
         return instance;
     }
 
-    public Task<DocumentReference> add(String isbn, String title, String author, String description, String owner) {
+    public Task<String> add(String isbn, String title, String author, String description, String owner) {
         HashMap<String, Object> data = new HashMap<>();
         data.put("isbn", isbn);
         data.put("title", title);
@@ -42,7 +42,12 @@ public class BookRepository implements IBookRepository {
         data.put("owner", owner);
         // when a book is first added, the status will always be "AVAILABLE"
         data.put("status", BOOK_STATUS.AVAILABLE.toString());
-        return bookCollection.add(data);
+        return bookCollection.add(data).continueWith(task -> {
+            if (task.isSuccessful()) {
+                return task.getResult().getId();
+            }
+            throw new Exception();
+        });
     }
 
     public UploadTask addImage(String bookId, Uri imageUri) {
