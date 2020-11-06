@@ -60,7 +60,6 @@ public class AddEditViewModel extends ViewModel {
                                             }
                                         }
                                 );
-
                             } else {
                                 successCallback.run(book);
                             }
