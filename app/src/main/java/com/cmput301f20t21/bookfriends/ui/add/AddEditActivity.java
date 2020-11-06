@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -34,6 +35,7 @@ public class AddEditActivity extends AppCompatActivity {
     private ImageView bookImage;
     private Uri bookImageUri;
     private TextInputLayout isbnLayout;
+    private EditText isbnTextEdit;
     private TextInputLayout titleLayout;
     private TextInputLayout authorLayout;
     private TextInputLayout descriptionLayout;
@@ -49,6 +51,7 @@ public class AddEditActivity extends AppCompatActivity {
     public static final String OLD_BOOK_INTENT_KEY = "com.cmput301f20t21.bookfriends.OLD_BOOK";
     public static final String UPDATED_BOOK_INTENT_KEY = "com.cmput301f20t21.bookfriends.UPDATED_BOOK";
 
+    public static final int REQUEST_GET_SCANNED_ISBN = 2000;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,6 +62,7 @@ public class AddEditActivity extends AppCompatActivity {
         uploadImgButton = findViewById(R.id.upload_cover_button);
         bookImage = findViewById(R.id.book_image_view); // will be replaced with actual image
         isbnLayout = findViewById(R.id.ISBN_layout);
+        isbnTextEdit = findViewById(R.id.isbn_edit_text);
         titleLayout = findViewById(R.id.title_layout);
         authorLayout = findViewById(R.id.author_layout);
         descriptionLayout = findViewById(R.id.description_layout);
@@ -200,7 +204,7 @@ public class AddEditActivity extends AppCompatActivity {
     private void openScanner() {
         // TODO: implement the scanner
         Intent intent = new Intent(this, ScannerAddActivity.class);
-        startActivity(intent); // TODO: potentially startActivityForResult
+        startActivityForResult(intent, REQUEST_GET_SCANNED_ISBN);
     }
 
     private void uploadImg() {
@@ -249,6 +253,9 @@ public class AddEditActivity extends AppCompatActivity {
                 );
                 bookImage.setImageURI(bookImageUri);
             }
+        }
+        else if (resultCode == RESULT_OK && requestCode == REQUEST_GET_SCANNED_ISBN) {
+            isbnTextEdit.setText(data.getStringExtra(ScannerAddActivity.ISBN_KEY));
         }
     }
 
