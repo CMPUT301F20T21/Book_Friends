@@ -49,6 +49,10 @@ public class ProfileEditTest {
         navigationToMe.check(matches(isDisplayed()));
         navigationToMe.perform(click());
 
+        ViewInteraction emailTextView = onView(
+                allOf(withId(R.id.email), withText("0@gmail.com"), isDisplayed()));
+        emailTextView.check(matches(withText("0@gmail.com")));
+
         ViewInteraction editIcon = onView(
                 allOf(withId(R.id.image_edit), isDisplayed()));
         editIcon.perform(click());
@@ -63,6 +67,10 @@ public class ProfileEditTest {
 
         Thread.sleep(3000);
 
+        ViewInteraction emailTextViewChanged = onView(
+                allOf(withId(R.id.email), withText("1@gmail.com"), isDisplayed()));
+        emailTextViewChanged.check(matches(withText("1@gmail.com")));
+
         ViewInteraction editIconAgain = onView(
                 allOf(withId(R.id.image_edit), isDisplayed()));
         editIconAgain.perform(click());
@@ -75,13 +83,17 @@ public class ProfileEditTest {
                 allOf(withId(R.id.text_confirm), withText("CONFIRM"), isDisplayed()));
         ConfirmAgain.perform(click());
 
+        ViewInteraction emailTextViewChangeBack = onView(
+                allOf(withId(R.id.email), withText("0@gmail.com"), isDisplayed()));
+        emailTextViewChangeBack.check(matches(withText("0@gmail.com")));
+
         ViewInteraction logout = onView(
                 allOf(withId(R.id.logout_button), isDisplayed()));
         logout.perform(click());
     }
 
     @Test
-    public void profileEditEmailUnchanged() throws InterruptedException {
+    public void profileEditEmailCancel() throws InterruptedException {
         ViewInteraction nameField = onView(
                 allOf(withId(R.id.login_username_field), isDisplayed()));
         nameField.perform(replaceText("Q"), closeSoftKeyboard());
@@ -100,6 +112,10 @@ public class ProfileEditTest {
         navigationToMe.check(matches(isDisplayed()));
         navigationToMe.perform(click());
 
+        ViewInteraction emailTextView = onView(
+                allOf(withId(R.id.email), withText("0@gmail.com"), isDisplayed()));
+        emailTextView.check(matches(withText("0@gmail.com")));
+
         ViewInteraction editIcon = onView(
                 allOf(withId(R.id.image_edit), isDisplayed()));
         editIcon.perform(click());
@@ -111,6 +127,10 @@ public class ProfileEditTest {
         ViewInteraction onCancel = onView(
                 allOf(withId(R.id.text_cancel), withText("CANCEL"), isDisplayed()));
         onCancel.perform(click());
+
+        ViewInteraction emailTextViewUnchanged = onView(
+                allOf(withId(R.id.email), withText("0@gmail.com"), isDisplayed()));
+        emailTextViewUnchanged.check(matches(withText("0@gmail.com")));
 
         ViewInteraction logout = onView(
                 allOf(withId(R.id.logout_button), isDisplayed()));
@@ -137,6 +157,10 @@ public class ProfileEditTest {
         navigationToMe.check(matches(isDisplayed()));
         navigationToMe.perform(click());
 
+        ViewInteraction emailTextView = onView(
+                allOf(withId(R.id.email), withText("0@gmail.com"), isDisplayed()));
+        emailTextView.check(matches(withText("0@gmail.com")));
+
         ViewInteraction editIcon = onView(
                 allOf(withId(R.id.image_edit), isDisplayed()));
         editIcon.perform(click());
@@ -152,6 +176,10 @@ public class ProfileEditTest {
         ViewInteraction onCancel = onView(
                 allOf(withId(R.id.text_cancel), withText("CANCEL"), isDisplayed()));
         onCancel.perform(click());
+
+        ViewInteraction emailTextViewUnchanged = onView(
+                allOf(withId(R.id.email), withText("0@gmail.com"), isDisplayed()));
+        emailTextViewUnchanged.check(matches(withText("0@gmail.com")));
 
         ViewInteraction logout = onView(
                 allOf(withId(R.id.logout_button), isDisplayed()));
