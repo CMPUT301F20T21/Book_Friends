@@ -1,10 +1,6 @@
 package com.cmput301f20t21.bookfriends.ui.login;
 
 
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
-
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
@@ -12,7 +8,6 @@ import androidx.test.runner.AndroidJUnit4;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.repositories.BookRepository;
-import com.cmput301f20t21.bookfriends.repositories.api.IBookRepository;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import org.junit.After;
@@ -68,7 +63,7 @@ public class AddBookTest {
     public void testISBN() throws InterruptedException {
 
         ViewInteraction isbnEditText = onView(
-                allOf(withId(R.id.ISBN_field), isDisplayed()));
+                allOf(withId(R.id.isbn_edit_text), isDisplayed()));
         isbnEditText.perform(replaceText("123456789"), closeSoftKeyboard());
         isbnEditText.check(matches(withText("123456789")));
     }
