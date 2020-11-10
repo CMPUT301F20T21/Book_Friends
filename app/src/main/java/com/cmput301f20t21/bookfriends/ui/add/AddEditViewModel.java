@@ -38,9 +38,15 @@ public class AddEditViewModel extends ViewModel {
     private final IBookRepository bookRepository;
     // the local, updated image uri that might update after first remote image fetch
     private final MutableLiveData<Uri> localImageUri = new MutableLiveData<>();
+    // the book we are editing
     private Book oldBook;
-    // the boolean indicating whether we should remove the image on save
-    // also represents if there should be a cover image displayed
+
+    /** the boolean indicating whether we should remove the image on save
+     * Also represents if there is a cover image displayed.
+     *
+     * Think of hasImage exactly the same as localImageUri except that it also considers
+     * if the book has a remote cover image
+     */
     private boolean hasImage = false;
 
     // production

@@ -54,7 +54,6 @@ public class AddEditActivity extends AppCompatActivity {
 
     private BOOK_ACTION action;
     private AddEditViewModel vm;
-    private Book editBook; // book currently being edited
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,13 +72,20 @@ public class AddEditActivity extends AppCompatActivity {
         vm.getLocalImageUri().observe(this, this::paintImage);
         scanButton.setOnClickListener(view -> openScanner());
         uploadImgButton.setOnClickListener(view -> {
-            showImageUpdateDialog(vm.getLocalImageUri().getValue());
+            showImageUpdateDialog();
         });
     }
 
+    /**
+     * The initial fetch for the existing cover image of the book, stored in firebase storage
+     * this fetch is called only once. It will also tell the vm whether there is an image for the book
+     */
     private void fetchRemoteCoverImage() {
-        if (editBook == null) return;
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference(editBook.getCoverImageName());
+        Book oldBook = vm.getOldBook();
+
+        if (oldBook == null) return;
+
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference(oldBook.getCoverImageName());
         GlideApp.with(this)
                 .load(storageReference)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -111,13 +117,23 @@ public class AddEditActivity extends AppCompatActivity {
         scanButton = findViewById(R.id.scanner_button);
     }
 
+    /**
+     * https://developer.android.com/topic/libraries/data-binding/architecture#viewmodel
+     * bind the xml views text fields with view model's live data
+     * this is a two way binding, meaning that update view will update vm data.
+     * Be very careful when setting views directly
+     */
     private void setViewBindings() {
         AddEditActivityBinding binding = DataBindingUtil.setContentView(this, R.layout.add_edit_activity);
         binding.setLifecycleOwner(this);
         binding.setVm(vm);
     }
 
-    private void showImageUpdateDialog(Uri uri) {
+    /**
+     * Show different floating dialog based on whether the book has an image.
+     * uses the vm.hasImage flag.
+     */
+    private void showImageUpdateDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         if (!vm.hasImage()) {
             builder.setItems(R.array.image_actions_new, (dialog, which) -> {
@@ -149,11 +165,16 @@ public class AddEditActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * bind the activity received book object into view model. this will set the text fields correspondingly
+     * thanks to data binding
+     */
     private void bindBookFromIntent() {
         Intent intent = getIntent();
         action = (BOOK_ACTION) intent.getSerializableExtra(OwnedListFragment.BOOK_ACTION_KEY);
         if (action == BOOK_ACTION.EDIT) {
-            editBook = intent.getParcelableExtra(OwnedListFragment.BOOK_EDIT_KEY);
+            // book currently being edited
+            Book editBook = intent.getParcelableExtra(OwnedListFragment.BOOK_EDIT_KEY);
             if (editBook != null) {
                 vm.bindBook(editBook);
             }
@@ -183,7 +204,6 @@ public class AddEditActivity extends AppCompatActivity {
      * Users should be able to manually fill in or user the scanner to retrieve the information
      * for the book they want to add
      * After checking all required fields, save button is clicked
-     * TODO: this is just a placeholder
      */
     private void saveInformation() {
         if (validateFields()) {
@@ -202,6 +222,10 @@ public class AddEditActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * validate the text fields, make sure they are not empty and if so set error message
+     * @return boolean indicating whether all fields are valid
+     */
     private boolean validateFields() {
         Boolean isValid = true;
         String isbn = isbnLayout.getEditText().getText().toString();
@@ -257,6 +281,12 @@ public class AddEditActivity extends AppCompatActivity {
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * paint the image on new uri updated
+     * this means that the image view will be overridden by this paint if it originally has a
+     * remote image already painted but that's exactly what we want since the user wants to update
+     * @param uri the local image uri
+     */
     private void paintImage(Uri uri) {
         GlideApp.with(this)
                 .load(uri)
@@ -268,11 +298,11 @@ public class AddEditActivity extends AppCompatActivity {
 
 
     private void openScanner() {
-        // TODO: implement the scanner
         Intent intent = new Intent(this, ScannerAddActivity.class);
         startActivityForResult(intent, REQUEST_GET_SCANNED_ISBN);
     }
 
+    // create an activity to allow users to upload an image
     private void prepareLocalImage() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.setType("image/*");
@@ -322,7 +352,7 @@ public class AddEditActivity extends AppCompatActivity {
                 vm.setLocalImageUri(bookImageUri);
             }
         } else if (resultCode == RESULT_OK && requestCode == REQUEST_GET_SCANNED_ISBN) {
-            isbnEditText.setText(data.getStringExtra(ScannerAddActivity.ISBN_KEY));
+            isbnEditText.setText(data.getStringExtra(ScannerAddActivity.ISBN_KEY)); // this sets the vm.bookIsbn too!
         }
     }
 
