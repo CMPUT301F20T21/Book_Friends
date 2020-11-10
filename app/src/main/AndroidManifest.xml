@@ -46,6 +46,9 @@
         <activity android:name=".ui.add.AddEditActivity"
             android:label="Add/Edit a Book">
         </activity>
+        <activity android:name=".ui.library.detailLibraryActivity"
+            android:label="View">
+        </activity>
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.login.CreateAccountActivity"
             android:windowSoftInputMode="adjustPan"

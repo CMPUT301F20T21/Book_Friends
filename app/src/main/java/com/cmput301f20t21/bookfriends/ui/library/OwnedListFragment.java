@@ -138,6 +138,13 @@ public class OwnedListFragment extends Fragment {
             startActivityForResult(intent, BOOK_ACTION.EDIT.getCode());
         }
     }
+    private void openDetailActivity(Book book){
+        Intent intent = new Intent(this.getActivity(), detailLibraryActivity.class);
+        intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.VIEW);
+        intent.putExtra(VIEW_REQUEST_KEY,book);
+        startActivityForResult(intent, BOOK_ACTION.VIEW.getCode());
+    }
+
 
     /**
      * called when the user clicks on one of the books
@@ -146,7 +153,7 @@ public class OwnedListFragment extends Fragment {
     public void onItemClick(int position) {
         if (position != RecyclerView.NO_POSITION) {
             Book book = vm.getBookByIndex(position);
-            openAddEditActivity(book);
+            openDetailActivity(book);
         }
     }
 

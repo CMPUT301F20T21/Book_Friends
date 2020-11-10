@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BorrowedListFragment extends Fragment {

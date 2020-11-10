@@ -44,4 +44,6 @@ public class BorrowedListAdapter extends BaseBookListAdapter {
             this.owner.setText(this.itemView.getResources().getString(R.string.book_list_item_owner, book.getOwner()));
         }
     }
+
+
 }

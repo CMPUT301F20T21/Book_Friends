@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class LoginViewModeUnitTest {
+public class LoginViewModelUnitTest {
     private String uid = "uid";
     private String username = "username";
     private String email = "email";
