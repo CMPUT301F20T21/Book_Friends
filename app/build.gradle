@@ -5,6 +5,10 @@ android {
     compileSdkVersion 29
     buildToolsVersion "30.0.2"
 
+    buildFeatures {
+        dataBinding true
+    }
+
     defaultConfig {
         applicationId "com.cmput301f20t21.bookfriends"
         minSdkVersion 24
