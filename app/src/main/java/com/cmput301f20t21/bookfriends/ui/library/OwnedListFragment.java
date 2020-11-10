@@ -200,6 +200,8 @@ public class OwnedListFragment extends Fragment {
         int height = layout.getMeasuredHeight();
         PopupWindow popup = new PopupWindow(layout, width, height,true);
 
+        // elevation does not work in xml file so have to set it here
+        popup.setElevation(12);
         // want to show the window above the view instead of below
         // so offset the window by its width and height
         popup.showAsDropDown(view, -width, -height);
