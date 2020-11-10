@@ -1,6 +1,5 @@
 package com.cmput301f20t21.bookfriends.ui.component;
 
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +9,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cmput301f20t21.bookfriends.utils.GlideApp;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
+import com.cmput301f20t21.bookfriends.utils.GlideApp;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -65,11 +65,15 @@ public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapte
             this.author.setText(this.itemView.getResources().getString(R.string.book_list_item_author, book.getAuthor()));
             this.isbn.setText(book.getIsbn());
             this.book = book;
+            paintCover();
+        }
+
+        protected void paintCover() {
             StorageReference storageReference = FirebaseStorage.getInstance().getReference(book.getCoverImageName());
             GlideApp.with(holderView)
                     .load(storageReference)
                     .placeholder(R.drawable.no_image)
                     .into(bookImage);
-            }
         }
+    }
 }

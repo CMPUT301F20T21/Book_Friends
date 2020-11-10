@@ -12,6 +12,8 @@ package com.cmput301f20t21.bookfriends.ui.add;
 import android.net.Uri;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.cmput301f20t21.bookfriends.callbacks.OnFailCallbackWithMessage;
@@ -23,7 +25,6 @@ import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.IAuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.IBookRepository;
-import com.google.firebase.firestore.DocumentReference;
 
 /**
  * The ViewModel for AddEditActivity
@@ -31,6 +32,7 @@ import com.google.firebase.firestore.DocumentReference;
 public class AddEditViewModel extends ViewModel {
     private final IAuthRepository authRepository;
     private final IBookRepository bookRepository;
+    private final MutableLiveData<Uri> bookImageUri = new MutableLiveData<>();
 
     //production
     public AddEditViewModel() {
@@ -43,17 +45,29 @@ public class AddEditViewModel extends ViewModel {
         this.bookRepository = bookRepository;
     }
 
+    public LiveData<Uri> getBookImageUri() {
+        return bookImageUri;
+    }
+
+    public void setBookImageUri(Uri uri) {
+        bookImageUri.setValue(uri);
+    }
+
+    public void upsertBookAndImage(OnSuccessCallbackWithMessage<Book> successCallback, OnFailCallbackWithMessage<BOOK_ERROR> failCallback) {
+        // TODO: edit the book or add the book
+    }
 
     /**
      * handles the add book functionality when user clicks the "Save" button in AddEditActivity
      * adds the book to the "book" collection and the image to FireBase Cloud Storage(if there is an image)
-     * @param isbn the isbn of the book
-     * @param title the title of the book
-     * @param author the author of the book
-     * @param description the book description
-     * @param imageUri the uri of the image, can be null if no image is added
+     *
+     * @param isbn            the isbn of the book
+     * @param title           the title of the book
+     * @param author          the author of the book
+     * @param description     the book description
+     * @param imageUri        the uri of the image, can be null if no image is added
      * @param successCallback async callback that is called upon successfully completing all operations
-     * @param failCallback async callback that is called if any operation failed
+     * @param failCallback    async callback that is called if any operation failed
      */
     public void handleAddBook(
             final String isbn, final String title, final String author, final String description,
@@ -85,18 +99,19 @@ public class AddEditViewModel extends ViewModel {
     /**
      * handles the edit book functionality when user clicks the "Save" button in AddEditActivity
      * edit the book to the "book" collection and the image to FireBase Cloud Storage(if there is an image)
-     * @param oldBook the book before it's being edited
-     * @param isbn the isbn of the book after edit
-     * @param title the title of the book after edit
-     * @param author the author of the book after edit
-     * @param description the book description after edit
-     * @param newUri the new image that the user uploaded, can be null if user did not upload a new image
+     *
+     * @param oldBook         the book before it's being edited
+     * @param isbn            the isbn of the book after edit
+     * @param title           the title of the book after edit
+     * @param author          the author of the book after edit
+     * @param description     the book description after edit
+     * @param newUri          the new image that the user uploaded, can be null if user did not upload a new image
      * @param successCallback async callback that is called upon successfully completing all operations
-     * @param failCallback async callback that is called if any operation failed
+     * @param failCallback    async callback that is called if any operation failed
      */
     public void handleEditBook(
             final Book oldBook, final String isbn, final String title, final String author, final String description,
-            @Nullable Uri newUri, OnSuccessCallbackWithMessage<Book> successCallback, OnFailCallbackWithMessage<BOOK_ERROR> failCallback
+            @Nullable Uri newUri, boolean shouldDeleteImage, OnSuccessCallbackWithMessage<Book> successCallback, OnFailCallbackWithMessage<BOOK_ERROR> failCallback
     ) {
         String bookId = oldBook.getId();
         bookRepository.editBook(oldBook, isbn, title, author, description).addOnSuccessListener(
@@ -114,8 +129,14 @@ public class AddEditViewModel extends ViewModel {
                                 }
                         );
                     } else {
-                        // image is not changed
-                        successCallback.run(newBook);
+                        if (shouldDeleteImage) {
+                            bookRepository.deleteImage(newBook.getCoverImageName())
+                                    .addOnCompleteListener(Void -> {
+                                        successCallback.run(newBook);
+                                    });
+                        } else {
+                            successCallback.run(newBook);
+                        }
                     }
                 }
         ).addOnFailureListener(e -> {

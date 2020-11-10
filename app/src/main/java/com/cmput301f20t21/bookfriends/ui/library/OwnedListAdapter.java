@@ -11,25 +11,17 @@ import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.ui.component.BaseBookListAdapter;
+import com.cmput301f20t21.bookfriends.utils.GlideApp;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
 public class OwnedListAdapter extends BaseBookListAdapter {
-    public interface onViewRequestsListener {
-        void run(String bookId);
-    }
-
-    public interface onDeleteListener {
-        void run(Book book);
-    }
-
-    public interface onItemClickListener {
-        void run(int position);
-    }
-
     private onDeleteListener deleteListener;
     private onItemClickListener itemClickListener;
     private onViewRequestsListener viewRequestsListener;
@@ -47,7 +39,17 @@ public class OwnedListAdapter extends BaseBookListAdapter {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_list, parent, false);
         return new OwnedListAdapter.ViewHolder(itemView, itemClickListener, deleteListener, viewRequestsListener);
     }
+    public interface onViewRequestsListener {
+        void run(String bookId);
+    }
 
+    public interface onDeleteListener {
+        void run(Book book);
+    }
+
+    public interface onItemClickListener {
+        void run(int position);
+    }
 
     public static class ViewHolder extends BaseBookListAdapter.ViewHolder {
         final ImageButton moreBtn;
@@ -61,6 +63,18 @@ public class OwnedListAdapter extends BaseBookListAdapter {
             v.setOnClickListener(view -> itemClickListener.run(getAdapterPosition()));
             this.deleteListener = deleteListener;
             this.viewRequestsListener = viewRequestsListener;
+        }
+
+        @Override
+        protected void paintCover() {
+            // disable caching in owned list since we might update books a lot more frequently
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference(book.getCoverImageName());
+            GlideApp.with(holderView)
+                    .load(storageReference)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .placeholder(R.drawable.no_image)
+                    .into(bookImage);
         }
 
         private void showPopup(View view) {

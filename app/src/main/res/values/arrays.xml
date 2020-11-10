@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="image_actions_new">
+        <item>Upload new image</item>
+        <item>Cancel</item>
+    </array>
+    <array name="image_actions_exist">
+        <item>Replace with new image</item>
+        <item>Delete cover image</item>
+        <item>Cancel</item>
+    </array>
+</resources>
