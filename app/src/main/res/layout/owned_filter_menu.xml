@@ -11,30 +11,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/string_available"
-        android:checked="true"
-        android:layout_alignParentTop="true" />
+        android:checked="true" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/filter_menu_requested"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/string_requested"
-        android:checked="true"
-        android:layout_below="@+id/filter_menu_available" />
+        android:checked="true" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/filter_menu_accepted"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/string_accepted"
-        android:checked="true"
-        android:layout_below="@+id/filter_menu_requested" />
+        android:checked="true" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/filter_menu_borrowed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/string_borrowed"
-        android:checked="true"
-        android:layout_below="@+id/filter_menu_accepted" />
+        android:checked="true" />
 </LinearLayout>
