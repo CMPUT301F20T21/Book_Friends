@@ -18,6 +18,7 @@ import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.RequestRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.IAuthRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.IRequestRepository;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
  * The ViewModel for BorrowedListFragment
  */
 public class BorrowedViewModel extends ViewModel {
-    private RequestRepository requestRepository = RequestRepository.getInstance();
+    private IRequestRepository requestRepository = RequestRepository.getInstance();
     private BookRepository bookRepository = BookRepository.getInstance();
     private IAuthRepository authRepository = AuthRepository.getInstance();
 

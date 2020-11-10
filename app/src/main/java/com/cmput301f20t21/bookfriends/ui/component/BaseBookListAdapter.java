@@ -19,9 +19,9 @@ import com.google.firebase.storage.StorageReference;
 import java.util.List;
 
 public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapter.ViewHolder> {
-    protected List<Book> books;
+    protected List<? extends Book> books;
 
-    public BaseBookListAdapter(List<Book> books) {
+    public BaseBookListAdapter(List<? extends Book> books) {
         this.books = books;
     }
 
