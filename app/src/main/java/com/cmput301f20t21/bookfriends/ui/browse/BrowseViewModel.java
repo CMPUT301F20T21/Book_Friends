@@ -1,15 +1,11 @@
 package com.cmput301f20t21.bookfriends.ui.browse;
 
-import android.util.Log;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.cmput301f20t21.bookfriends.entities.AvailableBook;
-import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
-import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.RequestRepository;
@@ -29,10 +25,12 @@ public class BrowseViewModel extends ViewModel {
     private final IRequestRepository requestRepository;
     private final IBookRepository bookRepository;
 
+    // production
     public BrowseViewModel() {
         this(AuthRepository.getInstance(), RequestRepository.getInstance(), BookRepository.getInstance());
     }
 
+    // dependency injection for unit test
     public BrowseViewModel(IAuthRepository authRepository, IRequestRepository requestRepository, IBookRepository bookRepository) {
         this.authRepository = authRepository;
         this.requestRepository = requestRepository;
@@ -50,33 +48,30 @@ public class BrowseViewModel extends ViewModel {
     }
 
     private void fetchBooks() {
+        // get logged in user's username
         String username = authRepository.getCurrentUser().getUsername();
+        // first, get all the request made by this user.
         requestRepository.getAllRequestsByUsername(username).addOnSuccessListener(requests -> {
-            // use this to set local requested state
-            Log.d("REQUEST COUNT:", String.valueOf(requests.size()));
+            // extract book id from fetched requests
+            // book ids will be unique because each user can only request a book once at a time
             List<String> requestedBookIds = requests
                     .stream()
                     .map(request -> request.getBookId())
                     .collect(Collectors.toList());
+            // get available book for current user (book in available status and not owned by this user)
             bookRepository.getAvailableBooksForUser(username).addOnSuccessListener(availableBooks -> {
+                // check if available book has been requested
                 availableBooks
                         .forEach(availableBook -> {
-
                             if (requestedBookIds.indexOf(availableBook.getId()) != -1) {
                                 availableBook.setRequested(true);
                             }
                         });
+                // insert into local data
                 bookData.clear();
                 bookData.addAll(availableBooks);
                 books.setValue(bookData);
-            }).addOnFailureListener(e -> {
-                        Log.d("ERROR INDEX:", "ERROR get book");
-                        errorMessage.setValue(BOOK_ERROR.FAIL_TO_GET_BOOKS);
-                    }
-            );
-        }).addOnFailureListener(e -> {
-            Log.d("ERROR INDEX:", e.getMessage());
-            errorMessage.setValue(BOOK_ERROR.FAIL_TO_GET_BOOKS);
-        });
+            }).addOnFailureListener(e -> errorMessage.setValue(BOOK_ERROR.FAIL_TO_GET_BOOKS));
+        }).addOnFailureListener(e -> errorMessage.setValue(BOOK_ERROR.FAIL_TO_GET_BOOKS));
     }
 }
