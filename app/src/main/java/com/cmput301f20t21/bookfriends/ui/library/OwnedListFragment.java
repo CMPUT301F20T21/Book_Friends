@@ -9,11 +9,13 @@
 
 package com.cmput301f20t21.bookfriends.ui.library;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,7 +46,8 @@ public class OwnedListFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-
+    private FloatingActionButton filterButton;
+    private FloatingActionButton addBookButton;
     /**
      * Called before creating the fragment view
      * @param inflater the layout inflater
@@ -58,12 +61,14 @@ public class OwnedListFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         vm = new ViewModelProvider(this).get(OwnedViewModel.class);
         View root = inflater.inflate(R.layout.owned_list_book, container, false);
-        final FloatingActionButton addBookButton = root.findViewById(R.id.add_button);
+        addBookButton = root.findViewById(R.id.add_button);
+        filterButton = root.findViewById(R.id.filter_button);
 
         addBookButton.setOnClickListener(
                 view -> openAddEditActivity(null)
         );
 
+        filterButton.setOnClickListener(this::showFilterPopup);
         return root;
     }
 
@@ -85,6 +90,20 @@ public class OwnedListFragment extends Fragment {
 
         adapter = new OwnedListAdapter(vm.getBooks().getValue(), this::onItemClick, this::onDeleteBook, this::onViewRequests);
         recyclerView.setAdapter(adapter);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0) {
+                    filterButton.hide();
+                    addBookButton.hide();
+                } else {
+                    filterButton.show();
+                    addBookButton.show();
+                }
+            }
+        });
 
         vm.getBooks().observe(getViewLifecycleOwner(), (List<Book> books) -> adapter.notifyDataSetChanged());
 
@@ -167,6 +186,25 @@ public class OwnedListFragment extends Fragment {
         Intent intent = new Intent(this.getActivity(), RequestActivity.class);
         intent.putExtra(VIEW_REQUEST_KEY, bookId);
         startActivity(intent);
+    }
+
+    /**
+     * when the user click on the filter button
+     * @param view the filter button view
+     */
+    private void showFilterPopup(View view) {
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.owned_filter_menu, getActivity().findViewById(R.id.popup_element));
+        layout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        int width = layout.getMeasuredWidth();
+        int height = layout.getMeasuredHeight();
+        PopupWindow popup = new PopupWindow(layout, width, height,true);
+
+        // elevation does not work in xml file so have to set it here
+        popup.setElevation(12);
+        // want to show the window above the view instead of below
+        // so offset the window by its width and height
+        popup.showAsDropDown(view, -width, -height);
     }
 }
 
