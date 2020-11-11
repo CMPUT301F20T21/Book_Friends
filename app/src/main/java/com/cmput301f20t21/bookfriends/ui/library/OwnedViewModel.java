@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
+import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.IAuthRepository;
@@ -25,7 +26,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * The ViewModel for OwnedListFragment
@@ -37,7 +37,8 @@ public class OwnedViewModel extends ViewModel {
 
     private final MutableLiveData<List<Book>> books = new MutableLiveData<>(new ArrayList<>());
     private final List<Book> bookData = books.getValue();
-
+    // a copy of the book live data, used for filtering
+    private final List<Book> bookCopyData = new ArrayList<>();
     private MutableLiveData<Integer> updatedPosition = new MutableLiveData<>(0);
     private MutableLiveData<BOOK_ERROR> errorMessageObserver = new MutableLiveData<>();
 
@@ -117,6 +118,28 @@ public class OwnedViewModel extends ViewModel {
                 .addOnFailureListener(e -> errorMessageObserver.setValue(BOOK_ERROR.FAIL_TO_DELETE_BOOK));
     }
 
+    public void filterBooks (
+            boolean includeAvailable, boolean includeRequested,
+            boolean includeAccepted, boolean includeBorrowed
+    ) {
+        if (bookData == null) {
+            return;
+        }
+        bookData.clear();
+        for (Book book : bookCopyData) {
+            BOOK_STATUS status = book.getStatus();
+            if (
+                    status == BOOK_STATUS.AVAILABLE && includeAvailable ||
+                    status == BOOK_STATUS.REQUESTED && includeRequested ||
+                    status == BOOK_STATUS.ACCEPTED && includeAccepted ||
+                    status == BOOK_STATUS.BORROWED && includeBorrowed
+            ) {
+                bookData.add(book);
+            }
+        }
+        books.setValue(bookData);
+    }
+
     /**
      * fetch a list of book that belongs to current user
      */
@@ -136,6 +159,7 @@ public class OwnedViewModel extends ViewModel {
                                             .map(document -> document.toObject(Book.class))
                                             .collect(Collectors.toList())
                             );
+                            bookCopyData.addAll(bookData);
                             books.setValue(bookData);
                         })
                 .addOnFailureListener(e -> errorMessageObserver.setValue(BOOK_ERROR.FAIL_TO_GET_BOOKS));

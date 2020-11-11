@@ -32,6 +32,7 @@ import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.ui.add.AddEditActivity;
 import com.cmput301f20t21.bookfriends.ui.request.RequestActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.List;
 
@@ -48,6 +49,13 @@ public class OwnedListFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private FloatingActionButton filterButton;
     private FloatingActionButton addBookButton;
+    // save the states locally when the fragment is visible
+    // use SharePreferences if we want to save the states after we switch view
+    private boolean includeAvailable = true;
+    private boolean includeRequested = true;
+    private boolean includeAccepted = true;
+    private boolean includeBorrowed = true;
+
     /**
      * Called before creating the fragment view
      * @param inflater the layout inflater
@@ -200,11 +208,42 @@ public class OwnedListFragment extends Fragment {
         int height = layout.getMeasuredHeight();
         PopupWindow popup = new PopupWindow(layout, width, height,true);
 
+        SwitchMaterial availableStatusSwitch = layout.findViewById(R.id.filter_menu_available);
+        SwitchMaterial requestedStatusSwitch = layout.findViewById(R.id.filter_menu_requested);
+        SwitchMaterial acceptedStatusSwitch = layout.findViewById(R.id.filter_menu_accepted);
+        SwitchMaterial borrowedStatusSwitch = layout.findViewById(R.id.filter_menu_borrowed);
+        availableStatusSwitch.setOnClickListener(this::onFilter);
+        requestedStatusSwitch.setOnClickListener(this::onFilter);
+        acceptedStatusSwitch.setOnClickListener(this::onFilter);
+        borrowedStatusSwitch.setOnClickListener(this::onFilter);
+        availableStatusSwitch.setChecked(includeAvailable);
+        requestedStatusSwitch.setChecked(includeRequested);
+        acceptedStatusSwitch.setChecked(includeAccepted);
+        borrowedStatusSwitch.setChecked(includeBorrowed);
+
         // elevation does not work in xml file so have to set it here
         popup.setElevation(12);
         // want to show the window above the view instead of below
         // so offset the window by its width and height
         popup.showAsDropDown(view, -width, -height);
+    }
+
+    private void onFilter(View view) {
+        View parentView = (View) view.getParent();
+        SwitchMaterial availableStatusSwitch = parentView.findViewById(R.id.filter_menu_available);
+        SwitchMaterial requestedStatusSwitch = parentView.findViewById(R.id.filter_menu_requested);
+        SwitchMaterial acceptedStatusSwitch = parentView.findViewById(R.id.filter_menu_accepted);
+        SwitchMaterial borrowedStatusSwitch = parentView.findViewById(R.id.filter_menu_borrowed);
+        includeAvailable = availableStatusSwitch.isChecked();
+        includeRequested = requestedStatusSwitch.isChecked();
+        includeAccepted = acceptedStatusSwitch.isChecked();
+        includeBorrowed = borrowedStatusSwitch.isChecked();
+        vm.filterBooks(
+                includeAvailable,
+                includeRequested,
+                includeAccepted,
+                includeBorrowed
+        );
     }
 }
 
