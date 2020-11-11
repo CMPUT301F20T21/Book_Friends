@@ -4,21 +4,20 @@ import android.net.Uri;
 
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
+import com.cmput301f20t21.bookfriends.repositories.api.IBookRepository;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class BookRepository {
+public class BookRepository implements IBookRepository {
 
     private static final BookRepository instance = new BookRepository();
     private final StorageReference imageStorageReference = FirebaseStorage.getInstance().getReference();
@@ -32,7 +31,7 @@ public class BookRepository {
         return instance;
     }
 
-    public Task<DocumentReference> add(String isbn, String title, String author, String description, String owner) {
+    public Task<String> add(String isbn, String title, String author, String description, String owner) {
         HashMap<String, Object> data = new HashMap<>();
         data.put("isbn", isbn);
         data.put("title", title);
@@ -41,21 +40,37 @@ public class BookRepository {
         data.put("owner", owner);
         // when a book is first added, the status will always be "AVAILABLE"
         data.put("status", BOOK_STATUS.AVAILABLE.toString());
-        return bookCollection.add(data);
+        return bookCollection.add(data).continueWith(task -> {
+            if (task.isSuccessful()) {
+                return task.getResult().getId();
+            }
+            throw new Exception();
+        });
     }
 
-    public UploadTask addImage(String bookId, Uri imageUri) {
-        StorageReference fileReference = imageStorageReference.child(bookId);
-        return fileReference.putFile(imageUri);
+    public Task<String> addImage(String imageName, Uri imageUri) {
+        StorageReference fileReference = imageStorageReference.child(imageName);
+        return fileReference.putFile(imageUri).continueWith(task -> {
+            if (task.isSuccessful()) {
+                return imageName;
+            }
+            throw new Exception();
+        });
     }
 
-    public Task<Void> editBook(String bookId, String isbn, String title, String author, String description) {
+    public Task<Book> editBook(Book oldBook, String isbn, String title, String author, String description) {
         HashMap<String, Object> data = new HashMap<>();
+        String id = oldBook.getId();
         data.put("isbn", isbn);
         data.put("title", title);
         data.put("author", author);
         data.put("description", description);
-        return bookCollection.document(bookId).update(data);
+        return bookCollection.document(id).update(data).continueWith(task -> {
+           if (task.isSuccessful()) {
+               return new Book(id, isbn, title, author, description, oldBook.getOwner(), BOOK_STATUS.AVAILABLE);
+           }
+           throw new Exception();
+        });
     }
 
     public Task<Void> delete(String id) {
@@ -115,5 +130,9 @@ public class BookRepository {
         return bookCollection
                 .whereEqualTo("status", BOOK_STATUS.AVAILABLE.toString())
                 .whereEqualTo("status", BOOK_STATUS.REQUESTED.toString()).get();
+    }
+
+    public Task<QuerySnapshot> getDocumentBy(String isbn, String title, String author) {
+        return bookCollection.whereEqualTo("isbn", isbn).whereEqualTo("title", title).whereEqualTo("author", author).get();
     }
 }
