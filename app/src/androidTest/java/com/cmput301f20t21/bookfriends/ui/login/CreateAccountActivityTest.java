@@ -30,10 +30,6 @@ public class CreateAccountActivityTest {
 
     @Test
     public void testIncorrectInput() throws InterruptedException {
-        ViewInteraction createAccountButton = onView(
-                allOf(withId(R.id.create_account_button), isDisplayed()));
-        createAccountButton.perform(click());
-
         ViewInteraction usernameField = onView(
                 allOf(withId(R.id.signup_username_field), isDisplayed()));
         usernameField.perform(replaceText("! User"), closeSoftKeyboard());

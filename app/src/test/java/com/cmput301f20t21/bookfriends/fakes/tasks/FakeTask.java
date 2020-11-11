@@ -11,7 +11,7 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.concurrent.Executor;
 
-public class FakeTask<T> extends Task<T>{
+public abstract class FakeTask<T> extends Task<T>{
     private boolean complete;
     private boolean success;
     private T result;
