@@ -3,8 +3,10 @@
     <string name="title_library">Your Library</string>
     <string name="tab_title_my_library">My Books</string>
     <string name="tab_title_borrowed_library">Borrowed Books</string>
-    <string name="tab_title_requested">Requested</string>
-    <string name="tab_title_accepted">Accepted</string>
+    <string name="string_available">Available</string>
+    <string name="string_requested">Requested</string>
+    <string name="string_accepted">Accepted</string>
+    <string name="string_borrowed">Borrowed</string>
     <string name="title_borrow">Borrow</string>
     <string name="title_browse">Browse</string>
     <string name="title_scanner_add">Scan to Add</string>
