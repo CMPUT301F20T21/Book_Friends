@@ -74,4 +74,8 @@
     <string name="fail_to_edit_book">Failed to edit book</string>
     <string name="scanner_scanning">Scanning...</string>
     <string name="accept_this_request">Accept this request?</string>
+
+    <string name="upload_new_image">Upload a new image</string>
+    <string name="replace_with_new_image">Replace with a new image</string>
+    <string name="delete_cover_image">Delete cover image</string>
 </resources>
