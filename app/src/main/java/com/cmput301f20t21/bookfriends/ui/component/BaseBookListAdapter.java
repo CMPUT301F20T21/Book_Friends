@@ -46,6 +46,7 @@ public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapte
         protected final TextView title;
         protected final TextView author;
         protected final TextView isbn;
+        protected final TextView status;
         protected final ImageView bookImage;
         protected View holderView;
         protected Book book;
@@ -57,6 +58,7 @@ public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapte
             title = v.findViewById(R.id.item_book_title);
             author = v.findViewById(R.id.item_book_author);
             isbn = v.findViewById(R.id.item_book_isbn);
+            status = v.findViewById(R.id.status);
             bookImage = v.findViewById(R.id.booklist_image_view);
         }
 
@@ -65,6 +67,7 @@ public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapte
             this.author.setText(this.itemView.getResources().getString(R.string.book_list_item_author, book.getAuthor()));
             this.isbn.setText(book.getIsbn());
             this.book = book;
+            this.status.setText(book.getStatus().name());
             StorageReference storageReference = FirebaseStorage.getInstance().getReference(book.getCoverImageName());
             GlideApp.with(holderView)
                     .load(storageReference)
