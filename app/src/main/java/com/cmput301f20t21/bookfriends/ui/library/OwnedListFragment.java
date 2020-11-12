@@ -49,12 +49,7 @@ public class OwnedListFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private FloatingActionButton filterButton;
     private FloatingActionButton addBookButton;
-    // save the states locally when the fragment is visible
-    // use SharePreferences if we want to save the states after we switch view
-    private boolean includeAvailable = true;
-    private boolean includeRequested = true;
-    private boolean includeAccepted = true;
-    private boolean includeBorrowed = true;
+    private PopupWindow filterPopup;
 
     /**
      * Called before creating the fragment view
@@ -76,7 +71,28 @@ public class OwnedListFragment extends Fragment {
                 view -> openAddEditActivity(null)
         );
 
-        filterButton.setOnClickListener(this::showFilterPopup);
+        View filterLayout = inflater.inflate(R.layout.owned_filter_menu, getActivity().findViewById(R.id.popup_element));
+        filterLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        int width = filterLayout.getMeasuredWidth();
+        int height = filterLayout.getMeasuredHeight();
+        filterPopup = new PopupWindow(filterLayout, width, height,true);
+        // elevation does not work in xml file so have to set it here
+        filterPopup.setElevation(12);
+
+        SwitchMaterial availableStatusSwitch = filterLayout.findViewById(R.id.filter_menu_available);
+        SwitchMaterial requestedStatusSwitch = filterLayout.findViewById(R.id.filter_menu_requested);
+        SwitchMaterial acceptedStatusSwitch = filterLayout.findViewById(R.id.filter_menu_accepted);
+        SwitchMaterial borrowedStatusSwitch = filterLayout.findViewById(R.id.filter_menu_borrowed);
+        availableStatusSwitch.setOnClickListener(this::onFilter);
+        requestedStatusSwitch.setOnClickListener(this::onFilter);
+        acceptedStatusSwitch.setOnClickListener(this::onFilter);
+        borrowedStatusSwitch.setOnClickListener(this::onFilter);
+
+        filterButton.setOnClickListener((view) -> {
+            // want to show the window above the view instead of below
+            // so offset the window by its width and height
+            filterPopup.showAsDropDown(view, -width, -height);
+        });
         return root;
     }
 
@@ -196,53 +212,17 @@ public class OwnedListFragment extends Fragment {
         startActivity(intent);
     }
 
-    /**
-     * when the user click on the filter button
-     * @param view the filter button view
-     */
-    private void showFilterPopup(View view) {
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout = inflater.inflate(R.layout.owned_filter_menu, getActivity().findViewById(R.id.popup_element));
-        layout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        int width = layout.getMeasuredWidth();
-        int height = layout.getMeasuredHeight();
-        PopupWindow popup = new PopupWindow(layout, width, height,true);
-
-        SwitchMaterial availableStatusSwitch = layout.findViewById(R.id.filter_menu_available);
-        SwitchMaterial requestedStatusSwitch = layout.findViewById(R.id.filter_menu_requested);
-        SwitchMaterial acceptedStatusSwitch = layout.findViewById(R.id.filter_menu_accepted);
-        SwitchMaterial borrowedStatusSwitch = layout.findViewById(R.id.filter_menu_borrowed);
-        availableStatusSwitch.setOnClickListener(this::onFilter);
-        requestedStatusSwitch.setOnClickListener(this::onFilter);
-        acceptedStatusSwitch.setOnClickListener(this::onFilter);
-        borrowedStatusSwitch.setOnClickListener(this::onFilter);
-        availableStatusSwitch.setChecked(includeAvailable);
-        requestedStatusSwitch.setChecked(includeRequested);
-        acceptedStatusSwitch.setChecked(includeAccepted);
-        borrowedStatusSwitch.setChecked(includeBorrowed);
-
-        // elevation does not work in xml file so have to set it here
-        popup.setElevation(12);
-        // want to show the window above the view instead of below
-        // so offset the window by its width and height
-        popup.showAsDropDown(view, -width, -height);
-    }
-
     private void onFilter(View view) {
         View parentView = (View) view.getParent();
         SwitchMaterial availableStatusSwitch = parentView.findViewById(R.id.filter_menu_available);
         SwitchMaterial requestedStatusSwitch = parentView.findViewById(R.id.filter_menu_requested);
         SwitchMaterial acceptedStatusSwitch = parentView.findViewById(R.id.filter_menu_accepted);
         SwitchMaterial borrowedStatusSwitch = parentView.findViewById(R.id.filter_menu_borrowed);
-        includeAvailable = availableStatusSwitch.isChecked();
-        includeRequested = requestedStatusSwitch.isChecked();
-        includeAccepted = acceptedStatusSwitch.isChecked();
-        includeBorrowed = borrowedStatusSwitch.isChecked();
         vm.filterBooks(
-                includeAvailable,
-                includeRequested,
-                includeAccepted,
-                includeBorrowed
+                availableStatusSwitch.isChecked(),
+                requestedStatusSwitch.isChecked(),
+                acceptedStatusSwitch.isChecked(),
+                borrowedStatusSwitch.isChecked()
         );
     }
 }
