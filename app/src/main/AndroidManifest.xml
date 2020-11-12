@@ -55,6 +55,16 @@
             android:parentActivityName="com.cmput301f20t21.bookfriends.ui.login.LoginActivity" >
 
         </activity>
+        <activity
+            android:name="com.cmput301f20t21.bookfriends.ui.borrow.detailAcceptedActivity"
+            android:label="The Book Detail (Accepted)">
+            >
+        </activity>
+        <activity
+            android:name="com.cmput301f20t21.bookfriends.ui.borrow.detailRequestedActivity"
+            android:label="The Book Detail (Requested)">
+            >
+        </activity>
         <activity android:name=".ui.request.RequestActivity"
             android:label="Requests">
 

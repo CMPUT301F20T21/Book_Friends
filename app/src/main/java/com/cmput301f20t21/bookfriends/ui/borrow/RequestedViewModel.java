@@ -8,8 +8,9 @@ import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import java.util.ArrayList;
 
 public class RequestedViewModel extends ViewModel {
+    private  ArrayList<Book> RequestedBookData = new ArrayList<>();
     public ArrayList<Book> getBooks() {
-        ArrayList<Book> RequestedBookData = new ArrayList<>();
+
         RequestedBookData.add(new Book ("123","456","Some Book Name","lyu","book","lyu", BOOK_STATUS.ACCEPTED));
         RequestedBookData.add(new Book ("123","456","Some Book Name","lyu","book","lyu", BOOK_STATUS.ACCEPTED));
         RequestedBookData.add(new Book ("123","456","Some Book Name","lyu","book","lyu", BOOK_STATUS.ACCEPTED));
@@ -20,6 +21,8 @@ public class RequestedViewModel extends ViewModel {
         return RequestedBookData;
     }
 
-
+    public Book getBookByIndex(Integer index) {
+        return RequestedBookData.get(index);
+    }
 
 }

@@ -77,4 +77,5 @@
     <string name="delete">delete</string>
     <string name="Add_Edit">Add/Edit</string>
     <string name="Edit_detail">Edit</string>
+    <string name="view_request">View All Requests</string>
 </resources>
