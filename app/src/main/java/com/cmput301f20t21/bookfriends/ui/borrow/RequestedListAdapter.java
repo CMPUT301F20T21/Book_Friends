@@ -45,7 +45,6 @@ public class RequestedListAdapter extends BaseBookListAdapter {
         public void onBind(Book book) {
             super.onBind(book);
             this.owner.setText(this.itemView.getResources().getString(R.string.book_list_item_owner, book.getOwner()));
-            this.status.setText("accept");
         }
     }
 }
