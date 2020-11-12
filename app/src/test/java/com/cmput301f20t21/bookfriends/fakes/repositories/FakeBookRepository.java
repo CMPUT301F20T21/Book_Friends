@@ -2,6 +2,7 @@ package com.cmput301f20t21.bookfriends.fakes.repositories;
 
 import android.net.Uri;
 
+import com.cmput301f20t21.bookfriends.entities.AvailableBook;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.repositories.api.IBookRepository;
 import com.google.android.gms.tasks.Task;
@@ -69,6 +70,11 @@ public class FakeBookRepository implements IBookRepository {
 
     @Override
     public Task<QuerySnapshot> getAvailableBooks() {
+        return null;
+    }
+
+    @Override
+    public Task<List<AvailableBook>> getAvailableBooksForUser(String username) {
         return null;
     }
 

@@ -47,10 +47,10 @@ public class BorrowFragment extends Fragment {
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             switch (position) {
                 case 0:
-                    tab.setText(getResources().getString(R.string.tab_title_requested));
+                    tab.setText(getResources().getString(R.string.string_requested));
                     break;
                 case 1:
-                    tab.setText(getResources().getString(R.string.tab_title_accepted));
+                    tab.setText(getResources().getString(R.string.string_accepted));
                     break;
                 default:
                     break;
