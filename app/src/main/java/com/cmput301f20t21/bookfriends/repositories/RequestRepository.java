@@ -1,8 +1,11 @@
 package com.cmput301f20t21.bookfriends.repositories;
 
+import android.util.Log;
+
 import com.cmput301f20t21.bookfriends.entities.Request;
-import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
+import com.cmput301f20t21.bookfriends.exceptions.UnexpectedException;
+import com.cmput301f20t21.bookfriends.repositories.api.IRequestRepository;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -11,19 +14,21 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class RequestRepository {
+public class RequestRepository implements IRequestRepository {
     private CollectionReference requestCollection;
 
-    private static final RequestRepository instance = new RequestRepository();
+    private static final IRequestRepository instance = new RequestRepository();
 
     private RequestRepository() {
         requestCollection = FirebaseFirestore.getInstance().collection("requests");
     }
 
-    public static RequestRepository getInstance() {
+    public static IRequestRepository getInstance() {
         return instance;
     }
 
@@ -39,6 +44,26 @@ public class RequestRepository {
     public Task<QuerySnapshot> getBorrowedRequestByUsername(String username) {
         return requestCollection.whereEqualTo("requester", username)
                 .whereEqualTo("status", REQUEST_STATUS.BORROWED.toString()).get();
+    }
+
+    public Task<List<Request>> getAllRequestsByUsername(String username) {
+        return requestCollection.whereEqualTo("requester", username).get()
+                .continueWith(task -> {
+                    if (task.isSuccessful()) {
+                        List<Request> requests = new ArrayList<Request>();
+                        try {
+                            requests = task.getResult().getDocuments()
+                                    .stream()
+                                    .map(doc -> doc.toObject(Request.class))
+                                    .collect(Collectors.toList());
+                        } catch (Exception e) {
+                            Log.d("REQUEST ERROR:", e.getMessage());
+                        }
+
+                        return requests;
+                    }
+                    throw new UnexpectedException();
+                });
     }
 
 
@@ -92,11 +117,10 @@ public class RequestRepository {
         String requester = (String) documentSnapshot.get("requester");
         String bookId = (String) documentSnapshot.get("bookId");
         String status = (String) documentSnapshot.get("status");
-        return new Request(requestId, requester, bookId, status);
+        return new Request(requestId, requester, bookId, REQUEST_STATUS.valueOf(status));
     }
 
     public String getRequesterFromDocument(DocumentSnapshot documentSnapshot) {
         return (String) documentSnapshot.get("requester");
     }
-
 }
