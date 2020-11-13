@@ -7,7 +7,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.cmput301f20t21.bookfriends.R;
@@ -26,7 +25,7 @@ public class BaseDetailActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail_page);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_white_18);
@@ -40,7 +39,7 @@ public class BaseDetailActivity extends AppCompatActivity {
         detailBook = getIntent.getParcelableExtra(RequestedListFragment.VIEW_REQUEST_KEY);
         detailISBN.setText(detailBook.getIsbn());
         detailTitle.setText(detailBook.getTitle());
-        detailAuthor.setText("Author: "+ detailBook.getAuthor());
+        detailAuthor.setText("Author: " + detailBook.getAuthor());
         StorageReference storageReference = FirebaseStorage.getInstance().getReference(detailBook.getCoverImageName());
         GlideApp.with(this)
                 .load(storageReference)

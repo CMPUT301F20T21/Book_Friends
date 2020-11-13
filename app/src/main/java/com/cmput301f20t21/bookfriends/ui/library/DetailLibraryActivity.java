@@ -22,11 +22,8 @@ public class DetailLibraryActivity extends BaseDetailActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
-
-
-    private void openAddEditActivity(@Nullable Book book) {
+    private void openAddEditActivity(Book book) {
         Intent intent = new Intent(DetailLibraryActivity.this, AddEditActivity.class);
         if (book == null) {
             intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.ADD);

@@ -148,14 +148,10 @@ public class OwnedListFragment extends Fragment {
      */
     private void openAddEditActivity(@Nullable Book book) {
         Intent intent = new Intent(this.getActivity(), AddEditActivity.class);
-        if (book == null) {
-            intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.ADD);
-            startActivityForResult(intent, BOOK_ACTION.ADD.getCode());
-        } else {
-            intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.EDIT);
-            intent.putExtra(BOOK_EDIT_KEY, book);
-            startActivityForResult(intent, BOOK_ACTION.EDIT.getCode());
-        }
+        intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.EDIT);
+        intent.putExtra(BOOK_EDIT_KEY, book);
+        startActivityForResult(intent, BOOK_ACTION.EDIT.getCode());
+
     }
     private void openDetailActivity(Book book){
         Intent intent = new Intent(this.getActivity(), DetailLibraryActivity.class);
