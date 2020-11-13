@@ -80,13 +80,8 @@ public class BorrowedViewModel extends ViewModel {
                 return;
             }
 
-            bookRepository.batchGetBooks(bookIds).addOnSuccessListener(bookDocumentsSnapshots -> {
-                List<DocumentSnapshot> documents = bookDocumentsSnapshots.getDocuments();
-                books.setValue(
-                        documents.stream()
-                                .map(document -> document.toObject(Book.class))
-                                .collect(Collectors.toList())
-                );
+            bookRepository.batchGetBooks(bookIds).addOnSuccessListener(borrowedBooks -> {
+                books.setValue(borrowedBooks);
             }).addOnFailureListener(e -> {
                 // TODO: handle failure here
             });

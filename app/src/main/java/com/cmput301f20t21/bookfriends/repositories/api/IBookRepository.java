@@ -21,7 +21,7 @@ public interface IBookRepository {
     Task<QuerySnapshot> getBooksOfOwnerId(String userName);
     Task<QuerySnapshot> getBookOfBorrowerId(String uid);
     Task<DocumentSnapshot> getBookById(String bookId);
-    Task<QuerySnapshot> batchGetBooks( List<String> bookIds);
+    Task<List<Book>> batchGetBooks( List<String> bookIds);
     Task<QuerySnapshot> getAvailableBooks();
     Task<List<AvailableBook>> getAvailableBooksForUser(String username);
     Task<QuerySnapshot> getDocumentBy(String isbn, String title, String author);

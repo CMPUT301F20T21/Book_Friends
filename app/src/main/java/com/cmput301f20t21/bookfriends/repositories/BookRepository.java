@@ -127,8 +127,17 @@ public class BookRepository implements IBookRepository {
         return bookCollection.document(bookId).get();
     }
 
-    public Task<QuerySnapshot> batchGetBooks(List<String> bookIds) {
-        return bookCollection.whereIn(FieldPath.documentId(), bookIds).get();
+    public Task<List<Book>> batchGetBooks(List<String> bookIds) {
+        return bookCollection.whereIn(FieldPath.documentId(), bookIds).get()
+                .continueWith(task -> {
+                    if (task.isSuccessful()) {
+                        return task.getResult().getDocuments()
+                                .stream()
+                                .map(doc -> doc.toObject(Book.class))
+                                .collect(Collectors.toList());
+                    }
+                    throw new UnexpectedException();
+                });
     }
 
     public Task<List<AvailableBook>> getAvailableBooksForUser(String username) {
