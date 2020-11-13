@@ -85,5 +85,4 @@
     <string name="Browse_detail">The Book Detail (Available)</string>
     <string name="Requested_detail">The Book Detail (Requested)</string>
     <string name="Borrowed_detail">View A Borrowed Book</string>
-    <String name = "add_edit">Add/Edit a Book</String>
 </resources>
