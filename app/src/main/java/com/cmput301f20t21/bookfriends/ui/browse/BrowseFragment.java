@@ -1,5 +1,6 @@
 package com.cmput301f20t21.bookfriends.ui.browse;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,7 +21,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.AvailableBook;
 import com.cmput301f20t21.bookfriends.entities.Book;
+import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
+import com.cmput301f20t21.bookfriends.ui.borrow.detailRequestedActivity;
 
 import java.util.List;
 
@@ -34,9 +37,10 @@ public class BrowseFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private SearchView searchView;
     private FragmentManager fragmentManager;
+    public static final String BOOK_ACTION_KEY = "com.cmput301f20t21.bookfriends.BOOK_ACTION";
+    public static final String VIEW_REQUEST_KEY = "com.cmput301f20t21.bookfriends.VIEW_REQUEST";
 
     /**
-     *
      * @param inflater
      * @param container
      * @param savedInstanceState
@@ -45,7 +49,7 @@ public class BrowseFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                                 @Nullable Bundle savedInstanceState) {
+                             @Nullable Bundle savedInstanceState) {
         vm = new ViewModelProvider(this).get(BrowseViewModel.class);
         setHasOptionsMenu(true);
         inflateSearchedList();
@@ -63,7 +67,7 @@ public class BrowseFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         // specify an adapter (see also next example)
-        adapter = new AvailableBookListAdapter(vm.getBooks().getValue());
+        adapter = new AvailableBookListAdapter(vm.getBooks().getValue(),this::onItemClick);
         recyclerView.setAdapter(adapter);
 
         vm.getBooks().observe(getViewLifecycleOwner(), (List<AvailableBook> books) -> adapter.notifyDataSetChanged());
@@ -75,13 +79,34 @@ public class BrowseFragment extends Fragment {
         });
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.browse_search_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-        searchView = (SearchView) menu.findItem(R.id.book_search_bar).getActionView();
+    private void openDetailActivity(Book book) {
+        Intent intent = new Intent(this.getActivity(), detailBrowseActivity.class);
+        intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.VIEW);
+        intent.putExtra(VIEW_REQUEST_KEY, book);
+        startActivityForResult(intent, BOOK_ACTION.VIEW.getCode());
     }
-    private void inflateSearchedList() {
-        fragmentManager = getChildFragmentManager();
+
+
+    /**
+     * called when the user clicks on one of the books
+     *
+     * @param position the book's position
+     */
+    public void onItemClick(int position) {
+        if (position != RecyclerView.NO_POSITION) {
+            Book book = vm.getBookByIndex(position);
+            openDetailActivity(book);
+        }
     }
+
+        @Override
+        public void onCreateOptionsMenu (Menu menu, MenuInflater inflater){
+            inflater.inflate(R.menu.browse_search_menu, menu);
+            super.onCreateOptionsMenu(menu, inflater);
+            searchView = (SearchView) menu.findItem(R.id.book_search_bar).getActionView();
+        }
+        private void inflateSearchedList () {
+            fragmentManager = getChildFragmentManager();
+        }
+
 }

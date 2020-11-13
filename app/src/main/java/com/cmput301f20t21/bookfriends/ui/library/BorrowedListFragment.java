@@ -1,5 +1,6 @@
 package com.cmput301f20t21.bookfriends.ui.library;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
+import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 
 import java.util.List;
 
@@ -23,6 +25,8 @@ public class BorrowedListFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
+    public static final String BOOK_ACTION_KEY = "com.cmput301f20t21.bookfriends.BOOK_ACTION";
+    public static final String VIEW_REQUEST_KEY = "com.cmput301f20t21.bookfriends.VIEW_REQUEST";
 
     @Nullable
     @Override
@@ -45,7 +49,7 @@ public class BorrowedListFragment extends Fragment {
 
         // specify an adapter (see also next example)
         vm.getBooks().observe(getViewLifecycleOwner(), (List<Book> books) -> {
-            adapter = new BorrowedListAdapter(books);
+            adapter = new BorrowedListAdapter(books,this::onItemClick);
             recyclerView.setAdapter(adapter);
         });
 
@@ -54,6 +58,26 @@ public class BorrowedListFragment extends Fragment {
                 adapter.notifyItemChanged(pos);
             }
         });
+    }
+
+    private void openDetailActivity(@Nullable Book book) {
+        Intent intent = new Intent(this.getActivity(), detailBorrowedActivity.class);
+        intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.VIEW);
+        intent.putExtra(VIEW_REQUEST_KEY, book);
+        startActivityForResult(intent, BOOK_ACTION.VIEW.getCode());
+    }
+
+
+    /**
+     * called when the user clicks on one of the books
+     *
+     * @param position the book's position
+     */
+    public void onItemClick(int position) {
+        if (position != RecyclerView.NO_POSITION) {
+            Book book = vm.getBookByIndex(position);
+            openDetailActivity(book);
+        }
     }
 }
 

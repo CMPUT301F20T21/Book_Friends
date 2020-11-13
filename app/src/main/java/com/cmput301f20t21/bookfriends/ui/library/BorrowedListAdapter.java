@@ -15,27 +15,33 @@ import com.cmput301f20t21.bookfriends.ui.component.BaseBookListAdapter;
 import java.util.List;
 
 public class BorrowedListAdapter extends BaseBookListAdapter {
+    private BorrowedListAdapter.onItemClickListener itemClickListener;
 
-    public BorrowedListAdapter(List<Book> books) {
+    public interface onItemClickListener {
+        void run(int position);
+    }
+    public BorrowedListAdapter(List<Book> books,BorrowedListAdapter.onItemClickListener itemClickListener) {
         super(books);
+        this.itemClickListener = itemClickListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_list, parent, false);
-        return new ViewHolder(itemView);
+        return new ViewHolder(itemView,itemClickListener);
     }
 
     public static class ViewHolder extends BaseBookListAdapter.ViewHolder {
         final ImageButton moreBtn;
         final TextView owner;
 
-        public ViewHolder(View v) {
+        public ViewHolder(View v, BorrowedListAdapter.onItemClickListener itemClickListener) {
             super(v);
             owner = v.findViewById(R.id.item_book_owner);
             moreBtn = v.findViewById(R.id.item_book_more_btn);
             moreBtn.setVisibility(View.GONE);
+            v.setOnClickListener(view -> itemClickListener.run(getAdapterPosition()));
         }
 
         @Override

@@ -61,8 +61,19 @@
             >
         </activity>
         <activity
+            android:name="com.cmput301f20t21.bookfriends.ui.browse.detailBrowseActivity"
+            android:label="The Book Detail (Available)">
+            >
+        </activity>
+
+        <activity
             android:name="com.cmput301f20t21.bookfriends.ui.borrow.detailRequestedActivity"
             android:label="The Book Detail (Requested)">
+            >
+        </activity>
+        <activity
+            android:name="com.cmput301f20t21.bookfriends.ui.library.detailBorrowedActivity"
+            android:label="View A Borrowed Book">
             >
         </activity>
         <activity android:name=".ui.request.RequestActivity"
