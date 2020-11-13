@@ -50,7 +50,10 @@ public class OwnedListFragment extends Fragment {
     private FloatingActionButton filterButton;
     private FloatingActionButton addBookButton;
     private PopupWindow filterPopup;
-
+    private SwitchMaterial availableStatusSwitch;
+    private SwitchMaterial requestedStatusSwitch;
+    private SwitchMaterial acceptedStatusSwitch;
+    private SwitchMaterial borrowedStatusSwitch;
     /**
      * Called before creating the fragment view
      * @param inflater the layout inflater
@@ -79,10 +82,10 @@ public class OwnedListFragment extends Fragment {
         // elevation does not work in xml file so have to set it here
         filterPopup.setElevation(12);
 
-        SwitchMaterial availableStatusSwitch = filterLayout.findViewById(R.id.filter_menu_available);
-        SwitchMaterial requestedStatusSwitch = filterLayout.findViewById(R.id.filter_menu_requested);
-        SwitchMaterial acceptedStatusSwitch = filterLayout.findViewById(R.id.filter_menu_accepted);
-        SwitchMaterial borrowedStatusSwitch = filterLayout.findViewById(R.id.filter_menu_borrowed);
+        availableStatusSwitch = filterLayout.findViewById(R.id.filter_menu_available);
+        requestedStatusSwitch = filterLayout.findViewById(R.id.filter_menu_requested);
+        acceptedStatusSwitch = filterLayout.findViewById(R.id.filter_menu_accepted);
+        borrowedStatusSwitch = filterLayout.findViewById(R.id.filter_menu_borrowed);
         availableStatusSwitch.setOnClickListener(this::onFilter);
         requestedStatusSwitch.setOnClickListener(this::onFilter);
         acceptedStatusSwitch.setOnClickListener(this::onFilter);
@@ -213,11 +216,6 @@ public class OwnedListFragment extends Fragment {
     }
 
     private void onFilter(View view) {
-        View parentView = (View) view.getParent();
-        SwitchMaterial availableStatusSwitch = parentView.findViewById(R.id.filter_menu_available);
-        SwitchMaterial requestedStatusSwitch = parentView.findViewById(R.id.filter_menu_requested);
-        SwitchMaterial acceptedStatusSwitch = parentView.findViewById(R.id.filter_menu_accepted);
-        SwitchMaterial borrowedStatusSwitch = parentView.findViewById(R.id.filter_menu_borrowed);
         vm.filterBooks(
                 availableStatusSwitch.isChecked(),
                 requestedStatusSwitch.isChecked(),
