@@ -54,6 +54,7 @@ public class OwnedListFragment extends Fragment {
     private SwitchMaterial requestedStatusSwitch;
     private SwitchMaterial acceptedStatusSwitch;
     private SwitchMaterial borrowedStatusSwitch;
+
     /**
      * Called before creating the fragment view
      * @param inflater the layout inflater
