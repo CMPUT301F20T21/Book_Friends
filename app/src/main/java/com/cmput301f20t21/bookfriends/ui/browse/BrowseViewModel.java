@@ -1,6 +1,8 @@
 package com.cmput301f20t21.bookfriends.ui.browse;
 
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -20,10 +22,13 @@ import java.util.stream.Collectors;
 public class BrowseViewModel extends ViewModel {
     private final MutableLiveData<List<AvailableBook>> books = new MutableLiveData<>(new ArrayList<>());
     private MutableLiveData<BOOK_ERROR> errorMessage = new MutableLiveData<>();
+    private MutableLiveData<Integer> updatedPosition = new MutableLiveData<>(0);
+
     private final List<AvailableBook> bookData = books.getValue();
     private final IAuthRepository authRepository;
     private final IRequestRepository requestRepository;
     private final IBookRepository bookRepository;
+    private final String currentUsername;
 
     // production
     public BrowseViewModel() {
@@ -35,6 +40,8 @@ public class BrowseViewModel extends ViewModel {
         this.authRepository = authRepository;
         this.requestRepository = requestRepository;
         this.bookRepository = bookRepository;
+        // get logged in user's username
+        currentUsername = authRepository.getCurrentUser().getUsername();
 
         fetchBooks();
     }
@@ -47,11 +54,13 @@ public class BrowseViewModel extends ViewModel {
         return errorMessage;
     }
 
+    public MutableLiveData<Integer> getUpdatedPosition() {
+        return updatedPosition;
+    }
+
     private void fetchBooks() {
-        // get logged in user's username
-        String username = authRepository.getCurrentUser().getUsername();
         // first, get all the request made by this user.
-        requestRepository.getAllRequestsByUsername(username).addOnSuccessListener(requests -> {
+        requestRepository.getAllRequestsByUsername(currentUsername).addOnSuccessListener(requests -> {
             // extract book id from fetched requests
             // book ids will be unique because each user can only request a book once at a time
             List<String> requestedBookIds = requests
@@ -59,7 +68,7 @@ public class BrowseViewModel extends ViewModel {
                     .map(request -> request.getBookId())
                     .collect(Collectors.toList());
             // get available book for current user (book in available status and not owned by this user)
-            bookRepository.getAvailableBooksForUser(username).addOnSuccessListener(availableBooks -> {
+            bookRepository.getAvailableBooksForUser(currentUsername).addOnSuccessListener(availableBooks -> {
                 // check if available book has been requested
                 availableBooks
                         .forEach(availableBook -> {
@@ -73,5 +82,15 @@ public class BrowseViewModel extends ViewModel {
                 books.setValue(bookData);
             }).addOnFailureListener(e -> errorMessage.setValue(BOOK_ERROR.FAIL_TO_GET_BOOKS));
         }).addOnFailureListener(e -> errorMessage.setValue(BOOK_ERROR.FAIL_TO_GET_BOOKS));
+    }
+
+    public void sendRequest(AvailableBook book) {
+        requestRepository
+                .sendRequest(currentUsername, book.getId())
+                .addOnSuccessListener(requestId -> {
+                    int positionToUpdate = bookData.indexOf(book);
+                    book.setRequested(true);
+                    updatedPosition.setValue(positionToUpdate);
+                });
     }
 }

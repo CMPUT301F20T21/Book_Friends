@@ -18,4 +18,5 @@ public interface IRequestRepository {
     Task<Void> batchDeny(List<String> ids);
     Request getRequestFromDocument(DocumentSnapshot documentSnapshot);
     String getRequesterFromDocument(DocumentSnapshot documentSnapshot);
+    Task<String> sendRequest(String requester, String bookId);
 }

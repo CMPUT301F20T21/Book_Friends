@@ -76,4 +76,5 @@
     <string name="fail_to_edit_book">Failed to edit book</string>
     <string name="scanner_scanning">Scanning...</string>
     <string name="accept_this_request">Accept this request?</string>
+    <string name="request">Request</string>
 </resources>

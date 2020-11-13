@@ -21,6 +21,7 @@ import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.AvailableBook;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
+import com.google.android.gms.tasks.Task;
 
 import java.util.List;
 
@@ -63,10 +64,12 @@ public class BrowseFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         // specify an adapter (see also next example)
-        adapter = new AvailableBookListAdapter(vm.getBooks().getValue());
+        adapter = new AvailableBookListAdapter(vm.getBooks().getValue(), this::onRequestClick);
         recyclerView.setAdapter(adapter);
 
         vm.getBooks().observe(getViewLifecycleOwner(), (List<AvailableBook> books) -> adapter.notifyDataSetChanged());
+
+        vm.getUpdatedPosition().observe(getViewLifecycleOwner(), updatedPosition -> adapter.notifyItemChanged(updatedPosition));
 
         vm.getErrorMessage().observe(getViewLifecycleOwner(), (BOOK_ERROR error) -> {
             if (error == BOOK_ERROR.FAIL_TO_GET_BOOKS) {
@@ -83,5 +86,9 @@ public class BrowseFragment extends Fragment {
     }
     private void inflateSearchedList() {
         fragmentManager = getChildFragmentManager();
+    }
+
+    private void onRequestClick(AvailableBook book) {
+        vm.sendRequest(book);
     }
 }
