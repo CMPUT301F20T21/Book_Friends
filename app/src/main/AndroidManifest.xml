@@ -44,7 +44,7 @@
 
         </activity>
         <activity android:name=".ui.add.AddEditActivity"
-            android:label="@string/Add_Edit">
+            android:label="@string/add_edit">
         </activity>
         <activity android:name=".ui.library.DetailLibraryActivity"
             android:label="@string/view">
@@ -57,24 +57,20 @@
         </activity>
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.borrow.DetailAcceptedActivity"
-            android:label="@string/Accepted_detail">
-            >
+            android:label="@string/accepted_detail">
         </activity>
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.browse.DetailBrowseActivity"
-            android:label="@string/Browse_detail">
-            >
+            android:label="@string/browse_detail">
         </activity>
 
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.borrow.DetailRequestedActivity"
-            android:label="@string/Requested_detail">
-            >
+            android:label="@string/requested_detail">
         </activity>
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.library.DetailBorrowedActivity"
-            android:label="@string/Borrowed_detail">
-            >
+            android:label="@string/borrowed_detail">
         </activity>
         <activity android:name=".ui.request.RequestActivity"
             android:label="Requests">

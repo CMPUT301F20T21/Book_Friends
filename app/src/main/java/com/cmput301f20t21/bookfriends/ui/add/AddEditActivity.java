@@ -22,7 +22,7 @@ import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
-import com.cmput301f20t21.bookfriends.ui.library.OwnedListFragment;
+import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 import com.cmput301f20t21.bookfriends.ui.scanner.ScannerAddActivity;
 import com.cmput301f20t21.bookfriends.utils.GlideApp;
 import com.google.android.material.textfield.TextInputLayout;
@@ -89,9 +89,9 @@ public class AddEditActivity extends AppCompatActivity {
         });
 
         Intent intent = getIntent();
-        action = (BOOK_ACTION) intent.getSerializableExtra(OwnedListFragment.BOOK_ACTION_KEY);
+        action = (BOOK_ACTION) intent.getSerializableExtra(BaseDetailActivity.BOOK_ACTION_KEY);
         if (action == BOOK_ACTION.EDIT) {
-            editBook = intent.getParcelableExtra(OwnedListFragment.BOOK_EDIT_KEY);
+            editBook = intent.getParcelableExtra(BaseDetailActivity.BOOK_DATA_KEY);
             if (editBook != null) {
                 loadBookInformation();
             }

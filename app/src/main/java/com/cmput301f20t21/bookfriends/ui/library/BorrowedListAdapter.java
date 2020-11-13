@@ -20,7 +20,7 @@ public class BorrowedListAdapter extends BaseBookListAdapter {
     public interface OnItemClickListener {
         void run(int position);
     }
-    public BorrowedListAdapter(List<Book> books,OnItemClickListener itemClickListener) {
+    public BorrowedListAdapter(List<Book> books, OnItemClickListener itemClickListener) {
         super(books);
         this.itemClickListener = itemClickListener;
     }
@@ -29,7 +29,7 @@ public class BorrowedListAdapter extends BaseBookListAdapter {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_list, parent, false);
-        return new ViewHolder(itemView,itemClickListener);
+        return new ViewHolder(itemView, itemClickListener);
     }
 
     public static class ViewHolder extends BaseBookListAdapter.ViewHolder {

@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
-import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
+import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 
 
 public class AcceptedListFragment extends Fragment {
@@ -25,8 +25,7 @@ public class AcceptedListFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    public static final String BOOK_ACTION_KEY = "com.cmput301f20t21.bookfriends.BOOK_ACTION";
-    public static final String VIEW_REQUEST_KEY = "com.cmput301f20t21.bookfriends.VIEW_REQUEST";
+
 
     @Nullable
     @Override
@@ -51,11 +50,11 @@ public class AcceptedListFragment extends Fragment {
         mAdapter = new AcceptedListAdapter(mViewModel.getBooks(),this::onItemClick);
         recyclerView.setAdapter(mAdapter);
     }
+
     private void openDetailActivity(Book book){
         Intent intent = new Intent(this.getActivity(), DetailAcceptedActivity.class);
-        intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.VIEW);
-        intent.putExtra(VIEW_REQUEST_KEY,book);
-        startActivityForResult(intent, BOOK_ACTION.VIEW.getCode());
+        intent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, book);
+        startActivity(intent);
     }
 
     public void onItemClick(int position) {

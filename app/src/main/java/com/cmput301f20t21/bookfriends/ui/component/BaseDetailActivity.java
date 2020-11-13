@@ -11,12 +11,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
-import com.cmput301f20t21.bookfriends.ui.borrow.RequestedListFragment;
 import com.cmput301f20t21.bookfriends.utils.GlideApp;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 public class BaseDetailActivity extends AppCompatActivity {
+    public static final String BOOK_ACTION_KEY = "com.cmput301f20t21.bookfriends.BOOK_ACTION";
+    public static final String BOOK_EDIT_KEY = "com.cmput301f20t21.bookfriends.BOOK_EDIT";
+    public static final String VIEW_REQUEST_KEY = "com.cmput301f20t21.bookfriends.VIEW_REQUEST";
+    public static final String BOOK_DATA_KEY = "com.cmput301f20t21.bookfriends.BOOK_DATA";
+
     protected Book detailBook;
     private ImageView bookImage;
     private TextView detailTitle;
@@ -36,10 +40,19 @@ public class BaseDetailActivity extends AppCompatActivity {
         detailAuthor = findViewById(R.id.detail_author);
 
         Intent getIntent = getIntent();
-        detailBook = getIntent.getParcelableExtra(RequestedListFragment.VIEW_REQUEST_KEY);
+        detailBook = getIntent.getParcelableExtra(BOOK_DATA_KEY);
+        setDetails();
+    }
+
+    public void updateBook(Book updateBook) {
+        detailBook = updateBook;
+        setDetails();
+    }
+
+    public void setDetails() {
         detailISBN.setText(detailBook.getIsbn());
         detailTitle.setText(detailBook.getTitle());
-        detailAuthor.setText("Author: " + detailBook.getAuthor());
+        detailAuthor.setText(getString(R.string.author, detailBook.getAuthor()));
         StorageReference storageReference = FirebaseStorage.getInstance().getReference(detailBook.getCoverImageName());
         GlideApp.with(this)
                 .load(storageReference)

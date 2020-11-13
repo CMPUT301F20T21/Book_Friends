@@ -15,18 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
-import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
+import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 
 import java.util.List;
 
 public class BorrowedListFragment extends Fragment {
     private BorrowedViewModel vm;
-
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-    public static final String BOOK_ACTION_KEY = "com.cmput301f20t21.bookfriends.BOOK_ACTION";
-    public static final String VIEW_REQUEST_KEY = "com.cmput301f20t21.bookfriends.VIEW_REQUEST";
 
     @Nullable
     @Override
@@ -60,11 +57,10 @@ public class BorrowedListFragment extends Fragment {
         });
     }
 
-    private void openDetailActivity(@Nullable Book book) {
+    private void openDetailActivity(Book book) {
         Intent intent = new Intent(this.getActivity(), DetailBorrowedActivity.class);
-        intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.VIEW);
-        intent.putExtra(VIEW_REQUEST_KEY, book);
-        startActivityForResult(intent, BOOK_ACTION.VIEW.getCode());
+        intent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, book);
+        startActivity(intent);
     }
 
 
