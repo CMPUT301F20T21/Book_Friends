@@ -58,11 +58,15 @@ public class RequestedViewModel extends ViewModel {
                     .stream()
                     .map(Request::getBookId)
                     .collect(Collectors.toList());
-            bookRepository.batchGetBooks(requestedBookIds).addOnSuccessListener(requestedBooks -> {
-                bookData.clear();
-                bookData.addAll(requestedBooks);
-                books.setValue(bookData);
-            }).addOnFailureListener(error -> errorMessage.setValue(BOOK_ERROR.FAIL_TO_GET_BOOKS));
+            if (requestedBookIds.size() > 0) {
+                bookRepository.batchGetBooks(requestedBookIds).addOnSuccessListener(requestedBooks -> {
+                    if (bookData != null) {
+                        bookData.clear();
+                        bookData.addAll(requestedBooks);
+                        books.setValue(bookData);
+                    }
+                }).addOnFailureListener(error -> errorMessage.setValue(BOOK_ERROR.FAIL_TO_GET_BOOKS));
+            }
         }).addOnFailureListener(error -> errorMessage.setValue(BOOK_ERROR.FAIL_TO_GET_BOOKS));
     }
 
