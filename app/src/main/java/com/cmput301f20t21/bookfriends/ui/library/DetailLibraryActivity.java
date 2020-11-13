@@ -43,7 +43,7 @@ public class DetailLibraryActivity extends BaseDetailActivity {
                 }
                 finish();
                 return true;
-            case R.id.Edit_button:
+            case R.id.edit_button:
                 openAddEditActivity(detailBook);
                 return true;
         }

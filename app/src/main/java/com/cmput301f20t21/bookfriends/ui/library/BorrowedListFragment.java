@@ -46,7 +46,7 @@ public class BorrowedListFragment extends Fragment {
 
         // specify an adapter (see also next example)
         vm.getBooks().observe(getViewLifecycleOwner(), (List<Book> books) -> {
-            adapter = new BorrowedListAdapter(books,this::onItemClick);
+            adapter = new BorrowedListAdapter(books, this::onItemClick);
             recyclerView.setAdapter(adapter);
         });
 

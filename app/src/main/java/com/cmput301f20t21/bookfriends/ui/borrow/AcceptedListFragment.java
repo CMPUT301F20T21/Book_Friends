@@ -47,7 +47,7 @@ public class AcceptedListFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new AcceptedListAdapter(mViewModel.getBooks(),this::onItemClick);
+        mAdapter = new AcceptedListAdapter(mViewModel.getBooks(), this::onItemClick);
         recyclerView.setAdapter(mAdapter);
     }
 

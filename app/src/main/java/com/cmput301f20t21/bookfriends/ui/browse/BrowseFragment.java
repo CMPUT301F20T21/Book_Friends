@@ -24,6 +24,8 @@ import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 /**
@@ -64,7 +66,7 @@ public class BrowseFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         // specify an adapter (see also next example)
-        adapter = new AvailableBookListAdapter(vm.getBooks().getValue(),this::onItemClick);
+        adapter = new AvailableBookListAdapter(vm.getBooks().getValue(), this::onItemClick);
         recyclerView.setAdapter(adapter);
 
         vm.getBooks().observe(getViewLifecycleOwner(), (List<AvailableBook> books) -> adapter.notifyDataSetChanged());
@@ -95,15 +97,15 @@ public class BrowseFragment extends Fragment {
         }
     }
 
-        @Override
-        public void onCreateOptionsMenu (Menu menu, MenuInflater inflater){
-            inflater.inflate(R.menu.browse_search_menu, menu);
-            super.onCreateOptionsMenu(menu, inflater);
-            searchView = (SearchView) menu.findItem(R.id.book_search_bar).getActionView();
-        }
+    @Override
+    public void onCreateOptionsMenu(@NotNull Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.browse_search_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+        searchView = (SearchView) menu.findItem(R.id.book_search_bar).getActionView();
+    }
 
-        private void inflateSearchedList () {
-            fragmentManager = getChildFragmentManager();
-        }
+    private void inflateSearchedList() {
+        fragmentManager = getChildFragmentManager();
+    }
 
 }

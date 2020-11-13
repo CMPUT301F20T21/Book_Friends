@@ -21,7 +21,7 @@ public class AcceptedListAdapter extends BaseBookListAdapter {
     public interface OnItemClickListener {
         void run(int position);
     }
-    public AcceptedListAdapter(ArrayList<Book> books,OnItemClickListener itemClickListener) {
+    public AcceptedListAdapter(ArrayList<Book> books, OnItemClickListener itemClickListener) {
         super(books);
         this.itemClickListener = itemClickListener;
     }
@@ -31,13 +31,13 @@ public class AcceptedListAdapter extends BaseBookListAdapter {
     @Override
     public AcceptedListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_list, parent, false);
-        return new AcceptedListAdapter.ViewHolder(itemView,itemClickListener);
+        return new AcceptedListAdapter.ViewHolder(itemView, itemClickListener);
     }
 
     public static class ViewHolder extends BaseBookListAdapter.ViewHolder {
         final ImageButton moreBtn;
 
-        public ViewHolder(View v,OnItemClickListener itemClickListener) {
+        public ViewHolder(View v, OnItemClickListener itemClickListener) {
             super(v);
             moreBtn = v.findViewById(R.id.item_book_more_btn);
             moreBtn.setOnClickListener(this::showPopup);

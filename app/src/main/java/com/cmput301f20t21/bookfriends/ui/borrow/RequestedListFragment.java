@@ -44,7 +44,7 @@ public class RequestedListFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         // specify an adapter (see also next example)
-        mAdapter = new RequestedListAdapter(mViewModel.getBooks(),this::onItemClick);
+        mAdapter = new RequestedListAdapter(mViewModel.getBooks(), this::onItemClick);
         recyclerView.setAdapter(mAdapter);
     }
 
