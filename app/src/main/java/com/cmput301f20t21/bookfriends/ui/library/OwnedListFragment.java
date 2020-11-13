@@ -158,7 +158,7 @@ public class OwnedListFragment extends Fragment {
         }
     }
     private void openDetailActivity(Book book){
-        Intent intent = new Intent(this.getActivity(), detailLibraryActivity.class);
+        Intent intent = new Intent(this.getActivity(), DetailLibraryActivity.class);
         intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.VIEW);
         intent.putExtra(VIEW_REQUEST_KEY,book);
         startActivityForResult(intent, BOOK_ACTION.VIEW.getCode());

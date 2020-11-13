@@ -16,11 +16,11 @@ import com.cmput301f20t21.bookfriends.ui.component.BaseBookListAdapter;
 import java.util.ArrayList;
 
 public class RequestedListAdapter extends BaseBookListAdapter {
-    public interface onItemClickListener {
+    private RequestedListAdapter.OnItemClickListener itemClickListener;
+    public interface OnItemClickListener {
         void run(int position);
     }
-    private RequestedListAdapter.onItemClickListener itemClickListener;
-    public RequestedListAdapter(ArrayList<Book> books, RequestedListAdapter.onItemClickListener itemClickListener) {
+    public RequestedListAdapter(ArrayList<Book> books, OnItemClickListener itemClickListener) {
         super(books);
         this.itemClickListener = itemClickListener;
     }
@@ -37,7 +37,7 @@ public class RequestedListAdapter extends BaseBookListAdapter {
         final TextView owner;
         final TextView status;
 
-        public ViewHolder(View v, RequestedListAdapter.onItemClickListener itemClickListener) {
+        public ViewHolder(View v, OnItemClickListener itemClickListener) {
             super(v);
             owner = v.findViewById(R.id.item_book_owner);
             moreBtn = v.findViewById(R.id.item_book_more_btn);

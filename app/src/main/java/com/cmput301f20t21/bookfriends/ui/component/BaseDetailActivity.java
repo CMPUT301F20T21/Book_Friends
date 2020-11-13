@@ -28,7 +28,7 @@ public class BaseDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.detail_browse);
+        setContentView(R.layout.detail_page);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_white_18);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         bookImage = findViewById(R.id.book_image_view); // will be replaced with actual image

@@ -15,11 +15,11 @@ import com.cmput301f20t21.bookfriends.ui.component.BaseBookListAdapter;
 import java.util.List;
 
 public class AvailableBookListAdapter extends BaseBookListAdapter {
-    private AvailableBookListAdapter.onItemClickListener itemClickListener;
-    public interface onItemClickListener {
+    private AvailableBookListAdapter.OnItemClickListener itemClickListener;
+    public interface OnItemClickListener {
         void run(int position);
     }
-    public AvailableBookListAdapter(List<AvailableBook> books, AvailableBookListAdapter.onItemClickListener itemClickListener) {
+    public AvailableBookListAdapter(List<AvailableBook> books,OnItemClickListener itemClickListener) {
         super(books);
         this.itemClickListener = itemClickListener;
     }
@@ -34,7 +34,7 @@ public class AvailableBookListAdapter extends BaseBookListAdapter {
         final ImageButton moreBtn;
         final TextView owner;
         final TextView status;
-        public ViewHolder(View v, AvailableBookListAdapter.onItemClickListener itemClickListener) {
+        public ViewHolder(View v, OnItemClickListener itemClickListener) {
             super(v);
             owner = v.findViewById(R.id.item_book_owner);
             moreBtn = v.findViewById(R.id.item_book_more_btn);

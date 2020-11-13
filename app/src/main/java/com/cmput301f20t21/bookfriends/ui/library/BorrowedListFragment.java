@@ -61,7 +61,7 @@ public class BorrowedListFragment extends Fragment {
     }
 
     private void openDetailActivity(@Nullable Book book) {
-        Intent intent = new Intent(this.getActivity(), detailBorrowedActivity.class);
+        Intent intent = new Intent(this.getActivity(), DetailBorrowedActivity.class);
         intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.VIEW);
         intent.putExtra(VIEW_REQUEST_KEY, book);
         startActivityForResult(intent, BOOK_ACTION.VIEW.getCode());

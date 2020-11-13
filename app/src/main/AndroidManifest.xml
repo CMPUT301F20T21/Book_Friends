@@ -44,10 +44,10 @@
 
         </activity>
         <activity android:name=".ui.add.AddEditActivity"
-            android:label="Add/Edit a Book">
+            android:label="@string/Add_Edit">
         </activity>
-        <activity android:name=".ui.library.detailLibraryActivity"
-            android:label="View">
+        <activity android:name=".ui.library.DetailLibraryActivity"
+            android:label="@string/view">
         </activity>
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.login.CreateAccountActivity"
@@ -56,24 +56,24 @@
 
         </activity>
         <activity
-            android:name="com.cmput301f20t21.bookfriends.ui.borrow.detailAcceptedActivity"
-            android:label="The Book Detail (Accepted)">
+            android:name="com.cmput301f20t21.bookfriends.ui.borrow.DetailAcceptedActivity"
+            android:label="@string/Accepted_detail">
             >
         </activity>
         <activity
-            android:name="com.cmput301f20t21.bookfriends.ui.browse.detailBrowseActivity"
-            android:label="The Book Detail (Available)">
+            android:name="com.cmput301f20t21.bookfriends.ui.browse.DetailBrowseActivity"
+            android:label="@string/Browse_detail">
             >
         </activity>
 
         <activity
-            android:name="com.cmput301f20t21.bookfriends.ui.borrow.detailRequestedActivity"
-            android:label="The Book Detail (Requested)">
+            android:name="com.cmput301f20t21.bookfriends.ui.borrow.DetailRequestedActivity"
+            android:label="@string/Requested_detail">
             >
         </activity>
         <activity
-            android:name="com.cmput301f20t21.bookfriends.ui.library.detailBorrowedActivity"
-            android:label="View A Borrowed Book">
+            android:name="com.cmput301f20t21.bookfriends.ui.library.DetailBorrowedActivity"
+            android:label="@string/Borrowed_detail">
             >
         </activity>
         <activity android:name=".ui.request.RequestActivity"

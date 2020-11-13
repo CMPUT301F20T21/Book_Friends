@@ -23,7 +23,6 @@ import com.cmput301f20t21.bookfriends.entities.AvailableBook;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
-import com.cmput301f20t21.bookfriends.ui.borrow.detailRequestedActivity;
 
 import java.util.List;
 
@@ -80,7 +79,7 @@ public class BrowseFragment extends Fragment {
     }
 
     private void openDetailActivity(Book book) {
-        Intent intent = new Intent(this.getActivity(), detailBrowseActivity.class);
+        Intent intent = new Intent(this.getActivity(), DetailBrowseActivity.class);
         intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.VIEW);
         intent.putExtra(VIEW_REQUEST_KEY, book);
         startActivityForResult(intent, BOOK_ACTION.VIEW.getCode());

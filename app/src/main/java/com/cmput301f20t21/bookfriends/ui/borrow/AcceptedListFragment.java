@@ -52,7 +52,7 @@ public class AcceptedListFragment extends Fragment {
         recyclerView.setAdapter(mAdapter);
     }
     private void openDetailActivity(Book book){
-        Intent intent = new Intent(this.getActivity(), detailAcceptedActivity.class);
+        Intent intent = new Intent(this.getActivity(), DetailAcceptedActivity.class);
         intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.VIEW);
         intent.putExtra(VIEW_REQUEST_KEY,book);
         startActivityForResult(intent, BOOK_ACTION.VIEW.getCode());

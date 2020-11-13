@@ -15,12 +15,12 @@ import com.cmput301f20t21.bookfriends.ui.component.BaseBookListAdapter;
 import java.util.List;
 
 public class BorrowedListAdapter extends BaseBookListAdapter {
-    private BorrowedListAdapter.onItemClickListener itemClickListener;
+    private BorrowedListAdapter.OnItemClickListener itemClickListener;
 
-    public interface onItemClickListener {
+    public interface OnItemClickListener {
         void run(int position);
     }
-    public BorrowedListAdapter(List<Book> books,BorrowedListAdapter.onItemClickListener itemClickListener) {
+    public BorrowedListAdapter(List<Book> books,OnItemClickListener itemClickListener) {
         super(books);
         this.itemClickListener = itemClickListener;
     }
@@ -36,7 +36,7 @@ public class BorrowedListAdapter extends BaseBookListAdapter {
         final ImageButton moreBtn;
         final TextView owner;
 
-        public ViewHolder(View v, BorrowedListAdapter.onItemClickListener itemClickListener) {
+        public ViewHolder(View v, OnItemClickListener itemClickListener) {
             super(v);
             owner = v.findViewById(R.id.item_book_owner);
             moreBtn = v.findViewById(R.id.item_book_more_btn);
