@@ -41,6 +41,8 @@ public class OwnedListFragment extends Fragment {
     public static final String BOOK_ACTION_KEY = "com.cmput301f20t21.bookfriends.BOOK_ACTION";
     public static final String BOOK_EDIT_KEY = "com.cmput301f20t21.bookfriends.BOOK_EDIT";
     public static final String VIEW_REQUEST_KEY = "com.cmput301f20t21.bookfriends.VIEW_REQUEST";
+    public static final String BOOK_DATA_KEY = "com.cmput301f20t21.bookfriends.BOOK_DATA";
+
 
     private OwnedViewModel vm;
     private RecyclerView recyclerView;
@@ -156,7 +158,7 @@ public class OwnedListFragment extends Fragment {
     private void openDetailActivity(Book book){
         Intent intent = new Intent(this.getActivity(), DetailLibraryActivity.class);
         intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.VIEW);
-        intent.putExtra(VIEW_REQUEST_KEY,book);
+        intent.putExtra(BOOK_DATA_KEY,book);
         startActivityForResult(intent, BOOK_ACTION.VIEW.getCode());
     }
 

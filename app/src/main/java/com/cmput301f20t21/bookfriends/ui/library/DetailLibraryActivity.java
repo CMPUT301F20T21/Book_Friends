@@ -15,9 +15,6 @@ import com.cmput301f20t21.bookfriends.ui.add.AddEditActivity;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 
 public class DetailLibraryActivity extends BaseDetailActivity {
-    public static final String BOOK_ACTION_KEY = "com.cmput301f20t21.bookfriends.BOOK_ACTION";
-    public static final String BOOK_EDIT_KEY = "com.cmput301f20t21.bookfriends.BOOK_EDIT";
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -25,15 +22,11 @@ public class DetailLibraryActivity extends BaseDetailActivity {
     }
     private void openAddEditActivity(Book book) {
         Intent intent = new Intent(DetailLibraryActivity.this, AddEditActivity.class);
-        if (book == null) {
-            intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.ADD);
-            startActivityForResult(intent, BOOK_ACTION.ADD.getCode());
-        } else {
-            intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.EDIT);
-            intent.putExtra(BOOK_EDIT_KEY, book);
-            startActivityForResult(intent, BOOK_ACTION.EDIT.getCode());
-        }
+        intent.putExtra(OwnedListFragment.BOOK_ACTION_KEY, BOOK_ACTION.EDIT);
+        intent.putExtra(OwnedListFragment.BOOK_DATA_KEY, book);
+        startActivityForResult(intent, BOOK_ACTION.EDIT.getCode());
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
