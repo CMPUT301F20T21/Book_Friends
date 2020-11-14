@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -43,6 +44,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -222,9 +224,19 @@ public class RequestActivity extends AppCompatActivity {
                     }
 
                     if (addressList.size() > 0) {
+                        // get the first address
                         Address address = addressList.get(0);
-                        Log.d("Map", "geoLocate: found a location: " + address.toString());
-                        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 15f));
+//                        Log.d("Map", "geoLocate: found a location: " + address.toString());
+                        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                        // move camera to that address
+                        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
+
+
+                        MarkerOptions options = new MarkerOptions()
+                                .position(latLng)
+                                .title(address.getAddressLine(0));
+                        myMap.addMarker(options);
+                        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                     }
                 }
                 return false;
@@ -249,11 +261,6 @@ public class RequestActivity extends AppCompatActivity {
 
         dialog.show();
     }
-
-//    private void geoLocate() {
-//        String searchString = searchText.getText().toString();
-//        Geocoder geocoder = new Geocoder();
-//    }
 
     private void checkLocationPermission() {
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
