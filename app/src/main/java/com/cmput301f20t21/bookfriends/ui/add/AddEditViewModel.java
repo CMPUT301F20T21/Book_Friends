@@ -25,6 +25,8 @@ import com.cmput301f20t21.bookfriends.repositories.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.IAuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.IBookRepository;
 
+import javax.annotation.Nullable;
+
 /**
  * The ViewModel for AddEditActivity
  */
@@ -54,7 +56,7 @@ public class AddEditViewModel extends ViewModel {
         this(AuthRepository.getInstance(), BookRepository.getInstance());
     }
 
-    // test - allow us to inject repository dependecy in test
+    // test - allow us to inject repository dependency in test
     public AddEditViewModel(IAuthRepository authRepository, IBookRepository bookRepository) {
         this.authRepository = authRepository;
         this.bookRepository = bookRepository;
@@ -77,7 +79,7 @@ public class AddEditViewModel extends ViewModel {
         return localImageUri;
     }
 
-    public void setLocalImageUri(Uri uri) {
+    public void setLocalImageUri(@Nullable Uri uri) {
         localImageUri.setValue(uri);
         setHasImage(uri != null); // if the local uri is null, it means users deleted image
     }
