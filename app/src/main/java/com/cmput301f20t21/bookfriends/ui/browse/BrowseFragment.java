@@ -12,14 +12,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.AvailableBook;
-import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 
 import java.util.List;
@@ -33,7 +31,6 @@ public class BrowseFragment extends Fragment {
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private SearchView searchView;
-    private FragmentManager fragmentManager;
 
     /**
      *
@@ -48,7 +45,6 @@ public class BrowseFragment extends Fragment {
                                  @Nullable Bundle savedInstanceState) {
         vm = new ViewModelProvider(this).get(BrowseViewModel.class);
         setHasOptionsMenu(true);
-        inflateSearchedList();
         View view = inflater.inflate(R.layout.fragment_browse, container, false);
         return view;
     }
@@ -80,8 +76,19 @@ public class BrowseFragment extends Fragment {
         inflater.inflate(R.menu.browse_search_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
         searchView = (SearchView) menu.findItem(R.id.book_search_bar).getActionView();
-    }
-    private void inflateSearchedList() {
-        fragmentManager = getChildFragmentManager();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                vm.filterBookWithKeyword(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                vm.filterBookWithKeyword(newText);
+                return true;
+            }
+        });
+
     }
 }
