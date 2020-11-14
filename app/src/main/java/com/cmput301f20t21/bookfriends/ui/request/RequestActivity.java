@@ -1,9 +1,13 @@
 package com.cmput301f20t21.bookfriends.ui.request;
 
+import android.Manifest;
+import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,12 +27,23 @@ import com.cmput301f20t21.bookfriends.utils.GlideApp;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.ui.library.OwnedListFragment;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.type.LatLng;
 
 import java.util.ArrayList;
 
 public class RequestActivity extends AppCompatActivity {
+    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+    private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
+    private Boolean locationPermissionGranted = false;
+    private GoogleMap myMap;
+
     private RecyclerView recyclerView;
     private RequestAdapter requestAdapter;
     //    private final ArrayList<Request> requestDataList = new ArrayList<>();
@@ -144,6 +161,7 @@ public class RequestActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.edit_confirm, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Toast.makeText(RequestActivity.this, "Accepted Request", Toast.LENGTH_SHORT).show();
+                        openMapDialog();
                         vm.acceptRequest(position);
                     }
                 })
@@ -151,4 +169,52 @@ public class RequestActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void openMapDialog() {
+//        checkLocationPermission();
+        Dialog dialog = new Dialog(RequestActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.map_dialog);
+        dialog.show();
+
+        MapView mapView = (MapView) dialog.findViewById(R.id.map_view);
+        MapsInitializer.initialize(RequestActivity.this);
+
+        mapView.onCreate(dialog.onSaveInstanceState());
+        mapView.onResume();
+        mapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                myMap = googleMap;
+            }
+        });
+    }
+
+
+
+    private void checkLocationPermission() {
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), FINE_LOCATION)
+            == PackageManager.PERMISSION_GRANTED) {
+
+            if (ContextCompat.checkSelfPermission(this.getApplicationContext(), COURSE_LOCATION)
+            == PackageManager.PERMISSION_GRANTED) {
+                locationPermissionGranted = true;
+            } else {
+                ActivityCompat.requestPermissions(this,permissions,LOCATION_PERMISSION_REQUEST_CODE);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        locationPermissionGranted = false;
+        switch (requestCode) {
+            case LOCATION_PERMISSION_REQUEST_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    locationPermissionGranted = true;
+                    // Initialize the map
+                }
+            }
+        }
+    }
 }
