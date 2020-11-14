@@ -22,14 +22,27 @@ import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.IAuthRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.IBookRepository;
 import com.google.firebase.firestore.DocumentReference;
 
 /**
  * The ViewModel for AddEditActivity
  */
 public class AddEditViewModel extends ViewModel {
-    private final IAuthRepository authRepository = AuthRepository.getInstance();
-    private final BookRepository bookRepository = BookRepository.getInstance();
+    private final IAuthRepository authRepository;
+    private final IBookRepository bookRepository;
+
+    //production
+    public AddEditViewModel() {
+        this(AuthRepository.getInstance(), BookRepository.getInstance());
+    }
+
+    // test - allow us to inject repository dependecy in test
+    public AddEditViewModel(IAuthRepository authRepository, IBookRepository bookRepository) {
+        this.authRepository = authRepository;
+        this.bookRepository = bookRepository;
+    }
+
 
     /**
      * handles the add book functionality when user clicks the "Save" button in AddEditActivity
@@ -47,34 +60,26 @@ public class AddEditViewModel extends ViewModel {
             @Nullable Uri imageUri, OnSuccessCallbackWithMessage<Book> successCallback, OnFailCallbackWithMessage<BOOK_ERROR> failCallback
     ) {
         String owner = authRepository.getCurrentUser().getUsername();
-        bookRepository.add(isbn, title, author, description, owner).addOnCompleteListener(
-                addBookTask -> {
-                    if (addBookTask.isSuccessful()) {
-                        DocumentReference result = addBookTask.getResult();
-                        if (result != null) {
-                            String bookId = result.getId();
-                            Book book = new Book(bookId, isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE);
-                            if (imageUri != null) {
-                                bookRepository.addImage(book.getCoverImageName(), imageUri).addOnCompleteListener(
-                                        addImageTask -> {
-                                            if (addImageTask.isSuccessful()) {
-                                                successCallback.run(book);
-                                            } else {
-                                                failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
-                                            }
-                                        }
-                                );
-                            } else {
-                                successCallback.run(book);
-                            }
-                        } else {
-                            failCallback.run(BOOK_ERROR.UNEXPECTED);
-                        }
+        bookRepository.add(isbn, title, author, description, owner).addOnSuccessListener(
+                id -> {
+                    Book book = new Book(id, isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE);
+                    if (imageUri != null) {
+                        bookRepository.addImage(book.getCoverImageName(), imageUri).addOnCompleteListener(
+                                addImageTask -> {
+                                    if (addImageTask.isSuccessful()) {
+                                        successCallback.run(book);
+                                    } else {
+                                        failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
+                                    }
+                                }
+                        );
                     } else {
-                        failCallback.run(BOOK_ERROR.FAIL_TO_ADD_BOOK);
+                        successCallback.run(book);
                     }
                 }
-        );
+        ).addOnFailureListener(e -> {
+            failCallback.run(BOOK_ERROR.FAIL_TO_ADD_BOOK);
+        });
     }
 
     /**
@@ -94,31 +99,28 @@ public class AddEditViewModel extends ViewModel {
             @Nullable Uri newUri, OnSuccessCallbackWithMessage<Book> successCallback, OnFailCallbackWithMessage<BOOK_ERROR> failCallback
     ) {
         String bookId = oldBook.getId();
-        bookRepository.editBook(bookId, isbn, title, author, description).addOnCompleteListener(
-                editBookTask -> {
-                    if (editBookTask.isSuccessful()) {
-                        Book book = new Book(bookId, isbn, title, author, description, oldBook.getOwner(), BOOK_STATUS.AVAILABLE);
-                        // addImage will also replace if file with imageName already exist
-                        if (newUri != null) {
-                            // when the image is updated
-                            bookRepository.addImage(book.getCoverImageName(), newUri).addOnCompleteListener(
-                                    addImageTask -> {
-                                        if (addImageTask.isSuccessful()) {
-                                            successCallback.run(book);
-                                        } else {
-                                            failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
-                                        }
+        bookRepository.editBook(oldBook, isbn, title, author, description).addOnSuccessListener(
+                newBook -> {
+                    // addImage will also replace if file with imageName already exist
+                    if (newUri != null) {
+                        // when the image is updated
+                        bookRepository.addImage(newBook.getCoverImageName(), newUri).addOnCompleteListener(
+                                addImageTask -> {
+                                    if (addImageTask.isSuccessful()) {
+                                        successCallback.run(newBook);
+                                    } else {
+                                        failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
                                     }
-                            );
-                        } else {
-                            // image is not changed
-                            successCallback.run(book);
-                        }
+                                }
+                        );
                     } else {
-                        failCallback.run(BOOK_ERROR.FAIL_TO_EDIT_BOOK);
+                        // image is not changed
+                        successCallback.run(newBook);
                     }
                 }
-        );
+        ).addOnFailureListener(e -> {
+            failCallback.run(BOOK_ERROR.FAIL_TO_EDIT_BOOK);
+        });
     }
 
 }

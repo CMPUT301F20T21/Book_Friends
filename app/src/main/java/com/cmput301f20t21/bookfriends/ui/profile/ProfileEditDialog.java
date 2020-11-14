@@ -49,14 +49,15 @@ public class ProfileEditDialog extends DialogFragment {
             String inputEmail = editEmail.getText().toString();
             isEmailValid(inputEmail);
             if (isEmailValid(inputEmail)){
+                //update email authentication
+                profileViewModel.updateCurrentUserEmail(inputEmail, TAG);
+                //update field "email"
+                profileViewModel.updateFirestoreUserEmail(inputEmail, TAG);
                 listener.onEdit(inputEmail);
                 getDialog().dismiss();
             }
 
-            //update email authentication
-            profileViewModel.updateCurrentUserEmail(inputEmail, TAG);
-            //update field "email"
-            profileViewModel.updateFirestoreUserEmail(inputEmail, TAG);
+
 
         });
         return view;
