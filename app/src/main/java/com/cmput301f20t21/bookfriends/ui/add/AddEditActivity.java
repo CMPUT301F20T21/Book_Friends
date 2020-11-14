@@ -125,8 +125,8 @@ public class AddEditActivity extends AppCompatActivity {
         String author = authorLayout.getEditText().getText().toString();
         String description = descriptionLayout.getEditText().getText().toString();
 
-        if (isbn.length() == 0) {
-            isbnLayout.setError(getString(R.string.empty_error));
+        if (isbn.length() != 10 && isbn.length() != 13) {
+            isbnLayout.setError(getString(R.string.isbn_invalid));
         }
 
         if (title.length() == 0) {
@@ -137,7 +137,7 @@ public class AddEditActivity extends AppCompatActivity {
             authorLayout.setError(getString(R.string.empty_error));
         }
 
-        if (isbn.length() != 0 && title.length() != 0 && author.length() != 0) {
+        if ((isbn.length() == 10 || isbn.length() == 13) && title.length() != 0 && author.length() != 0) {
             if (action == BOOK_ACTION.ADD) {
                 // if no image is attached, bookImageUri will be passed as null
                 model.handleAddBook(isbn, title, author, description, bookImageUri,
