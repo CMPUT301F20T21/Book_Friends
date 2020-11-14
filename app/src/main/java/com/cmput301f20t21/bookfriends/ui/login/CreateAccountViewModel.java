@@ -1,6 +1,5 @@
 package com.cmput301f20t21.bookfriends.ui.login;
 
-import android.util.Log;
 import android.widget.EditText;
 
 import androidx.lifecycle.ViewModel;
@@ -19,9 +18,18 @@ import com.google.firebase.auth.FirebaseUser;
 
 
 public class CreateAccountViewModel extends ViewModel {
-    private final IAuthRepository authRepository = AuthRepository.getInstance();
-    private final IUserRepository userRepository = UserRepository.getInstance();
+    private final IAuthRepository authRepository;
+    private final IUserRepository userRepository;
     private final String TAG = "SIGNUP_ERROR";
+
+    // production
+    public CreateAccountViewModel() {
+        this(AuthRepository.getInstance(), UserRepository.getInstance());
+    }
+    public CreateAccountViewModel(IAuthRepository authRepository, IUserRepository userRepository){
+        this.authRepository = authRepository;
+        this.userRepository = userRepository;
+    }
 
     /**
      * check the input field for emptiness, adding error message if field is empty
