@@ -40,7 +40,7 @@
     <string name="back">Back</string>
     <string name="save">Save</string>
     <string name="scan_add">Scan and autofill</string>
-    <string name="upload_img">Upload cover image</string>
+    <string name="update_cover_img">Update cover image</string>
     <string name="empty_error">Cannot be empty</string>
     <string name="permission_denied">Permission denied…!</string>
     <string name ="string_confirm_password">Confirm Password</string>
