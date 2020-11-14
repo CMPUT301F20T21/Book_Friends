@@ -1,6 +1,7 @@
 package com.cmput301f20t21.bookfriends.ui.borrow;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
+import com.cmput301f20t21.bookfriends.entities.Book;
+import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 
 public class RequestedListFragment extends Fragment {
     private RequestedViewModel mViewModel;
-
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -42,8 +44,25 @@ public class RequestedListFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         // specify an adapter (see also next example)
-        mAdapter = new RequestedListAdapter(mViewModel.getBooks());
+        mAdapter = new RequestedListAdapter(mViewModel.getBooks(), this::onItemClick);
         recyclerView.setAdapter(mAdapter);
+    }
+
+    private void openDetailActivity(Book book){
+        Intent intent = new Intent(this.getActivity(), DetailRequestedActivity.class);
+        intent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, book);
+        startActivity(intent);
+    }
+
+    /**
+     * called when the user clicks on one of the books
+     * @param position the book's position
+     */
+    public void onItemClick(int position) {
+        if (position != RecyclerView.NO_POSITION) {
+            Book book = mViewModel.getBookByIndex(position);
+            openDetailActivity(book);
+        }
     }
 }
 

@@ -5,12 +5,12 @@ import com.cmput301f20t21.bookfriends.enums.LOGIN_ERROR;
 import com.cmput301f20t21.bookfriends.exceptions.InvalidLoginCredentialsException;
 import com.cmput301f20t21.bookfriends.exceptions.UnexpectedException;
 import com.cmput301f20t21.bookfriends.exceptions.UsernameNotExistException;
-import com.cmput301f20t21.bookfriends.fakes.repositories.FakeAuthRepository;
 import com.cmput301f20t21.bookfriends.fakes.callbacks.FakeFailCallbackWithMessage;
-import com.cmput301f20t21.bookfriends.fakes.tasks.FakeFailTask;
 import com.cmput301f20t21.bookfriends.fakes.callbacks.FakeSuccessCallback;
-import com.cmput301f20t21.bookfriends.fakes.tasks.FakeSuccessTask;
+import com.cmput301f20t21.bookfriends.fakes.repositories.FakeAuthRepository;
 import com.cmput301f20t21.bookfriends.fakes.repositories.FakeUserRepository;
+import com.cmput301f20t21.bookfriends.fakes.tasks.FakeFailTask;
+import com.cmput301f20t21.bookfriends.fakes.tasks.FakeSuccessTask;
 import com.cmput301f20t21.bookfriends.ui.login.LoginViewModel;
 import com.google.firebase.auth.AuthResult;
 
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class LoginViewModeUnitTest {
+public class LoginViewModelUnitTest {
     private String uid = "uid";
     private String username = "username";
     private String email = "email";

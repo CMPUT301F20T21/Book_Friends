@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.cmput301f20t21.bookfriends.entities.AvailableBook;
+import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.BookRepository;
@@ -97,6 +98,9 @@ public class BrowseViewModel extends ViewModel {
 
     public LiveData<BOOK_ERROR> getErrorMessage() {
         return errorMessage;
+    }
+    public Book getBookByIndex(Integer index) {
+        return bookData.get(index);
     }
 
     /**
