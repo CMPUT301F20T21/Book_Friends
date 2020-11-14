@@ -27,11 +27,10 @@ public class BrowseViewModel extends ViewModel {
     private final MutableLiveData<String> searchQuery = new MutableLiveData<>(""); // the updated search query we are using
     // the updated/filtered/calculated book results based on changed books and/or searchQuery
     private final MediatorLiveData<List<AvailableBook>> searchedBooks = new MediatorLiveData<>();
-
-    // raw book data
-    private final List<AvailableBook> bookData = books.getValue();
     // need this reference to keep adapter referring to the same array in memory or else it won't update
     private final List<AvailableBook> searchedBookData = new ArrayList<>();
+    // raw book data
+    private final List<AvailableBook> bookData = books.getValue();
 
     private final IAuthRepository authRepository;
     private final IRequestRepository requestRepository;
