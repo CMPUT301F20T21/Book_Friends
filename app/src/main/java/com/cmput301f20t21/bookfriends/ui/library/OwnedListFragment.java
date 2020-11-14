@@ -146,6 +146,17 @@ public class OwnedListFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // reset the status of the switches when resuming from another activity
+        // since the activity might have altered the book data
+        availableStatusSwitch.setChecked(true);
+        requestedStatusSwitch.setChecked(true);
+        acceptedStatusSwitch.setChecked(true);
+        borrowedStatusSwitch.setChecked(true);
+    }
+
     /**
      * called upon returning from the AddEditActivity, will add or update the book to the local data
      * @param requestCode the request code that starts the activity
