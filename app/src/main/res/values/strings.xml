@@ -89,4 +89,5 @@
     <string name="upload_new_image">Upload a new image</string>
     <string name="replace_with_new_image">Replace with a new image</string>
     <string name="delete_cover_image">Delete cover image</string>
+    <string name="address_search">Enter Address</string>
 </resources>

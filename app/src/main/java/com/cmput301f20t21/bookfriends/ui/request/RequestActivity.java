@@ -4,10 +4,19 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Camera;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,15 +36,19 @@ import com.cmput301f20t21.bookfriends.utils.GlideApp;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.ui.library.OwnedListFragment;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.type.LatLng;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class RequestActivity extends AppCompatActivity {
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -43,6 +56,8 @@ public class RequestActivity extends AppCompatActivity {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private Boolean locationPermissionGranted = false;
     private GoogleMap myMap;
+
+    private EditText searchText;
 
     private RecyclerView recyclerView;
     private RequestAdapter requestAdapter;
@@ -174,7 +189,7 @@ public class RequestActivity extends AppCompatActivity {
         Dialog dialog = new Dialog(RequestActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.map_dialog);
-        dialog.show();
+
 
         MapView mapView = (MapView) dialog.findViewById(R.id.map_view);
         MapsInitializer.initialize(RequestActivity.this);
@@ -187,9 +202,58 @@ public class RequestActivity extends AppCompatActivity {
                 myMap = googleMap;
             }
         });
+
+        searchText = (EditText) dialog.findViewById(R.id.input_search);
+        searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH
+                        || actionId == EditorInfo.IME_ACTION_DONE
+                        || keyEvent.getAction() == keyEvent.ACTION_DOWN
+                        || keyEvent.getAction() == keyEvent.KEYCODE_ENTER) {
+                        // execute searching
+                    String searchString = searchText.getText().toString();
+                    Geocoder geocoder = new Geocoder(dialog.getContext());
+                    List<Address> addressList = new ArrayList<>();
+                    try {
+                        addressList = geocoder.getFromLocationName(searchString, 1);
+                    } catch (IOException e) {
+
+                    }
+
+                    if (addressList.size() > 0) {
+                        Address address = addressList.get(0);
+                        Log.d("Map", "geoLocate: found a location: " + address.toString());
+                        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 15f));
+                    }
+                }
+                return false;
+            }
+        });
+
+        Button cancelSearchButton = (Button) dialog.findViewById(R.id.cancel_search);
+        cancelSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        Button confirmSearchButton = (Button) dialog.findViewById(R.id.confirm_search);
+        confirmSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
-
+//    private void geoLocate() {
+//        String searchString = searchText.getText().toString();
+//        Geocoder geocoder = new Geocoder();
+//    }
 
     private void checkLocationPermission() {
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
