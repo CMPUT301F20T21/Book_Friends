@@ -38,7 +38,7 @@ public class CreateAccountViewModelUnitTest {
     FakeFailCallbackWithMessage<SIGNUP_ERROR> mockFailCallbackWithMessage;
 
     @Test
-    public void signUpSuccess() {
+    public void signUpFail() {
         CreateAccountViewModel model = new CreateAccountViewModel(mockAuthRepository, mockUserRepository);
         User user = new User(uid, username, email);
 
