@@ -146,17 +146,6 @@ public class OwnedListFragment extends Fragment {
         });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        // reset the status of the switches when resuming from another activity
-        // since the activity might have altered the book data
-        availableStatusSwitch.setChecked(true);
-        requestedStatusSwitch.setChecked(true);
-        acceptedStatusSwitch.setChecked(true);
-        borrowedStatusSwitch.setChecked(true);
-    }
-
     /**
      * called upon returning from the AddEditActivity, will add or update the book to the local data
      * @param requestCode the request code that starts the activity
@@ -178,6 +167,7 @@ public class OwnedListFragment extends Fragment {
                 vm.updateBook(oldBook, updatedBook);
                 Toast.makeText(getActivity(), getString(R.string.edit_book_successful), Toast.LENGTH_SHORT).show();
             }
+            resetFilter();
         }
     }
 
@@ -234,6 +224,17 @@ public class OwnedListFragment extends Fragment {
                 acceptedStatusSwitch.isChecked(),
                 borrowedStatusSwitch.isChecked()
         );
+    }
+
+    /**
+     * reset the switches, should be called whenever the book data is altered
+     */
+    private void resetFilter() {
+        super.onResume();
+        availableStatusSwitch.setChecked(true);
+        requestedStatusSwitch.setChecked(true);
+        acceptedStatusSwitch.setChecked(true);
+        borrowedStatusSwitch.setChecked(true);
     }
 }
 

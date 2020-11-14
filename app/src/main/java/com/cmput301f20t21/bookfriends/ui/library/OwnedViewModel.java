@@ -86,7 +86,7 @@ public class OwnedViewModel extends ViewModel {
      * @return the book at the specified index
      */
     public Book getBookByIndex(Integer index) {
-        return bookData.get(index);
+        return filteredBookData.get(index);
     }
 
 
