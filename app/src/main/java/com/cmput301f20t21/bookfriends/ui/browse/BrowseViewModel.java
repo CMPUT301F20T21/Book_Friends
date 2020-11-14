@@ -59,8 +59,8 @@ public class BrowseViewModel extends ViewModel {
      */
     private void setupSearchedBooks() {
         searchedBooks.setValue(searchedBookData);
-        searchedBooks.addSource(searchQuery, keyword -> setSearchedBooksByKeywordAndBookData(keyword, bookData)); // keyword is new
-        searchedBooks.addSource(books, bookData -> setSearchedBooksByKeywordAndBookData(searchQuery.getValue(), bookData)); // bookData is new (this is a local one!)
+        searchedBooks.addSource(searchQuery, keyword -> refreshSearchedBooks(keyword, bookData)); // keyword is new
+        searchedBooks.addSource(books, bookData -> refreshSearchedBooks(searchQuery.getValue(), bookData)); // bookData is new (this is a local one!)
     }
 
     /**
@@ -70,13 +70,15 @@ public class BrowseViewModel extends ViewModel {
      * @param keyword
      * @param bookData
      */
-    private void setSearchedBooksByKeywordAndBookData(String keyword, List<AvailableBook> bookData) {
+    private void refreshSearchedBooks(String keyword, List<AvailableBook> bookData) {
         Function<String, Boolean> contains = ifNotNullAndContains(keyword);
         List<AvailableBook> newBookData = bookData
                 .stream()
                 .filter(book -> contains.apply(book.getTitle()) ||
                         contains.apply(book.getAuthor()) ||
-                        contains.apply(book.getOwner()))
+                        contains.apply(book.getOwner()) ||
+                        contains.apply(book.getIsbn())
+                )
                 .collect(Collectors.toList());
         searchedBookData.clear();
         searchedBookData.addAll(newBookData);
@@ -86,7 +88,7 @@ public class BrowseViewModel extends ViewModel {
     private Function<String, Boolean> ifNotNullAndContains(String keyword) {
         return (attribute) -> {
             if (attribute == null || keyword == null) return true;
-            return attribute.contains(keyword);
+            return attribute.toLowerCase().contains(keyword.toLowerCase());
         };
     }
 
