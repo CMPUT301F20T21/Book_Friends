@@ -80,13 +80,13 @@ public class BrowseFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 vm.filterBookWithKeyword(query);
-                return false;
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 vm.filterBookWithKeyword(newText);
-                return false;
+                return true;
             }
         });
 
