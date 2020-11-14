@@ -67,7 +67,7 @@ public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapte
             this.author.setText(this.itemView.getResources().getString(R.string.book_list_item_author, book.getAuthor()));
             this.isbn.setText(book.getIsbn());
             this.book = book;
-            this.status.setText(book.getStatus().name());
+            this.status.setText(book.getStatus().toString().toLowerCase());
             StorageReference storageReference = FirebaseStorage.getInstance().getReference(book.getCoverImageName());
             GlideApp.with(holderView)
                     .load(storageReference)
