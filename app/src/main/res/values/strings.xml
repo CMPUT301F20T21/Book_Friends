@@ -40,7 +40,7 @@
     <string name="back">Back</string>
     <string name="save">Save</string>
     <string name="scan_add">Scan and autofill</string>
-    <string name="upload_img">Upload cover image</string>
+    <string name="update_cover_img">Update cover image</string>
     <string name="empty_error">Cannot be empty</string>
     <string name="permission_denied">Permission denied…!</string>
     <string name ="string_confirm_password">Confirm Password</string>
@@ -76,4 +76,8 @@
     <string name="fail_to_edit_book">Failed to edit book</string>
     <string name="scanner_scanning">Scanning...</string>
     <string name="accept_this_request">Accept this request?</string>
+
+    <string name="upload_new_image">Upload a new image</string>
+    <string name="replace_with_new_image">Replace with a new image</string>
+    <string name="delete_cover_image">Delete cover image</string>
 </resources>
