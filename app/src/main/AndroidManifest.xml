@@ -24,7 +24,6 @@
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.scanner.ScannerAddActivity"
             android:label="@string/title_scanner_add"
-            android:parentActivityName=".ui.add.AddEditActivity"
             >
         </activity>
         <activity

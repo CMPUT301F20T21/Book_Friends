@@ -13,7 +13,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,7 +36,6 @@ public class BrowseFragment extends Fragment {
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private SearchView searchView;
-    private FragmentManager fragmentManager;
 
     /**
      * @param inflater
@@ -51,7 +49,6 @@ public class BrowseFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         vm = new ViewModelProvider(this).get(BrowseViewModel.class);
         setHasOptionsMenu(true);
-        inflateSearchedList();
         View view = inflater.inflate(R.layout.fragment_browse, container, false);
         return view;
     }
@@ -102,10 +99,18 @@ public class BrowseFragment extends Fragment {
         inflater.inflate(R.menu.browse_search_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
         searchView = (SearchView) menu.findItem(R.id.book_search_bar).getActionView();
-    }
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                vm.filterBookWithKeyword(query);
+                return true;
+            }
 
-    private void inflateSearchedList() {
-        fragmentManager = getChildFragmentManager();
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                vm.filterBookWithKeyword(newText);
+                return true;
+            }
+        });
     }
-
 }
