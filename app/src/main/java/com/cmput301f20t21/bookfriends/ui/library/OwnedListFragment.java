@@ -230,7 +230,6 @@ public class OwnedListFragment extends Fragment {
      * reset the switches, should be called whenever the book data is altered
      */
     private void resetFilter() {
-        super.onResume();
         availableStatusSwitch.setChecked(true);
         requestedStatusSwitch.setChecked(true);
         acceptedStatusSwitch.setChecked(true);
