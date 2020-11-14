@@ -22,11 +22,11 @@ import com.google.firebase.storage.StorageReference;
 import java.util.List;
 
 public class OwnedListAdapter extends BaseBookListAdapter {
-    private onDeleteListener deleteListener;
-    private onItemClickListener itemClickListener;
-    private onViewRequestsListener viewRequestsListener;
+    private OnDeleteListener deleteListener;
+    private OnItemClickListener itemClickListener;
+    private OnViewRequestsListener viewRequestsListener;
 
-    public OwnedListAdapter(List<Book> books, onItemClickListener itemClickListener, onDeleteListener deleteListener, onViewRequestsListener viewRequestsListener) {
+    public OwnedListAdapter(List<Book> books, OnItemClickListener itemClickListener, OnDeleteListener deleteListener, OnViewRequestsListener viewRequestsListener) {
         super(books);
         this.itemClickListener = itemClickListener;
         this.deleteListener = deleteListener;
@@ -39,24 +39,24 @@ public class OwnedListAdapter extends BaseBookListAdapter {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_list, parent, false);
         return new OwnedListAdapter.ViewHolder(itemView, itemClickListener, deleteListener, viewRequestsListener);
     }
-    public interface onViewRequestsListener {
+    public interface OnViewRequestsListener {
         void run(String bookId);
     }
 
-    public interface onDeleteListener {
+    public interface OnDeleteListener {
         void run(Book book);
     }
 
-    public interface onItemClickListener {
+    public interface OnItemClickListener {
         void run(int position);
     }
 
     public static class ViewHolder extends BaseBookListAdapter.ViewHolder {
         final ImageButton moreBtn;
-        final onDeleteListener deleteListener;
-        final onViewRequestsListener viewRequestsListener;
+        final OnDeleteListener deleteListener;
+        final OnViewRequestsListener viewRequestsListener;
 
-        public ViewHolder(View v, onItemClickListener itemClickListener, onDeleteListener deleteListener, onViewRequestsListener viewRequestsListener) {
+        public ViewHolder(View v, OnItemClickListener itemClickListener, OnDeleteListener deleteListener, OnViewRequestsListener viewRequestsListener) {
             super(v);
             moreBtn = v.findViewById(R.id.item_book_more_btn);
             moreBtn.setOnClickListener(this::showPopup);
