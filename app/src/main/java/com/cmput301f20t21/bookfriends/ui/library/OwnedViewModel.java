@@ -12,36 +12,47 @@ package com.cmput301f20t21.bookfriends.ui.library;
 
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
+import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.IAuthRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.IBookRepository;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * The ViewModel for OwnedListFragment
  */
 public class OwnedViewModel extends ViewModel {
 
-    private final IAuthRepository authRepository = AuthRepository.getInstance();
-    private final BookRepository bookRepository = BookRepository.getInstance();
+    private final IAuthRepository authRepository;
+    private final IBookRepository bookRepository;
 
     private final MutableLiveData<List<Book>> books = new MutableLiveData<>(new ArrayList<>());
     private final List<Book> bookData = books.getValue();
-
+    private final MediatorLiveData<List<Book>> filteredBooks = new MediatorLiveData<>();
+    private final List<Book> filteredBookData = new ArrayList<>();
     private MutableLiveData<Integer> updatedPosition = new MutableLiveData<>(0);
     private MutableLiveData<BOOK_ERROR> errorMessageObserver = new MutableLiveData<>();
 
     public OwnedViewModel() {
+        this(AuthRepository.getInstance(), BookRepository.getInstance());
+    }
+
+    public OwnedViewModel(IAuthRepository authRepository, IBookRepository bookRepository) {
+        this.authRepository = authRepository;
+        this.bookRepository = bookRepository;
+
+        setSource();
         fetchBooks();
     }
 
@@ -50,7 +61,7 @@ public class OwnedViewModel extends ViewModel {
      * @return a list of book
      */
     public LiveData<List<Book>> getBooks() {
-        return books;
+        return filteredBooks;
     }
 
     /**
@@ -75,8 +86,9 @@ public class OwnedViewModel extends ViewModel {
      * @return the book at the specified index
      */
     public Book getBookByIndex(Integer index) {
-        return bookData.get(index);
+        return filteredBookData.get(index);
     }
+
 
     /**
      * add a book to the list
@@ -115,6 +127,40 @@ public class OwnedViewModel extends ViewModel {
                             books.setValue(bookData);
                         })
                 .addOnFailureListener(e -> errorMessageObserver.setValue(BOOK_ERROR.FAIL_TO_DELETE_BOOK));
+    }
+
+    public void filterBooks (
+            boolean includeAvailable, boolean includeRequested,
+            boolean includeAccepted, boolean includeBorrowed
+    ) {
+        if (bookData == null) {
+            return;
+        }
+        filteredBookData.clear();
+        for (Book book : bookData) {
+            BOOK_STATUS status = book.getStatus();
+            if (
+                    status == BOOK_STATUS.AVAILABLE && includeAvailable ||
+                    status == BOOK_STATUS.REQUESTED && includeRequested ||
+                    status == BOOK_STATUS.ACCEPTED && includeAccepted ||
+                    status == BOOK_STATUS.BORROWED && includeBorrowed
+            ) {
+                filteredBookData.add(book);
+            }
+        }
+        filteredBooks.setValue(filteredBookData);
+    }
+
+    /**
+     * setup the source so that filteredBooks are listening to books data change
+     */
+    private void setSource() {
+        filteredBooks.setValue(filteredBookData);
+        filteredBooks.addSource(books, bookData -> {
+            filteredBookData.clear();
+            filteredBookData.addAll(bookData);
+            filteredBooks.setValue(filteredBookData);
+        });
     }
 
     /**

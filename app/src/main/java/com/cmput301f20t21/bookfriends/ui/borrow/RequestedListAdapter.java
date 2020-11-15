@@ -19,24 +19,26 @@ public class RequestedListAdapter extends BaseBookListAdapter {
 
     public RequestedListAdapter(List<Book> books) {
         super(books);
+        this.itemClickListener = itemClickListener;
     }
 
     @NonNull
     @Override
     public RequestedListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_list, parent, false);
-        return new RequestedListAdapter.ViewHolder(itemView);
+        return new RequestedListAdapter.ViewHolder(itemView, itemClickListener);
     }
 
     public static class ViewHolder extends BaseBookListAdapter.ViewHolder {
         final ImageButton moreBtn;
         final TextView owner;
 
-        public ViewHolder(View v) {
+        public ViewHolder(View v, OnItemClickListener itemClickListener) {
             super(v);
             owner = v.findViewById(R.id.item_book_owner);
             moreBtn = v.findViewById(R.id.item_book_more_btn);
             moreBtn.setVisibility(View.GONE);
+            v.setOnClickListener(view -> itemClickListener.run(getAdapterPosition()));
         }
 
         @Override

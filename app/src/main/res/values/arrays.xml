@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="image_actions_new">
+        <item>@string/upload_new_image</item>
+        <item>@string/cancel</item>
+    </array>
+    <array name="image_actions_exist">
+        <item>@string/replace_with_new_image</item>
+        <item>@string/delete_cover_image</item>
+        <item>@string/cancel</item>
+    </array>
+</resources>

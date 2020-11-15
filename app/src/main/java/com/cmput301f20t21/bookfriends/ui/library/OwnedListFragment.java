@@ -30,16 +30,16 @@ import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.ui.add.AddEditActivity;
+import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 import com.cmput301f20t21.bookfriends.ui.request.RequestActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
 public class OwnedListFragment extends Fragment {
-    public static final String BOOK_ACTION_KEY = "com.cmput301f20t21.bookfriends.BOOK_ACTION";
-    public static final String BOOK_EDIT_KEY = "com.cmput301f20t21.bookfriends.BOOK_EDIT";
     public static final String VIEW_REQUEST_KEY = "com.cmput301f20t21.bookfriends.VIEW_REQUEST";
 
     private OwnedViewModel vm;
@@ -48,6 +48,12 @@ public class OwnedListFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private FloatingActionButton filterButton;
     private FloatingActionButton addBookButton;
+    private PopupWindow filterPopup;
+    private SwitchMaterial availableStatusSwitch;
+    private SwitchMaterial requestedStatusSwitch;
+    private SwitchMaterial acceptedStatusSwitch;
+    private SwitchMaterial borrowedStatusSwitch;
+
     /**
      * Called before creating the fragment view
      * @param inflater the layout inflater
@@ -65,10 +71,31 @@ public class OwnedListFragment extends Fragment {
         filterButton = root.findViewById(R.id.filter_button);
 
         addBookButton.setOnClickListener(
-                view -> openAddEditActivity(null)
+                view -> openAddEditActivity()
         );
 
-        filterButton.setOnClickListener(this::showFilterPopup);
+        View filterLayout = inflater.inflate(R.layout.owned_filter_menu, getActivity().findViewById(R.id.popup_element));
+        filterLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        int width = filterLayout.getMeasuredWidth();
+        int height = filterLayout.getMeasuredHeight();
+        filterPopup = new PopupWindow(filterLayout, width, height,true);
+        // elevation does not work in xml file so have to set it here
+        filterPopup.setElevation(12);
+
+        availableStatusSwitch = filterLayout.findViewById(R.id.filter_menu_available);
+        requestedStatusSwitch = filterLayout.findViewById(R.id.filter_menu_requested);
+        acceptedStatusSwitch = filterLayout.findViewById(R.id.filter_menu_accepted);
+        borrowedStatusSwitch = filterLayout.findViewById(R.id.filter_menu_borrowed);
+        availableStatusSwitch.setOnClickListener(this::onFilter);
+        requestedStatusSwitch.setOnClickListener(this::onFilter);
+        acceptedStatusSwitch.setOnClickListener(this::onFilter);
+        borrowedStatusSwitch.setOnClickListener(this::onFilter);
+
+        filterButton.setOnClickListener((view) -> {
+            // want to show the window above the view instead of below
+            // so offset the window by its width and height
+            filterPopup.showAsDropDown(view, -width, -height);
+        });
         return root;
     }
 
@@ -132,30 +159,29 @@ public class OwnedListFragment extends Fragment {
                 Book book = data.getParcelableExtra(AddEditActivity.NEW_BOOK_INTENT_KEY);
                 vm.addBook(book);
                 Toast.makeText(getActivity(), getString(R.string.add_book_successful), Toast.LENGTH_SHORT).show();
-            } else if (requestCode == BOOK_ACTION.EDIT.getCode()) {
+            } else {
                 Book oldBook = data.getParcelableExtra(AddEditActivity.OLD_BOOK_INTENT_KEY);
                 Book updatedBook = data.getParcelableExtra(AddEditActivity.UPDATED_BOOK_INTENT_KEY);
 
                 vm.updateBook(oldBook, updatedBook);
-                Toast.makeText(getActivity(), getString(R.string.edit_book_successful), Toast.LENGTH_SHORT).show();
             }
+            resetFilter();
         }
     }
 
     /**
      * function allows user to jump into the add/edit screen when click on the floating button
-     * @param book the book to edit, will be null if the action is add
      */
-    private void openAddEditActivity(@Nullable Book book) {
+    private void openAddEditActivity() {
         Intent intent = new Intent(this.getActivity(), AddEditActivity.class);
-        if (book == null) {
-            intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.ADD);
-            startActivityForResult(intent, BOOK_ACTION.ADD.getCode());
-        } else {
-            intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.EDIT);
-            intent.putExtra(BOOK_EDIT_KEY, book);
-            startActivityForResult(intent, BOOK_ACTION.EDIT.getCode());
-        }
+        intent.putExtra(BaseDetailActivity.BOOK_ACTION_KEY, BOOK_ACTION.ADD);
+        startActivityForResult(intent, BOOK_ACTION.ADD.getCode());
+    }
+
+    private void openDetailActivity(Book book){
+        Intent intent = new Intent(this.getActivity(), DetailLibraryActivity.class);
+        intent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, book);
+        startActivityForResult(intent, BOOK_ACTION.VIEW.getCode());
     }
 
     /**
@@ -165,7 +191,7 @@ public class OwnedListFragment extends Fragment {
     public void onItemClick(int position) {
         if (position != RecyclerView.NO_POSITION) {
             Book book = vm.getBookByIndex(position);
-            openAddEditActivity(book);
+            openDetailActivity(book);
         }
     }
 
@@ -188,23 +214,23 @@ public class OwnedListFragment extends Fragment {
         startActivity(intent);
     }
 
-    /**
-     * when the user click on the filter button
-     * @param view the filter button view
-     */
-    private void showFilterPopup(View view) {
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout = inflater.inflate(R.layout.owned_filter_menu, getActivity().findViewById(R.id.popup_element));
-        layout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        int width = layout.getMeasuredWidth();
-        int height = layout.getMeasuredHeight();
-        PopupWindow popup = new PopupWindow(layout, width, height,true);
+    private void onFilter(View view) {
+        vm.filterBooks(
+                availableStatusSwitch.isChecked(),
+                requestedStatusSwitch.isChecked(),
+                acceptedStatusSwitch.isChecked(),
+                borrowedStatusSwitch.isChecked()
+        );
+    }
 
-        // elevation does not work in xml file so have to set it here
-        popup.setElevation(12);
-        // want to show the window above the view instead of below
-        // so offset the window by its width and height
-        popup.showAsDropDown(view, -width, -height);
+    /**
+     * reset the switches, should be called whenever the book data is altered
+     */
+    private void resetFilter() {
+        availableStatusSwitch.setChecked(true);
+        requestedStatusSwitch.setChecked(true);
+        acceptedStatusSwitch.setChecked(true);
+        borrowedStatusSwitch.setChecked(true);
     }
 }
 

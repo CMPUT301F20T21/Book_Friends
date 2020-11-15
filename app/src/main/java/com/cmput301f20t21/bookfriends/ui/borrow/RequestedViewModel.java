@@ -50,7 +50,11 @@ public class RequestedViewModel extends ViewModel {
     public MutableLiveData<BOOK_ERROR> getErrorMessage() {
         return errorMessage;
     }
-
+    
+    public Book getBookByIndex(Integer index) {
+        return RequestedBookData.get(index);
+    }
+  
     private void fetchBooks() {
         String username = authRepository.getCurrentUser().getUsername();
         requestRepository.getAllRequestsByUsername(username, REQUEST_STATUS.OPENED).addOnSuccessListener(requests -> {
@@ -68,6 +72,6 @@ public class RequestedViewModel extends ViewModel {
                 }).addOnFailureListener(error -> errorMessage.setValue(BOOK_ERROR.FAIL_TO_GET_BOOKS));
             }
         }).addOnFailureListener(error -> errorMessage.setValue(BOOK_ERROR.FAIL_TO_GET_BOOKS));
-    }
+    }  
 
 }

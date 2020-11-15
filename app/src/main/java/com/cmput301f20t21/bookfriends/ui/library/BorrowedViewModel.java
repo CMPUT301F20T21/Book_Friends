@@ -33,18 +33,19 @@ public class BorrowedViewModel extends ViewModel {
     private BookRepository bookRepository = BookRepository.getInstance();
     private IAuthRepository authRepository = AuthRepository.getInstance();
 
-    private MutableLiveData<List<Book>> books;
+    private MutableLiveData<List<Book>> books = new MutableLiveData<>(new ArrayList<Book>());
+    private List<Book> bookData = books.getValue();
     private MutableLiveData<Integer> updatedPosition;
+
+    public BorrowedViewModel() {
+        fetchBooks();
+    }
 
     /**
      * get the list of books from MutableLiveData
      * @return a list of books
      */
     public LiveData<List<Book>> getBooks() {
-        if (books == null) {
-            books = new MutableLiveData<>();
-            fetchBooks();
-        }
         return books;
     }
 
@@ -58,7 +59,9 @@ public class BorrowedViewModel extends ViewModel {
         }
         return updatedPosition;
     }
-
+    public Book getBookByIndex(Integer index) {
+        return bookData.get(index);
+    }
     private void fetchBooks() {
         String username = authRepository.getCurrentUser().getUsername();
 
