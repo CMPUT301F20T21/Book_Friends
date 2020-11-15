@@ -64,6 +64,7 @@ public class Book implements Parcelable {
         return getId() + "cover";
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
