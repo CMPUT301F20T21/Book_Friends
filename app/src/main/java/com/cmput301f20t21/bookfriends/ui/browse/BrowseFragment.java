@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
-import com.cmput301f20t21.bookfriends.entities.AvailableBook;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
@@ -66,7 +65,7 @@ public class BrowseFragment extends Fragment {
         adapter = new AvailableBookListAdapter(vm.getBooks().getValue(), this::onItemClick);
         recyclerView.setAdapter(adapter);
 
-        vm.getBooks().observe(getViewLifecycleOwner(), (List<AvailableBook> books) -> adapter.notifyDataSetChanged());
+        vm.getBooks().observe(getViewLifecycleOwner(), (List<Book> books) -> adapter.notifyDataSetChanged());
 
         vm.getUpdatedPosition().observe(getViewLifecycleOwner(), updatedPosition -> adapter.notifyItemChanged(updatedPosition));
 
@@ -78,7 +77,7 @@ public class BrowseFragment extends Fragment {
     }
 
     private void openDetailActivity(Book book) {
-        Intent intent = new Intent(this.getActivity(), DetailBrowseActivity.class);
+        Intent intent = new Intent(this.getActivity(), BrowseDetailActivity.class);
         intent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, book);
         startActivity(intent);
     }

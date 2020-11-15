@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.cmput301f20t21.bookfriends.R;
-import com.cmput301f20t21.bookfriends.entities.AvailableBook;
+import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.ui.component.BaseBookListAdapter;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class AvailableBookListAdapter extends BaseBookListAdapter {
     public interface OnItemClickListener {
         void run(int position);
     }
-    public AvailableBookListAdapter(List<AvailableBook> books, OnItemClickListener itemClickListener) {
+    public AvailableBookListAdapter(List<Book> books, OnItemClickListener itemClickListener) {
         super(books);
         this.itemClickListener = itemClickListener;
     }
@@ -30,24 +30,22 @@ public class AvailableBookListAdapter extends BaseBookListAdapter {
         return new AvailableBookListAdapter.ViewHolder(itemView, itemClickListener);
     }
 
-    public static class ViewHolder extends BaseBookListAdapter.ViewHolder<AvailableBook> {
+    public static class ViewHolder extends BaseBookListAdapter.ViewHolder {
         final ImageButton moreBtn;
         final TextView owner;
         final TextView status;
-        final Button requestBtn;
 
         public ViewHolder(View v, OnItemClickListener itemClickListener) {
             super(v);
             owner = v.findViewById(R.id.item_book_owner);
             moreBtn = v.findViewById(R.id.item_book_more_btn);
             status = v.findViewById(R.id.status);
-            requestBtn = v.findViewById(R.id.request_button);
             moreBtn.setVisibility(View.GONE);
             v.setOnClickListener(view -> itemClickListener.run(getAdapterPosition()));
         }
 
         @Override
-        public void onBind(AvailableBook book) {
+        public void onBind(Book book) {
             super.onBind(book);
             this.owner.setText(this.itemView.getResources().getString(R.string.book_list_item_owner, book.getOwner()));
         }

@@ -59,7 +59,7 @@
             android:label="@string/accepted_detail">
         </activity>
         <activity
-            android:name="com.cmput301f20t21.bookfriends.ui.browse.DetailBrowseActivity"
+            android:name="com.cmput301f20t21.bookfriends.ui.browse.BrowseDetailActivity"
             android:label="@string/browse_detail">
         </activity>
 

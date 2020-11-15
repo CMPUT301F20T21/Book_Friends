@@ -6,8 +6,8 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.cmput301f20t21.bookfriends.entities.AvailableBook;
 import com.cmput301f20t21.bookfriends.entities.Book;
+import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.BookRepository;
@@ -24,16 +24,16 @@ import java.util.stream.Collectors;
 public class BrowseViewModel extends ViewModel {
     // exposed live data
     private final MutableLiveData<BOOK_ERROR> errorMessage = new MutableLiveData<>();
-    private final MutableLiveData<List<AvailableBook>> books = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<List<Book>> books = new MutableLiveData<>(new ArrayList<>());
     private MutableLiveData<Integer> updatedPosition = new MutableLiveData<>(0);
 
     private final MutableLiveData<String> searchQuery = new MutableLiveData<>(""); // the updated search query we are using
     // the updated/filtered/calculated book results based on changed books and/or searchQuery
-    private final MediatorLiveData<List<AvailableBook>> searchedBooks = new MediatorLiveData<>();
+    private final MediatorLiveData<List<Book>> searchedBooks = new MediatorLiveData<>();
     // need this reference to keep adapter referring to the same array in memory or else it won't update
-    private final List<AvailableBook> searchedBookData = new ArrayList<>();
+    private final List<Book> searchedBookData = new ArrayList<>();
     // raw book data
-    private final List<AvailableBook> bookData = books.getValue();
+    private final List<Book> bookData = books.getValue();
 
     private final IRequestRepository requestRepository;
     private final IBookRepository bookRepository;
@@ -73,9 +73,9 @@ public class BrowseViewModel extends ViewModel {
      * @param keyword
      * @param bookData
      */
-    private void refreshSearchedBooks(String keyword, List<AvailableBook> bookData) {
+    private void refreshSearchedBooks(String keyword, List<Book> bookData) {
         Function<String, Boolean> contains = ifNotNullAndContains(keyword);
-        List<AvailableBook> newBookData = bookData
+        List<Book> newBookData = bookData
                 .stream()
                 .filter(book -> contains.apply(book.getTitle()) ||
                         contains.apply(book.getAuthor()) ||
@@ -95,13 +95,14 @@ public class BrowseViewModel extends ViewModel {
         };
     }
 
-    public LiveData<List<AvailableBook>> getBooks() {
+    public LiveData<List<Book>> getBooks() {
         return searchedBooks;
     }
 
     public LiveData<BOOK_ERROR> getErrorMessage() {
         return errorMessage;
     }
+
     public Book getBookByIndex(Integer index) {
         return bookData.get(index);
     }
@@ -124,36 +125,25 @@ public class BrowseViewModel extends ViewModel {
     private void fetchBooks() {
         // first, get all the request made by this user.
         requestRepository.getAllRequestsByUsername(currentUsername).addOnSuccessListener(requests -> {
-            // extract book id from fetched requests
-            // book ids will be unique because each user can only request a book once at a time
-            List<String> requestedBookIds = requests
-                    .stream()
-                    .map(request -> request.getBookId())
-                    .collect(Collectors.toList());
+
             // get available book for current user (book in available status and not owned by this user)
             bookRepository.getAvailableBooksForUser(currentUsername).addOnSuccessListener(availableBooks -> {
-                // check if available book has been requested
-                availableBooks
-                        .forEach(availableBook -> {
-                            if (requestedBookIds.indexOf(availableBook.getId()) != -1) {
-                                availableBook.setRequested(true);
-                            }
-                        });
-                // insert into local data
                 bookData.clear();
-                bookData.addAll(availableBooks);
+                bookData.addAll(filterRequestedFromAvailableBooks(availableBooks, requests));
                 books.setValue(bookData);
             }).addOnFailureListener(e -> errorMessage.setValue(BOOK_ERROR.FAIL_TO_GET_BOOKS));
         }).addOnFailureListener(e -> errorMessage.setValue(BOOK_ERROR.FAIL_TO_GET_BOOKS));
     }
 
-    public void sendRequest(AvailableBook book) {
-        requestRepository
-                .sendRequest(currentUsername, book.getId())
-                .addOnSuccessListener(requestId -> {
-                    int positionToUpdate = bookData.indexOf(book);
-                    book.setRequested(true);
-                    updatedPosition.setValue(positionToUpdate);
-                });
+    private List<Book> filterRequestedFromAvailableBooks(List<Book> availableBooks, List<Request> requests) {
+        List<String> requestedBookIds = requests
+                .stream()
+                .map(request -> request.getBookId())
+                .collect(Collectors.toList());
+
+        return availableBooks
+                .stream()
+                .filter(availableBook -> requestedBookIds.indexOf(availableBook.getId()) != 1)
+                .collect(Collectors.toList());
     }
 }
