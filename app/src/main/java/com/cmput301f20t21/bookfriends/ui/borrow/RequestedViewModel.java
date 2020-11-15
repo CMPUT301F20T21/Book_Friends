@@ -52,7 +52,7 @@ public class RequestedViewModel extends ViewModel {
     }
     
     public Book getBookByIndex(Integer index) {
-        return RequestedBookData.get(index);
+        return bookData.get(index);
     }
   
     private void fetchBooks() {

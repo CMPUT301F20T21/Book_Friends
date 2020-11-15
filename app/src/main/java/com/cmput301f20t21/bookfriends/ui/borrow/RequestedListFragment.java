@@ -47,7 +47,7 @@ public class RequestedListFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         // specify an adapter (see also next example)
-        adapter = new RequestedListAdapter(vm.getBooks().getValue());
+        adapter = new RequestedListAdapter(vm.getBooks().getValue(), this::onItemClick);
         recyclerView.setAdapter(adapter);
 
         vm.getBooks().observe(getViewLifecycleOwner(), (List<Book> books) -> adapter.notifyDataSetChanged());
@@ -71,7 +71,7 @@ public class RequestedListFragment extends Fragment {
      */
     public void onItemClick(int position) {
         if (position != RecyclerView.NO_POSITION) {
-            Book book = mViewModel.getBookByIndex(position);
+            Book book = vm.getBookByIndex(position);
             openDetailActivity(book);
         }
     }

@@ -16,8 +16,13 @@ import com.cmput301f20t21.bookfriends.ui.component.BaseBookListAdapter;
 import java.util.List;
 
 public class RequestedListAdapter extends BaseBookListAdapter {
+    private OnItemClickListener itemClickListener;
 
-    public RequestedListAdapter(List<Book> books) {
+    public interface OnItemClickListener {
+        void run(int position);
+    }
+
+    public RequestedListAdapter(List<Book> books, OnItemClickListener itemClickListener) {
         super(books);
         this.itemClickListener = itemClickListener;
     }

@@ -84,7 +84,9 @@ public class BorrowedViewModel extends ViewModel {
             }
 
             bookRepository.batchGetBooks(bookIds).addOnSuccessListener(borrowedBooks -> {
-                books.setValue(borrowedBooks);
+                bookData.clear();
+                bookData.addAll(borrowedBooks);
+                books.setValue(bookData);
             }).addOnFailureListener(e -> {
                 // TODO: handle failure here
             });
