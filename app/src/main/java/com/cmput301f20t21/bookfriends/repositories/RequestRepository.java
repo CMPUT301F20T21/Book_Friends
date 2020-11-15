@@ -46,8 +46,9 @@ public class RequestRepository implements IRequestRepository {
                 .whereEqualTo("status", REQUEST_STATUS.BORROWED.toString()).get();
     }
 
-    public Task<List<Request>> getAllRequestsByUsername(String username) {
-        return requestCollection.whereEqualTo("requester", username).get()
+    public Task<List<Request>> getAllRequestsByUsername(String username, REQUEST_STATUS status) {
+        return requestCollection.whereEqualTo("requester", username)
+                .whereEqualTo("status", status.toString()).get()
                 .continueWith(task -> {
                     if (task.isSuccessful()) {
                         List<Request> requests = new ArrayList<Request>();

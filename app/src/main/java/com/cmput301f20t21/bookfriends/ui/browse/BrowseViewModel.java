@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.cmput301f20t21.bookfriends.entities.AvailableBook;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
+import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.RequestRepository;
@@ -118,7 +119,7 @@ public class BrowseViewModel extends ViewModel {
         // get logged in user's username
         String username = authRepository.getCurrentUser().getUsername();
         // first, get all the request made by this user.
-        requestRepository.getAllRequestsByUsername(username).addOnSuccessListener(requests -> {
+        requestRepository.getAllRequestsByUsername(username, REQUEST_STATUS.OPENED).addOnSuccessListener(requests -> {
             // extract book id from fetched requests
             // book ids will be unique because each user can only request a book once at a time
             List<String> requestedBookIds = requests
