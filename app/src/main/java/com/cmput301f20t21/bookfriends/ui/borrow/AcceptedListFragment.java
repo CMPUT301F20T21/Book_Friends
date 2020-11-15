@@ -1,6 +1,7 @@
 package com.cmput301f20t21.bookfriends.ui.borrow;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
+import com.cmput301f20t21.bookfriends.entities.Book;
+import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 
 
 public class AcceptedListFragment extends Fragment {
@@ -22,6 +25,7 @@ public class AcceptedListFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
+
 
     @Nullable
     @Override
@@ -43,8 +47,21 @@ public class AcceptedListFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new AcceptedListAdapter(mViewModel.getBooks());
+        mAdapter = new AcceptedListAdapter(mViewModel.getBooks(), this::onItemClick);
         recyclerView.setAdapter(mAdapter);
+    }
+
+    private void openDetailActivity(Book book){
+        Intent intent = new Intent(this.getActivity(), DetailAcceptedActivity.class);
+        intent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, book);
+        startActivity(intent);
+    }
+
+    public void onItemClick(int position) {
+        if (position != RecyclerView.NO_POSITION) {
+            Book book = mViewModel.getBookByIndex(position);
+            openDetailActivity(book);
+        }
     }
 }
 

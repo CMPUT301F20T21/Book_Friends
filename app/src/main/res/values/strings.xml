@@ -40,7 +40,7 @@
     <string name="back">Back</string>
     <string name="save">Save</string>
     <string name="scan_add">Scan and autofill</string>
-    <string name="upload_img">Upload cover image</string>
+    <string name="update_cover_img">Update cover image</string>
     <string name="empty_error">Cannot be empty</string>
     <string name="permission_denied">Permission denied…!</string>
     <string name ="string_confirm_password">Confirm Password</string>
@@ -77,4 +77,17 @@
     <string name="scanner_scanning">Scanning...</string>
     <string name="accept_this_request">Accept this request?</string>
     <string name="isbn_invalid">isbn should be 10 or 13 digits</string>
+    <string name="delete">delete</string>
+    <string name="add_edit">Add/Edit</string>
+    <string name="edit_detail">Edit</string>
+    <string name="view_request">View All Requests</string>
+    <string name="view">View</string>
+    <string name="accepted_detail">he Book Detail (Accepted)</string>
+    <string name="browse_detail">The Book Detail (Available)</string>
+    <string name="requested_detail">The Book Detail (Requested)</string>
+    <string name="borrowed_detail">View A Borrowed Book</string>
+    <string name="author">Author: %s</string>
+    <string name="upload_new_image">Upload a new image</string>
+    <string name="replace_with_new_image">Replace with a new image</string>
+    <string name="delete_cover_image">Delete cover image</string>
 </resources>

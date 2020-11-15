@@ -1,5 +1,6 @@
 package com.cmput301f20t21.bookfriends.ui.library;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
+import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BorrowedListFragment extends Fragment {
     private BorrowedViewModel vm;
-
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -46,7 +46,7 @@ public class BorrowedListFragment extends Fragment {
 
         // specify an adapter (see also next example)
         vm.getBooks().observe(getViewLifecycleOwner(), (List<Book> books) -> {
-            adapter = new BorrowedListAdapter(books);
+            adapter = new BorrowedListAdapter(books, this::onItemClick);
             recyclerView.setAdapter(adapter);
         });
 
@@ -55,6 +55,25 @@ public class BorrowedListFragment extends Fragment {
                 adapter.notifyItemChanged(pos);
             }
         });
+    }
+
+    private void openDetailActivity(Book book) {
+        Intent intent = new Intent(this.getActivity(), DetailBorrowedActivity.class);
+        intent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, book);
+        startActivity(intent);
+    }
+
+
+    /**
+     * called when the user clicks on one of the books
+     *
+     * @param position the book's position
+     */
+    public void onItemClick(int position) {
+        if (position != RecyclerView.NO_POSITION) {
+            Book book = vm.getBookByIndex(position);
+            openDetailActivity(book);
+        }
     }
 }
 
