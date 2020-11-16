@@ -97,7 +97,9 @@ public class Book implements Parcelable {
                 author.equals(book.author) &&
                 Objects.equals(description, book.description) &&
                 owner.equals(book.owner) &&
-                imageUri.equals(book.imageUri) &&
+                (
+                        (imageUri != null && imageUri.equals(book.imageUri))  || (imageUri == null && book.imageUri == null)
+                ) &&
                 status == book.status;
     }
 

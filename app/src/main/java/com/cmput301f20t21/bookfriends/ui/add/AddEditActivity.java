@@ -85,26 +85,16 @@ public class AddEditActivity extends AppCompatActivity {
 
         if (oldBook == null) return;
 
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference(oldBook.getCoverImageName());
-        GlideApp.with(this)
-                .load(storageReference)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .addListener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        vm.setHasImage(false);
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        vm.setHasImage(true);
-                        return false;
-                    }
-                })
-                .placeholder(R.drawable.no_image)
-                .into(bookImage);
+        if (oldBook.getImageUri() == null) {
+            GlideApp.with(this)
+                    .load(R.drawable.no_image)
+                    .into(bookImage);
+        } else {
+            GlideApp.with(this)
+                    .load(oldBook.getImageUri())
+                    .placeholder(R.drawable.no_image)
+                    .into(bookImage);
+        }
     }
 
     private void setChildViews() {
@@ -287,14 +277,29 @@ public class AddEditActivity extends AppCompatActivity {
      * @param uri the local image uri
      */
     private void paintImage(Uri uri) {
-        GlideApp.with(this)
-                .load(uri)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .placeholder(R.drawable.no_image)
-                .into(bookImage);
+        if (uri == null) {
+            GlideApp.with(this)
+                    .load(R.drawable.no_image)
+                    .into(bookImage);
+        } else {
+            GlideApp.with(this)
+                    .load(uri)
+                    .placeholder(R.drawable.no_image)
+                    .into(bookImage);
+        }
     }
-
+    private void paintImage(String uri) {
+        if (uri == null) {
+            GlideApp.with(this)
+                    .load(R.drawable.no_image)
+                    .into(bookImage);
+        } else {
+            GlideApp.with(this)
+                    .load(uri)
+                    .placeholder(R.drawable.no_image)
+                    .into(bookImage);
+        }
+    }
 
     private void openScanner() {
         Intent intent = new Intent(this, ScannerAddActivity.class);

@@ -69,6 +69,7 @@ public class AddEditViewModel extends ViewModel {
         bookAuthor.setValue(book.getAuthor());
         bookDescription.setValue(book.getDescription());
         this.oldBook = book;
+        if (book.getImageUri() != null) setHasImage(true);
     }
 
     public Book getOldBook() {

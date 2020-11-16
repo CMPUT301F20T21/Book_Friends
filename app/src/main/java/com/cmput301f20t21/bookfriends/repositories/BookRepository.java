@@ -63,7 +63,7 @@ public class BookRepository implements IBookRepository {
             return bookCollection.add(data).continueWithTask((Continuation<DocumentReference, Task<Pair<String, String>>>) task -> {
                 if (task.isSuccessful()) {
                     String newBookId = task.getResult().getId();
-                    return addImage(newBookId, imageUriFile).continueWithTask((Continuation<String, Task<Pair<String, String>>>) addImageTask -> {
+                    return addImage(newBookId + "cover", imageUriFile).continueWithTask((Continuation<String, Task<Pair<String, String>>>) addImageTask -> {
                         if (addImageTask.isSuccessful()) {
                             return bookCollection.document(task.getResult().getId()).update("imageUri", addImageTask.getResult()).continueWith(updateBookTask -> {
                                 if (updateBookTask.isSuccessful()) {
@@ -123,7 +123,7 @@ public class BookRepository implements IBookRepository {
         if (imageUriFile != null) {
             return bookCollection.document(id).update(data).continueWithTask((Continuation<Void, Task<Pair<Book, String>>>) updateTask -> {
                 if (updateTask.isSuccessful()) {
-                    return addImage(id, imageUriFile).continueWithTask((Continuation<String, Task<Pair<Book, String>>>) imageTask -> bookCollection.document(id).update("imageUri", imageTask.getResult()).continueWith(updateBookTask -> {
+                    return addImage(id + "cover", imageUriFile).continueWithTask((Continuation<String, Task<Pair<Book, String>>>) imageTask -> bookCollection.document(id).update("imageUri", imageTask.getResult()).continueWith(updateBookTask -> {
                         if (updateBookTask.isSuccessful()) {
                             Log.e("bfriends", imageTask.getResult());
                             newBook.setImageUri(imageTask.getResult());
@@ -137,6 +137,7 @@ public class BookRepository implements IBookRepository {
         }
         return bookCollection.document(id).update(data).continueWith(updateTask -> {
             if (updateTask.isSuccessful()) {
+                newBook.setImageUri(null);
                 return new Pair<>(newBook, null);
             }
             throw new Exception("add Book failed: failed to update with data");
