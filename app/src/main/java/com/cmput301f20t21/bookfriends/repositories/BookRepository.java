@@ -57,9 +57,12 @@ public class BookRepository implements IBookRepository {
         StorageReference fileReference = imageStorageReference.child(imageName);
         return fileReference.putFile(imageUri).continueWith(task -> {
             if (task.isSuccessful()) {
-                return imageName;
+                if (task.getResult() != null) {
+                    return task.getResult().toString();
+                }
+                throw new Exception("failed to upload image: upload task succeed but cannot get task result");
             }
-            throw new Exception();
+            throw new Exception("failed to upload image: upload task failed or cannot get result");
         });
     }
 

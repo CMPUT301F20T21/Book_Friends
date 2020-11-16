@@ -69,9 +69,14 @@ public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapte
         }
 
         protected void paintCover() {
-            StorageReference storageReference = FirebaseStorage.getInstance().getReference(book.getCoverImageName());
+            if (this.book.getImageUri() == null) {
+                GlideApp.with(holderView)
+                        .load(R.drawable.no_image)
+                        .into(bookImage);
+                return;
+            };
             GlideApp.with(holderView)
-                    .load(storageReference)
+                    .load(this.book.getImageUri())
                     .placeholder(R.drawable.no_image)
                     .into(bookImage);
         }

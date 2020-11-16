@@ -17,6 +17,7 @@ public class Book implements Parcelable {
     private String description;
     private String owner; // the owner's username
     private BOOK_STATUS status;
+    private String imageUri; // the downloadable, public url of the cover image
 
     // used for firebase document toObject call
     public Book() {
@@ -30,6 +31,26 @@ public class Book implements Parcelable {
         this.description = description;
         this.owner = owner;
         this.status = status;
+        this.imageUri = "";
+    }
+
+    public Book(String id, String isbn, String title, String author, String description, String owner, BOOK_STATUS status, String imageUri) {
+        this.id = id;
+        this.isbn = isbn;
+        this.title = title;
+        this.author = author;
+        this.description = description;
+        this.owner = owner;
+        this.status = status;
+        this.imageUri = imageUri;
+    }
+
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String uri) {
+        this.imageUri = uri;
     }
 
     public String getId() {
@@ -76,12 +97,13 @@ public class Book implements Parcelable {
                 author.equals(book.author) &&
                 Objects.equals(description, book.description) &&
                 owner.equals(book.owner) &&
+                imageUri.equals(book.imageUri) &&
                 status == book.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, isbn, title, author, description, owner, status);
+        return Objects.hash(id, isbn, title, author, description, owner, status, imageUri);
     }
 
     // Implement parcelable boilerplate
@@ -99,6 +121,7 @@ public class Book implements Parcelable {
         dest.writeString(description);
         dest.writeString(owner);
         dest.writeString(status.toString());
+        dest.writeString(imageUri);
     }
 
     public static final Parcelable.Creator<Book> CREATOR = new Parcelable.Creator<Book>() {
@@ -119,5 +142,6 @@ public class Book implements Parcelable {
         description = in.readString();
         owner = in.readString();
         status = BOOK_STATUS.valueOf(in.readString());
+        imageUri = in.readString();
     }
 }

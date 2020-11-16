@@ -116,8 +116,9 @@ public class AddEditViewModel extends ViewModel {
                     Book book = new Book(id, isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE);
                     if (imageUri != null) {
                         bookRepository.addImage(book.getCoverImageName(), imageUri).addOnCompleteListener(
-                                addImageTask -> {
+                                addImageTask -> { // task returning the downloadable uri for the image
                                     if (addImageTask.isSuccessful()) {
+                                        book.setImageUri(addImageTask.getResult());
                                         successCallback.run(book);
                                     } else {
                                         failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
@@ -157,6 +158,7 @@ public class AddEditViewModel extends ViewModel {
                         bookRepository.addImage(newBook.getCoverImageName(), newUri).addOnCompleteListener(
                                 addImageTask -> {
                                     if (addImageTask.isSuccessful()) {
+                                        newBook.setImageUri(addImageTask.getResult());
                                         successCallback.run(newBook);
                                     } else {
                                         failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
@@ -167,6 +169,7 @@ public class AddEditViewModel extends ViewModel {
                         if (!hasImage) {
                             bookRepository.deleteImage(newBook.getCoverImageName())
                                     .addOnCompleteListener(Void -> {
+                                        newBook.setImageUri(null);
                                         successCallback.run(newBook);
                                     });
                         } else {
