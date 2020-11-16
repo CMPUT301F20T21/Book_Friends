@@ -2,24 +2,24 @@ package com.cmput301f20t21.bookfriends.ui.browse;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import com.cmput301f20t21.bookfriends.R;
-import com.cmput301f20t21.bookfriends.entities.AvailableBook;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.ui.component.BaseBookListAdapter;
 
 import java.util.List;
 
 public class AvailableBookListAdapter extends BaseBookListAdapter {
-    private AvailableBookListAdapter.OnItemClickListener itemClickListener;
+    private OnItemClickListener itemClickListener;
     public interface OnItemClickListener {
         void run(int position);
     }
-    public AvailableBookListAdapter(List<AvailableBook> books, OnItemClickListener itemClickListener) {
+    public AvailableBookListAdapter(List<Book> books, OnItemClickListener itemClickListener) {
         super(books);
         this.itemClickListener = itemClickListener;
     }
@@ -34,6 +34,7 @@ public class AvailableBookListAdapter extends BaseBookListAdapter {
         final ImageButton moreBtn;
         final TextView owner;
         final TextView status;
+
         public ViewHolder(View v, OnItemClickListener itemClickListener) {
             super(v);
             owner = v.findViewById(R.id.item_book_owner);
@@ -47,12 +48,6 @@ public class AvailableBookListAdapter extends BaseBookListAdapter {
         public void onBind(Book book) {
             super.onBind(book);
             this.owner.setText(this.itemView.getResources().getString(R.string.book_list_item_owner, book.getOwner()));
-            // cast book to available book
-            // TODO: find a better way to pass available book
-            AvailableBook availableBook = (AvailableBook) book;
-            if (availableBook.getRequested()) {
-                status.setText("requested");
-            }
         }
     }
 }
