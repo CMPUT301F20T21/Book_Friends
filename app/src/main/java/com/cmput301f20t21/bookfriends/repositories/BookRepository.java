@@ -1,14 +1,20 @@
 package com.cmput301f20t21.bookfriends.repositories;
 
 import android.net.Uri;
+import android.util.Log;
+import android.util.Pair;
+
+import androidx.annotation.NonNull;
 
 import com.cmput301f20t21.bookfriends.entities.AvailableBook;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.exceptions.UnexpectedException;
 import com.cmput301f20t21.bookfriends.repositories.api.IBookRepository;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -16,6 +22,9 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import org.checkerframework.checker.nullness.compatqual.NullableType;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -36,7 +45,11 @@ public class BookRepository implements IBookRepository {
         return instance;
     }
 
-    public Task<String> add(String isbn, String title, String author, String description, String owner) {
+    public Task<Void> updateBookImage(String bookId, String imageUri) {
+        return bookCollection.document(bookId).update("imageUri", imageUri);
+    }
+
+    public Task<Pair<String, @NullableType String>> add(String isbn, String title, String author, String description, String owner, Uri imageUriFile) {
         HashMap<String, Object> data = new HashMap<>();
         data.put("isbn", isbn);
         data.put("title", title);
@@ -45,20 +58,53 @@ public class BookRepository implements IBookRepository {
         data.put("owner", owner);
         // when a book is first added, the status will always be "AVAILABLE"
         data.put("status", BOOK_STATUS.AVAILABLE.toString());
+
+        if (imageUriFile != null) {
+            return bookCollection.add(data).continueWithTask((Continuation<DocumentReference, Task<Pair<String, String>>>) task -> {
+                if (task.isSuccessful()) {
+                    String newBookId = task.getResult().getId();
+                    return addImage(newBookId, imageUriFile).continueWithTask((Continuation<String, Task<Pair<String, String>>>) addImageTask -> {
+                        if (addImageTask.isSuccessful()) {
+                            return bookCollection.document(task.getResult().getId()).update("imageUri", addImageTask.getResult()).continueWith(updateBookTask -> {
+                                if (updateBookTask.isSuccessful()) {
+                                    Log.e("bfriends", addImageTask.getResult());
+                                    return new Pair<>(newBookId, addImageTask.getResult());
+                                }
+                                throw new Exception("add Book failed: updating book with new image download uri failed, everything else worked");
+                            });
+                        }
+                        throw new Exception("add Book failed: upload image failed, add image task is not successful");
+                    });
+                }
+                throw new Exception("add Book failed: failed to add new book data to collection");
+            });
+        }
         return bookCollection.add(data).continueWith(task -> {
             if (task.isSuccessful()) {
-                return task.getResult().getId();
+                return new Pair<>(task.getResult().getId(), null);
             }
             throw new Exception();
         });
     }
 
+    /**
+     * add image to firebase storage and return the downloadable url
+     *
+     * @param imageName the image name key
+     * @param imageUri  the uri FILE to upload
+     * @return Task returning the String of the downloadable url
+     */
     public Task<String> addImage(String imageName, Uri imageUri) {
         StorageReference fileReference = imageStorageReference.child(imageName);
-        return fileReference.putFile(imageUri).continueWith(task -> {
+        return fileReference.putFile(imageUri).continueWithTask((Continuation<UploadTask.TaskSnapshot, Task<String>>) task -> {
             if (task.isSuccessful()) {
                 if (task.getResult() != null) {
-                    return task.getResult().toString();
+                    return fileReference.getDownloadUrl().continueWith(urlTask -> {
+                        if (urlTask.isSuccessful() && urlTask.getResult() != null) {
+                            return urlTask.getResult().toString();
+                        }
+                        throw new Exception("failed to upload image: everything succeeded but cannot get downloadable url");
+                    });
                 }
                 throw new Exception("failed to upload image: upload task succeed but cannot get task result");
             }
@@ -66,18 +112,34 @@ public class BookRepository implements IBookRepository {
         });
     }
 
-    public Task<Book> editBook(Book oldBook, String isbn, String title, String author, String description) {
+    public Task<Pair<Book, String>> editBook(Book oldBook, String isbn, String title, String author, String description, Uri imageUriFile) {
         HashMap<String, Object> data = new HashMap<>();
         String id = oldBook.getId();
         data.put("isbn", isbn);
         data.put("title", title);
         data.put("author", author);
         data.put("description", description);
-        return bookCollection.document(id).update(data).continueWith(task -> {
-            if (task.isSuccessful()) {
-                return new Book(id, isbn, title, author, description, oldBook.getOwner(), BOOK_STATUS.AVAILABLE);
+        Book newBook = new Book(id, isbn, title, author, description, oldBook.getOwner(), oldBook.getStatus(), oldBook.getImageUri());
+        if (imageUriFile != null) {
+            return bookCollection.document(id).update(data).continueWithTask((Continuation<Void, Task<Pair<Book, String>>>) updateTask -> {
+                if (updateTask.isSuccessful()) {
+                    return addImage(id, imageUriFile).continueWithTask((Continuation<String, Task<Pair<Book, String>>>) imageTask -> bookCollection.document(id).update("imageUri", imageTask.getResult()).continueWith(updateBookTask -> {
+                        if (updateBookTask.isSuccessful()) {
+                            Log.e("bfriends", imageTask.getResult());
+                            newBook.setImageUri(imageTask.getResult());
+                            return new Pair<>(newBook, imageTask.getResult());
+                        }
+                        throw new Exception("add Book failed: updating book with new image download uri failed, everything else worked");
+                    }));
+                }
+                throw new Exception("add Book failed: failed to update with data");
+            });
+        }
+        return bookCollection.document(id).update(data).continueWith(updateTask -> {
+            if (updateTask.isSuccessful()) {
+                return new Pair<>(newBook, null);
             }
-            throw new Exception();
+            throw new Exception("add Book failed: failed to update with data");
         });
     }
 

@@ -111,23 +111,12 @@ public class AddEditViewModel extends ViewModel {
         final Uri imageUri = localImageUri.getValue();
 
         String owner = authRepository.getCurrentUser().getUsername();
-        bookRepository.add(isbn, title, author, description, owner).addOnSuccessListener(
-                id -> {
-                    Book book = new Book(id, isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE);
-                    if (imageUri != null) {
-                        bookRepository.addImage(book.getCoverImageName(), imageUri).addOnCompleteListener(
-                                addImageTask -> { // task returning the downloadable uri for the image
-                                    if (addImageTask.isSuccessful()) {
-                                        book.setImageUri(addImageTask.getResult());
-                                        successCallback.run(book);
-                                    } else {
-                                        failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
-                                    }
-                                }
-                        );
-                    } else {
-                        successCallback.run(book);
-                    }
+        bookRepository.add(isbn, title, author, description, owner, imageUri).addOnSuccessListener(
+                pair_id_url -> {
+                    String id = pair_id_url.first;
+                    String downloadUri = pair_id_url.second;
+                    Book book = new Book(id, isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE, downloadUri);
+                    successCallback.run(book);
                 }
         ).addOnFailureListener(e -> {
             failCallback.run(BOOK_ERROR.FAIL_TO_ADD_BOOK);
@@ -148,34 +137,13 @@ public class AddEditViewModel extends ViewModel {
         final String title = bookTitle.getValue();
         final String author = bookAuthor.getValue();
         final String description = bookDescription.getValue();
-        final Uri newUri = localImageUri.getValue();
+        final Uri newUriFile = localImageUri.getValue();
 
-        bookRepository.editBook(oldBook, isbn, title, author, description).addOnSuccessListener(
-                newBook -> {
-                    // addImage will also replace if file with imageName already exist
-                    if (newUri != null) {
-                        // when the image is updated
-                        bookRepository.addImage(newBook.getCoverImageName(), newUri).addOnCompleteListener(
-                                addImageTask -> {
-                                    if (addImageTask.isSuccessful()) {
-                                        newBook.setImageUri(addImageTask.getResult());
-                                        successCallback.run(newBook);
-                                    } else {
-                                        failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
-                                    }
-                                }
-                        );
-                    } else {
-                        if (!hasImage) {
-                            bookRepository.deleteImage(newBook.getCoverImageName())
-                                    .addOnCompleteListener(Void -> {
-                                        newBook.setImageUri(null);
-                                        successCallback.run(newBook);
-                                    });
-                        } else {
-                            successCallback.run(newBook);
-                        }
-                    }
+        bookRepository.editBook(oldBook, isbn, title, author, description, newUriFile).addOnSuccessListener(
+                pair_id_uri -> {
+                    Book newBook = pair_id_uri.first;
+                    String downloadUri = pair_id_uri.second;
+                    successCallback.run(newBook);
                 }
         ).addOnFailureListener(e -> {
             failCallback.run(BOOK_ERROR.FAIL_TO_EDIT_BOOK);

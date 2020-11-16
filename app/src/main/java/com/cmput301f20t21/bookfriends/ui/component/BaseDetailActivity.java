@@ -53,11 +53,16 @@ public class BaseDetailActivity extends AppCompatActivity {
         detailISBN.setText(detailBook.getIsbn());
         detailTitle.setText(detailBook.getTitle());
         detailAuthor.setText(getString(R.string.author, detailBook.getAuthor()));
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference(detailBook.getCoverImageName());
-        GlideApp.with(this)
-                .load(storageReference)
-                .placeholder(R.drawable.no_image)
-                .into(bookImage);
+        if (detailBook.getImageUri() != null) {
+            GlideApp.with(this)
+                    .load(detailBook.getImageUri())
+                    .placeholder(R.drawable.no_image)
+                    .into(bookImage);
+        } else {
+            GlideApp.with(this)
+                    .load(R.drawable.no_image)
+                    .into(bookImage);
+        }
     }
 
     @Override
