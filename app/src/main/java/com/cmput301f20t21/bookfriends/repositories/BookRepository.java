@@ -1,8 +1,6 @@
 package com.cmput301f20t21.bookfriends.repositories;
 
 import android.net.Uri;
-import android.util.Log;
-import android.util.Pair;
 
 import com.cmput301f20t21.bookfriends.entities.AvailableBook;
 import com.cmput301f20t21.bookfriends.entities.Book;
@@ -11,8 +9,8 @@ import com.cmput301f20t21.bookfriends.exceptions.UnexpectedException;
 import com.cmput301f20t21.bookfriends.repositories.api.IBookRepository;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -36,6 +34,17 @@ public class BookRepository implements IBookRepository {
         return instance;
     }
 
+    /**
+     * add a new book to firestore and upload image file and return the book with the downloadable
+     * uri in the book entity
+     * @param isbn
+     * @param title
+     * @param author
+     * @param description
+     * @param owner
+     * @param imageUriFile
+     * @return
+     */
     public Task<Book> add(String isbn, String title, String author, String description, String owner, Uri imageUriFile) {
         HashMap<String, Object> data = new HashMap<>();
         data.put("isbn", isbn);
@@ -54,7 +63,6 @@ public class BookRepository implements IBookRepository {
                         if (addImageTask.isSuccessful()) {
                             return bookCollection.document(task.getResult().getId()).update("imageUri", addImageTask.getResult()).continueWith(updateBookTask -> {
                                 if (updateBookTask.isSuccessful()) {
-                                    Log.e("bfriends", addImageTask.getResult());
                                     return new Book(newBookId, isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE, addImageTask.getResult());
                                 }
                                 throw new Exception("add Book failed: updating book with new image download uri failed, everything else worked");
@@ -99,6 +107,17 @@ public class BookRepository implements IBookRepository {
         });
     }
 
+    /**
+     * edit a book. replace image with a new image file and update the downloadable link
+     * or, set the link to null, but the image is not yet deleted, and we don't have to
+     * @param oldBook
+     * @param isbn
+     * @param title
+     * @param author
+     * @param description
+     * @param imageUriFile
+     * @return
+     */
     public Task<Book> editBook(Book oldBook, String isbn, String title, String author, String description, Uri imageUriFile) {
         HashMap<String, Object> data = new HashMap<>();
         String id = oldBook.getId();
@@ -128,6 +147,7 @@ public class BookRepository implements IBookRepository {
 
         return bookCollection.document(id).update(data).continueWith(updateTask -> {
             if (updateTask.isSuccessful()) {
+                newBook.setImageUri(null);
                 return newBook;
             }
             throw new Exception("edit Book failed: failed to update with data");
@@ -162,17 +182,6 @@ public class BookRepository implements IBookRepository {
     public Task<QuerySnapshot> getBooksOfOwnerId(String username) {
         return bookCollection.whereEqualTo("owner", username).get();
     }
-
-//  TODO ============ the possibly ideal way of us mapping doc directly to entities, works now but not enabled in this PR ========
-//    public Task<ArrayList<Book>> getBooksOfOwnerIdParsed(String username) {
-//        return bookCollection.whereEqualTo("owner", username).get().continueWith(qSnap -> {
-//            List<DocumentSnapshot> docs = qSnap.getResult().getDocuments();
-//            return (ArrayList<Book>) docs
-//                    .stream()
-//                    .map(doc -> doc.toObject(Book.class))
-//                    .collect(Collectors.toList());
-//        });
-//    }
 
     public Task<QuerySnapshot> getBookOfBorrowerId(String uid) {
         // TODO placeholder here
