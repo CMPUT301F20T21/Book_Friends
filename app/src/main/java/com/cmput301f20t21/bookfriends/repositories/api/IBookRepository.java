@@ -1,7 +1,6 @@
 package com.cmput301f20t21.bookfriends.repositories.api;
 
 import android.net.Uri;
-import android.util.Pair;
 
 import com.cmput301f20t21.bookfriends.entities.AvailableBook;
 import com.cmput301f20t21.bookfriends.entities.Book;
@@ -12,10 +11,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.List;
 
 public interface IBookRepository {
-    Task<Pair<String, String>> add(String isbn, String title, String author, String description, String owner, Uri imageUriFile);
+    Task<Book> add(String isbn, String title, String author, String description, String owner, Uri imageUriFile);
     Task<String> addImage(String bookId, Uri imageUri);
     Task<Void> updateBookImage(String bookId, String imageUri);
-    Task<Pair<Book, String>> editBook(Book oldBook, String isbn, String title, String author, String description, Uri imageUriFile);
+    Task<Book> editBook(Book oldBook, String isbn, String title, String author, String description, Uri imageUriFile);
     Task<Void> delete(String id);
     Task<Void> deleteImage(String imageName);
     Book getBookFromDocument(DocumentSnapshot document);

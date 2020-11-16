@@ -4,29 +4,20 @@ import android.net.Uri;
 import android.util.Log;
 import android.util.Pair;
 
-import androidx.annotation.NonNull;
-
 import com.cmput301f20t21.bookfriends.entities.AvailableBook;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.exceptions.UnexpectedException;
 import com.cmput301f20t21.bookfriends.repositories.api.IBookRepository;
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import org.checkerframework.checker.nullness.compatqual.NullableType;
-
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,7 +40,7 @@ public class BookRepository implements IBookRepository {
         return bookCollection.document(bookId).update("imageUri", imageUri);
     }
 
-    public Task<Pair<String, @NullableType String>> add(String isbn, String title, String author, String description, String owner, Uri imageUriFile) {
+    public Task<Book> add(String isbn, String title, String author, String description, String owner, Uri imageUriFile) {
         HashMap<String, Object> data = new HashMap<>();
         data.put("isbn", isbn);
         data.put("title", title);
@@ -68,7 +59,7 @@ public class BookRepository implements IBookRepository {
                             return bookCollection.document(task.getResult().getId()).update("imageUri", addImageTask.getResult()).continueWith(updateBookTask -> {
                                 if (updateBookTask.isSuccessful()) {
                                     Log.e("bfriends", addImageTask.getResult());
-                                    return new Pair<>(newBookId, addImageTask.getResult());
+                                    return new Book(newBookId, isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE, addImageTask.getResult());
                                 }
                                 throw new Exception("add Book failed: updating book with new image download uri failed, everything else worked");
                             });
@@ -81,7 +72,7 @@ public class BookRepository implements IBookRepository {
         }
         return bookCollection.add(data).continueWith(task -> {
             if (task.isSuccessful()) {
-                return new Pair<>(task.getResult().getId(), null);
+                return new Book(task.getResult().getId(), isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE, null);
             }
             throw new Exception();
         });
@@ -112,7 +103,7 @@ public class BookRepository implements IBookRepository {
         });
     }
 
-    public Task<Pair<Book, String>> editBook(Book oldBook, String isbn, String title, String author, String description, Uri imageUriFile) {
+    public Task<Book> editBook(Book oldBook, String isbn, String title, String author, String description, Uri imageUriFile) {
         HashMap<String, Object> data = new HashMap<>();
         String id = oldBook.getId();
         data.put("isbn", isbn);
@@ -130,7 +121,7 @@ public class BookRepository implements IBookRepository {
                         if (updateBookTask.isSuccessful()) {
                             // set the updated download link
                             newBook.setImageUri(imageTask.getResult());
-                            return new Pair<>(newBook, imageTask.getResult());
+                            return newBook;
                         }
                         throw new Exception("edit Book failed: updating book with new image download uri failed, everything else worked");
                     }));
@@ -144,7 +135,7 @@ public class BookRepository implements IBookRepository {
                 return deleteImage(id + "cover").continueWith(deleteTask -> {
                     if (deleteTask.isSuccessful()) {
                         newBook.setImageUri(null);
-                        return new Pair<>(newBook, null);
+                        return newBook;
                     }
                     throw new Exception("edit Book failed: failed to delete book image");
                 });

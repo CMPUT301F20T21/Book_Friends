@@ -61,11 +61,16 @@ public class RequestActivity extends AppCompatActivity {
             authorTextView.setText(book.getAuthor());
             descriptionTextView.setText(book.getDescription());
             bookStatus.setText(book.getStatus().toString());
-            StorageReference storageReference = FirebaseStorage.getInstance().getReference(book.getCoverImageName());
-            GlideApp.with(this)
-                    .load(storageReference)
-                    .placeholder(R.drawable.no_image)
-                    .into(bookImage);
+            if (book.getImageUri() == null) {
+                GlideApp.with(this)
+                        .load(R.drawable.no_image)
+                        .into(bookImage);
+            } else {
+                GlideApp.with(this)
+                        .load(book.getImageUri())
+                        .placeholder(R.drawable.no_image)
+                        .into(bookImage);
+            }
         });
 
 

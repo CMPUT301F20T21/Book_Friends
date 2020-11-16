@@ -113,12 +113,7 @@ public class AddEditViewModel extends ViewModel {
 
         String owner = authRepository.getCurrentUser().getUsername();
         bookRepository.add(isbn, title, author, description, owner, imageUri).addOnSuccessListener(
-                pair_id_url -> {
-                    String id = pair_id_url.first;
-                    String downloadUri = pair_id_url.second;
-                    Book book = new Book(id, isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE, downloadUri);
-                    successCallback.run(book);
-                }
+                successCallback::run
         ).addOnFailureListener(e -> {
             failCallback.run(BOOK_ERROR.FAIL_TO_ADD_BOOK);
         });
@@ -141,11 +136,7 @@ public class AddEditViewModel extends ViewModel {
         final Uri newUriFile = localImageUri.getValue();
 
         bookRepository.editBook(oldBook, isbn, title, author, description, newUriFile).addOnSuccessListener(
-                pair_id_uri -> {
-                    Book newBook = pair_id_uri.first;
-                    String downloadUri = pair_id_uri.second;
-                    successCallback.run(newBook);
-                }
+                    successCallback::run
         ).addOnFailureListener(e -> {
             failCallback.run(BOOK_ERROR.FAIL_TO_EDIT_BOOK);
         });
