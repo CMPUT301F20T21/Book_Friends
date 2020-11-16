@@ -31,7 +31,7 @@ public class Book implements Parcelable {
         this.description = description;
         this.owner = owner;
         this.status = status;
-        this.imageUri = "";
+        this.imageUri = null;
     }
 
     public Book(String id, String isbn, String title, String author, String description, String owner, BOOK_STATUS status, String imageUri) {

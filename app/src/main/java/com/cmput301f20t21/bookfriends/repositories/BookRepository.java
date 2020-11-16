@@ -130,15 +130,9 @@ public class BookRepository implements IBookRepository {
             });
         }
 
-        return bookCollection.document(id).update(data).continueWithTask(updateTask -> {
+        return bookCollection.document(id).update(data).continueWith(updateTask -> {
             if (updateTask.isSuccessful()) {
-                return deleteImage(id + "cover").continueWith(deleteTask -> {
-                    if (deleteTask.isSuccessful()) {
-                        newBook.setImageUri(null);
-                        return newBook;
-                    }
-                    throw new Exception("edit Book failed: failed to delete book image");
-                });
+                return newBook;
             }
             throw new Exception("edit Book failed: failed to update with data");
         });
