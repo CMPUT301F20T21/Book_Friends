@@ -21,8 +21,6 @@ import com.cmput301f20t21.bookfriends.utils.GlideApp;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.ui.library.OwnedListFragment;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -61,13 +59,13 @@ public class RequestActivity extends AppCompatActivity {
             authorTextView.setText(book.getAuthor());
             descriptionTextView.setText(book.getDescription());
             bookStatus.setText(book.getStatus().toString());
-            if (book.getImageUri() == null) {
+            if (book.getImageUrl() == null) {
                 GlideApp.with(this)
                         .load(R.drawable.no_image)
                         .into(bookImage);
             } else {
                 GlideApp.with(this)
-                        .load(book.getImageUri())
+                        .load(book.getImageUrl())
                         .placeholder(R.drawable.no_image)
                         .into(bookImage);
             }

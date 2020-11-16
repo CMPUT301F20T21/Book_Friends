@@ -9,12 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.utils.GlideApp;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
@@ -69,14 +66,14 @@ public class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapte
         }
 
         protected void paintCover() {
-            if (this.book.getImageUri() == null) {
+            if (this.book.getImageUrl() == null) {
                 GlideApp.with(holderView)
                         .load(R.drawable.no_image)
                         .into(bookImage);
                 return;
             };
             GlideApp.with(holderView)
-                    .load(this.book.getImageUri())
+                    .load(this.book.getImageUrl())
                     .placeholder(R.drawable.no_image)
                     .into(bookImage);
         }

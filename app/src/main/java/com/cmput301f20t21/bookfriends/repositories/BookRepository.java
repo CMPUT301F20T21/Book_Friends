@@ -61,7 +61,7 @@ public class BookRepository implements IBookRepository {
                     String newBookId = task.getResult().getId();
                     return addImage(newBookId + "cover", imageUriFile).continueWithTask(addImageTask -> {
                         if (addImageTask.isSuccessful()) {
-                            return bookCollection.document(task.getResult().getId()).update("imageUri", addImageTask.getResult()).continueWith(updateBookTask -> {
+                            return bookCollection.document(task.getResult().getId()).update("imageUrl", addImageTask.getResult()).continueWith(updateBookTask -> {
                                 if (updateBookTask.isSuccessful()) {
                                     return new Book(newBookId, isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE, addImageTask.getResult());
                                 }
@@ -118,7 +118,7 @@ public class BookRepository implements IBookRepository {
      * @param imageUriFile
      * @return
      */
-    public Task<Book> editBook(Book oldBook, String isbn, String title, String author, String description, Uri imageUriFile) {
+    public Task<Book> editBook(Book oldBook, String isbn, String title, String author, String description, Uri imageUriFile, Boolean shouldDeleteImage) {
         HashMap<String, Object> data = new HashMap<>();
         String id = oldBook.getId();
         data.put("isbn", isbn);
@@ -127,15 +127,15 @@ public class BookRepository implements IBookRepository {
         data.put("description", description);
 
         // just so we don't have the old book unexpectedly changed (especially the imageUri)
-        Book newBook = new Book(id, isbn, title, author, description, oldBook.getOwner(), oldBook.getStatus(), oldBook.getImageUri());
+        Book newBook = new Book(id, isbn, title, author, description, oldBook.getOwner(), oldBook.getStatus(), oldBook.getImageUrl());
         if (imageUriFile != null) {
             // need to upload a new image for this book
             return bookCollection.document(id).update(data).continueWithTask(updateTask -> {
                 if (updateTask.isSuccessful()) {
-                    return addImage(id + "cover", imageUriFile).continueWithTask(imageTask -> bookCollection.document(id).update("imageUri", imageTask.getResult()).continueWith(updateBookTask -> {
+                    return addImage(id + "cover", imageUriFile).continueWithTask(imageTask -> bookCollection.document(id).update("imageUrl", imageTask.getResult()).continueWith(updateBookTask -> {
                         if (updateBookTask.isSuccessful()) {
                             // set the updated download link
-                            newBook.setImageUri(imageTask.getResult());
+                            newBook.setImageUrl(imageTask.getResult());
                             return newBook;
                         }
                         throw new Exception("edit Book failed: updating book with new image download uri failed, everything else worked");
@@ -143,15 +143,29 @@ public class BookRepository implements IBookRepository {
                 }
                 throw new Exception("edit Book failed: failed to update with data");
             });
+        } else {
+            // there's no local image file, simply update other data
+            return bookCollection.document(id).update(data).continueWithTask(updateTask -> {
+                if (updateTask.isSuccessful()) {
+                    if (shouldDeleteImage) {
+                        // delete image
+                        return bookCollection.document(id).update("imageUrl", null).continueWith(updateBookTask -> {
+                            if (updateBookTask.isSuccessful()) {
+                                // set the updated download link
+                                newBook.setImageUrl(null); // remove image only if 1. there's no local new image file 2. oldBook does not have a image url
+                                return newBook;
+                            }
+                            throw new Exception("edit Book failed: updating book with new image download uri failed, everything else worked");
+                        });
+                    } else {
+                        // just return the updated book
+                        return bookCollection.get().continueWith(noop -> newBook);
+                    }
+                }
+                throw new Exception("edit Book failed: failed to update with data");
+            });
         }
 
-        return bookCollection.document(id).update(data).continueWith(updateTask -> {
-            if (updateTask.isSuccessful()) {
-                newBook.setImageUri(null);
-                return newBook;
-            }
-            throw new Exception("edit Book failed: failed to update with data");
-        });
     }
 
     public Task<Void> delete(String id) {

@@ -19,7 +19,6 @@ import com.cmput301f20t21.bookfriends.callbacks.OnFailCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
-import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.IAuthRepository;
@@ -69,7 +68,7 @@ public class AddEditViewModel extends ViewModel {
         bookAuthor.setValue(book.getAuthor());
         bookDescription.setValue(book.getDescription());
         this.oldBook = book;
-        if (book.getImageUri() != null) setHasImage(true);
+        if (book.getImageUrl() != null) setHasImage(true);
     }
 
     public Book getOldBook() {
@@ -134,8 +133,9 @@ public class AddEditViewModel extends ViewModel {
         final String author = bookAuthor.getValue();
         final String description = bookDescription.getValue();
         final Uri newUriFile = localImageUri.getValue();
+        final Boolean shouldDeleteImage = !hasImage;
 
-        bookRepository.editBook(oldBook, isbn, title, author, description, newUriFile).addOnSuccessListener(
+        bookRepository.editBook(oldBook, isbn, title, author, description, newUriFile, shouldDeleteImage).addOnSuccessListener(
                     successCallback::run
         ).addOnFailureListener(e -> {
             failCallback.run(BOOK_ERROR.FAIL_TO_EDIT_BOOK);

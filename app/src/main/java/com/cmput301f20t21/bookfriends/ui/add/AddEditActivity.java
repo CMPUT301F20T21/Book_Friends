@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,11 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.databinding.AddEditActivityBinding;
 import com.cmput301f20t21.bookfriends.entities.Book;
@@ -34,8 +28,6 @@ import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 import com.cmput301f20t21.bookfriends.ui.scanner.ScannerAddActivity;
 import com.cmput301f20t21.bookfriends.utils.GlideApp;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 public class AddEditActivity extends AppCompatActivity {
     public static final String NEW_BOOK_INTENT_KEY = "com.cmput301f20t21.bookfriends.NEW_BOOK";
@@ -82,19 +74,9 @@ public class AddEditActivity extends AppCompatActivity {
      */
     private void fetchRemoteCoverImage() {
         Book oldBook = vm.getOldBook();
-
         if (oldBook == null) return;
 
-        if (oldBook.getImageUri() == null) {
-            GlideApp.with(this)
-                    .load(R.drawable.no_image)
-                    .into(bookImage);
-        } else {
-            GlideApp.with(this)
-                    .load(oldBook.getImageUri())
-                    .placeholder(R.drawable.no_image)
-                    .into(bookImage);
-        }
+        paintImage(oldBook.getImageUrl());
     }
 
     private void setChildViews() {
@@ -288,14 +270,14 @@ public class AddEditActivity extends AppCompatActivity {
                     .into(bookImage);
         }
     }
-    private void paintImage(String uri) {
-        if (uri == null) {
+    private void paintImage(String url) {
+        if (url == null) {
             GlideApp.with(this)
                     .load(R.drawable.no_image)
                     .into(bookImage);
         } else {
             GlideApp.with(this)
-                    .load(uri)
+                    .load(url)
                     .placeholder(R.drawable.no_image)
                     .into(bookImage);
         }
