@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
+import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.RequestRepository;
@@ -131,8 +132,7 @@ public class BrowseViewModel extends ViewModel {
 
     private void fetchBooks() {
         // first, get all the request made by this user.
-        requestRepository.getAllRequestsByUsername(currentUsername).addOnSuccessListener(requests -> {
-
+        requestRepository.getAllRequestsByUsername(currentUsername, REQUEST_STATUS.OPENED).addOnSuccessListener(requests -> {
             // get available book for current user (book in available status and not owned by this user)
             bookRepository.getAvailableBooksForUser(currentUsername).addOnSuccessListener(availableBooks -> {
                 bookData.clear();
@@ -150,7 +150,7 @@ public class BrowseViewModel extends ViewModel {
 
         return availableBooks
                 .stream()
-                .filter(availableBook -> requestedBookIds.indexOf(availableBook.getId()) != 1)
+                .filter(availableBook -> requestedBookIds.indexOf(availableBook.getId()) == -1)
                 .collect(Collectors.toList());
     }
 }

@@ -63,7 +63,7 @@ public class FakeBookRepository implements IBookRepository {
     }
 
     @Override
-    public Task<QuerySnapshot> batchGetBooks(List<String> bookIds) {
+    public Task<List<Book>> batchGetBooks(List<String> bookIds) {
         return null;
     }
 
