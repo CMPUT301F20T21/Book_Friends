@@ -122,6 +122,13 @@ public class BrowseViewModel extends ViewModel {
         return updatedPosition;
     }
 
+    public void handleRequestedBook(Book requestedBook) {
+        if (bookData.indexOf(requestedBook) != -1) {
+            bookData.remove(requestedBook);
+            books.setValue(bookData);
+        }
+    }
+
     private void fetchBooks() {
         // first, get all the request made by this user.
         requestRepository.getAllRequestsByUsername(currentUsername).addOnSuccessListener(requests -> {

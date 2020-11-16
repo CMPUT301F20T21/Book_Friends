@@ -1,5 +1,6 @@
 package com.cmput301f20t21.bookfriends.ui.browse;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,12 +11,14 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.cmput301f20t21.bookfriends.R;
+import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 
 public class BrowseDetailActivity extends BaseDetailActivity {
+    public static final String REQUESTED_BOOK_INTENT_KEY = "com.cmput301f20t21.bookfriends.REQUESTED_BOOK";
+
     private Button actionButton;
     private BrowseDetailViewModel vm;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,7 +40,10 @@ public class BrowseDetailActivity extends BaseDetailActivity {
     }
 
     private void onSendRequestSuccess() {
-
+        Intent intent = new Intent();
+        intent.putExtra(REQUESTED_BOOK_INTENT_KEY, detailBook);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     private void onSendRequestFailure() {

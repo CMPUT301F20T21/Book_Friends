@@ -19,12 +19,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
+import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
+import com.cmput301f20t21.bookfriends.ui.add.AddEditActivity;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * User can see the list of all of the books and search what they need
@@ -79,7 +83,7 @@ public class BrowseFragment extends Fragment {
     private void openDetailActivity(Book book) {
         Intent intent = new Intent(this.getActivity(), BrowseDetailActivity.class);
         intent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, book);
-        startActivity(intent);
+        startActivityForResult(intent, BOOK_ACTION.SEND_REQUEST.getCode());
     }
 
 
@@ -113,5 +117,23 @@ public class BrowseFragment extends Fragment {
                 return true;
             }
         });
+    }
+
+    /**
+     * called upon returning from the BrowseDetail, will add or update the book to the local data
+     * @param requestCode the request code that starts the activity
+     * @param resultCode the result code sent from the activity
+     * @param data the intent data that contains the requested book
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == BOOK_ACTION.SEND_REQUEST.getCode()) {
+                Book requestedBook = data.getParcelableExtra(BrowseDetailActivity.REQUESTED_BOOK_INTENT_KEY);
+                vm.handleRequestedBook(requestedBook);
+                Toast.makeText(getActivity(), getString(R.string.request_book_successful), Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
