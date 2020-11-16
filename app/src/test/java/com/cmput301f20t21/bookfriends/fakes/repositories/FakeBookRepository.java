@@ -12,9 +12,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.List;
 
 public class FakeBookRepository implements IBookRepository {
-
     @Override
-    public Task<String> add(String isbn, String title, String author, String description, String owner) {
+    public Task<Book> add(String isbn, String title, String author, String description, String owner, Uri imageUriFile) {
         return null;
     }
 
@@ -24,7 +23,7 @@ public class FakeBookRepository implements IBookRepository {
     }
 
     @Override
-    public Task<Book> editBook(Book oldBook, String isbn, String title, String author, String description) {
+    public Task<Book> editBook(Book oldBook, String isbn, String title, String author, String description, Uri imageUriFile) {
         return null;
     }
 

@@ -36,10 +36,6 @@ public class BookRepository implements IBookRepository {
         return instance;
     }
 
-    public Task<Void> updateBookImage(String bookId, String imageUri) {
-        return bookCollection.document(bookId).update("imageUri", imageUri);
-    }
-
     public Task<Book> add(String isbn, String title, String author, String description, String owner, Uri imageUriFile) {
         HashMap<String, Object> data = new HashMap<>();
         data.put("isbn", isbn);

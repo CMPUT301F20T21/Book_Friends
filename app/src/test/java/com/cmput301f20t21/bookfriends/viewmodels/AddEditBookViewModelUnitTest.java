@@ -64,16 +64,18 @@ public class AddEditBookViewModelUnitTest {
         String author = "author";
         String description = "description";
         String owner = user.getUsername();
-        FakeSuccessTask<String> fakeAddBookTask = new FakeSuccessTask(id);
 
-        when(mockBookRepository.add(isbn, title, author, description, owner)).thenReturn(fakeAddBookTask);
+        Book bookAdded = new Book(id, isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE);
+        FakeSuccessTask<Book> fakeAddBookTask = new FakeSuccessTask<>(bookAdded);
+
+        when(mockBookRepository.add(isbn, title, author, description, owner, null)).thenReturn(fakeAddBookTask);
 
         model.bookIsbn.setValue("isbn");
         model.bookTitle.setValue("title");
         model.bookAuthor.setValue("author");
         model.bookDescription.setValue("description");
         model.handleAddBook(mockSuccessCallback, mockFailCallback);
-        verify(mockSuccessCallback, times(1)).run(new Book(id, isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE));
+        verify(mockSuccessCallback, times(1)).run(bookAdded);
 
     }
 
@@ -85,7 +87,7 @@ public class AddEditBookViewModelUnitTest {
         FakeSuccessTask<Book> fakeEditBookTask = new FakeSuccessTask<>(oldBook);
         FakeSuccessTask<Void> fakeDeleteImageTask = new FakeSuccessTask<>((Void) null);
 
-        when(mockBookRepository.editBook(oldBook, "newIsbn", "newTitle", "newAuthor", "newDescription")).thenReturn(fakeEditBookTask);
+        when(mockBookRepository.editBook(oldBook, "newIsbn", "newTitle", "newAuthor", "newDescription", null)).thenReturn(fakeEditBookTask);
 
         model.bindBook(oldBook);
         model.bookIsbn.setValue("newIsbn");
@@ -96,7 +98,7 @@ public class AddEditBookViewModelUnitTest {
 
         model.handleEditBook(mockSuccessCallback, mockFailCallback);
 
-        verify(mockBookRepository, times(1)).editBook(oldBook, "newIsbn", "newTitle", "newAuthor", "newDescription");
+        verify(mockBookRepository, times(1)).editBook(oldBook, "newIsbn", "newTitle", "newAuthor", "newDescription", null);
         verify(mockSuccessCallback, times(1)).run(new Book("oldId", "oldIsbn", "oldTitle", "oldAuthor", "oldDescription", "oldOwner",  BOOK_STATUS.AVAILABLE));
     }
 }
