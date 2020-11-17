@@ -2,7 +2,6 @@ package com.cmput301f20t21.bookfriends.repositories.api;
 
 import android.net.Uri;
 
-import com.cmput301f20t21.bookfriends.entities.AvailableBook;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -21,8 +20,8 @@ public interface IBookRepository {
     Task<QuerySnapshot> getBooksOfOwnerId(String userName);
     Task<QuerySnapshot> getBookOfBorrowerId(String uid);
     Task<DocumentSnapshot> getBookById(String bookId);
-    Task<QuerySnapshot> batchGetBooks( List<String> bookIds);
+    Task<List<Book>> batchGetBooks( List<String> bookIds);
     Task<QuerySnapshot> getAvailableBooks();
-    Task<List<AvailableBook>> getAvailableBooksForUser(String username);
+    Task<List<Book>> getAvailableBooksForUser(String username);
     Task<QuerySnapshot> getDocumentBy(String isbn, String title, String author);
 }

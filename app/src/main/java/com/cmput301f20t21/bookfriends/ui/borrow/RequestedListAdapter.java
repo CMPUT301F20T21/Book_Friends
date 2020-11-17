@@ -13,14 +13,16 @@ import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.ui.component.BaseBookListAdapter;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class RequestedListAdapter extends BaseBookListAdapter {
-    private RequestedListAdapter.OnItemClickListener itemClickListener;
+    private OnItemClickListener itemClickListener;
+
     public interface OnItemClickListener {
         void run(int position);
     }
-    public RequestedListAdapter(ArrayList<Book> books, OnItemClickListener itemClickListener) {
+
+    public RequestedListAdapter(List<Book> books, OnItemClickListener itemClickListener) {
         super(books);
         this.itemClickListener = itemClickListener;
     }
@@ -35,13 +37,11 @@ public class RequestedListAdapter extends BaseBookListAdapter {
     public static class ViewHolder extends BaseBookListAdapter.ViewHolder {
         final ImageButton moreBtn;
         final TextView owner;
-        final TextView status;
 
         public ViewHolder(View v, OnItemClickListener itemClickListener) {
             super(v);
             owner = v.findViewById(R.id.item_book_owner);
             moreBtn = v.findViewById(R.id.item_book_more_btn);
-            status = v.findViewById(R.id.status);
             moreBtn.setVisibility(View.GONE);
             v.setOnClickListener(view -> itemClickListener.run(getAdapterPosition()));
         }
@@ -50,7 +50,6 @@ public class RequestedListAdapter extends BaseBookListAdapter {
         public void onBind(Book book) {
             super.onBind(book);
             this.owner.setText(this.itemView.getResources().getString(R.string.book_list_item_owner, book.getOwner()));
-            this.status.setText("accept");
         }
     }
 }
