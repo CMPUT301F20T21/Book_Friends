@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
-import com.cmput301f20t21.bookfriends.utils.GlideApp;
+import com.cmput301f20t21.bookfriends.utils.ImagePainter;
 
 import java.util.List;
 
@@ -64,20 +64,8 @@ public abstract class BaseBookListAdapter<T extends Book> extends RecyclerView.A
             this.author.setText(this.itemView.getResources().getString(R.string.book_list_item_author, book.getAuthor()));
             this.isbn.setText(book.getIsbn());
             this.book = book;
-            paintCover();
-        }
-
-        protected void paintCover() {
-            if (this.book.getImageUrl() == null) {
-                GlideApp.with(holderView)
-                        .load(R.drawable.no_image)
-                        .into(bookImage);
-                return;
-            };
-            GlideApp.with(holderView)
-                    .load(this.book.getImageUrl())
-                    .placeholder(R.drawable.no_image)
-                    .into(bookImage);
+            this.status.setText(book.getStatus().toString().toLowerCase());
+            ImagePainter.paintImage(bookImage, book.getImageUrl());
         }
     }
 }
