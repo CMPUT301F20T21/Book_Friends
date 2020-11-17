@@ -44,6 +44,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -53,10 +54,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RequestActivity extends AppCompatActivity {
-    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-    private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
-    private Boolean locationPermissionGranted = false;
     private GoogleMap myMap;
 
     private EditText searchText;
@@ -191,11 +188,9 @@ public class RequestActivity extends AppCompatActivity {
      * allows users to enter an address or click to pin
      */
     private void openMapDialog() {
-//        checkLocationPermission();
         Dialog dialog = new Dialog(RequestActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.map_dialog);
-
 
         MapView mapView = (MapView) dialog.findViewById(R.id.map_view);
         MapsInitializer.initialize(RequestActivity.this);
@@ -205,9 +200,11 @@ public class RequestActivity extends AppCompatActivity {
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
+                // the map initially is set to Edmonton
                 LatLng edmontonLatLng = new LatLng(53.544388, -113.490929);
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(edmontonLatLng, 12f));
                 myMap = googleMap;
+
             }
         });
 
@@ -232,7 +229,6 @@ public class RequestActivity extends AppCompatActivity {
                     if (addressList.size() > 0) {
                         // get the first address
                         Address address = addressList.get(0);
-//                        Log.d("Map", "geoLocate: found a location: " + address.toString());
                         LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                         // move camera to that address
                         myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
@@ -241,6 +237,8 @@ public class RequestActivity extends AppCompatActivity {
                                 .position(latLng)
                                 .title(address.getAddressLine(0));
                         myMap.addMarker(options);
+                        // TODO: hide the keyboard after searching (optional)
+                        // not sure why this is not working properly
                         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                     }
                 }
@@ -252,6 +250,7 @@ public class RequestActivity extends AppCompatActivity {
         cancelSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // TODO: cancel the confirmation if user click on cancel on the map dialog
                 dialog.dismiss();
             }
         });
@@ -260,37 +259,12 @@ public class RequestActivity extends AppCompatActivity {
         confirmSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // TODO: accept the request only when user specifies the location of meeting
                 dialog.dismiss();
             }
         });
 
+        // show the map dialog
         dialog.show();
-    }
-
-    private void checkLocationPermission() {
-        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), FINE_LOCATION)
-            == PackageManager.PERMISSION_GRANTED) {
-
-            if (ContextCompat.checkSelfPermission(this.getApplicationContext(), COURSE_LOCATION)
-            == PackageManager.PERMISSION_GRANTED) {
-                locationPermissionGranted = true;
-            } else {
-                ActivityCompat.requestPermissions(this,permissions,LOCATION_PERMISSION_REQUEST_CODE);
-            }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        locationPermissionGranted = false;
-        switch (requestCode) {
-            case LOCATION_PERMISSION_REQUEST_CODE: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    locationPermissionGranted = true;
-                    // Initialize the map
-                }
-            }
-        }
     }
 }
