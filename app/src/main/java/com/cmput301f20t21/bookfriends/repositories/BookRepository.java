@@ -2,7 +2,6 @@ package com.cmput301f20t21.bookfriends.repositories;
 
 import android.net.Uri;
 
-import com.cmput301f20t21.bookfriends.entities.AvailableBook;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.exceptions.UnexpectedException;
@@ -219,7 +218,7 @@ public class BookRepository implements IBookRepository {
                 });
     }
 
-    public Task<List<AvailableBook>> getAvailableBooksForUser(String username) {
+    public Task<List<Book>> getAvailableBooksForUser(String username) {
         return bookCollection
                 .whereNotEqualTo("owner", username)
                 .whereEqualTo("status", BOOK_STATUS.AVAILABLE.toString())
@@ -228,7 +227,7 @@ public class BookRepository implements IBookRepository {
                     if (task.isSuccessful()) {
                         return task.getResult().getDocuments()
                                 .stream()
-                                .map(doc -> doc.toObject(AvailableBook.class))
+                                .map(doc -> doc.toObject(Book.class))
                                 .collect(Collectors.toList());
                     }
                     throw new UnexpectedException();

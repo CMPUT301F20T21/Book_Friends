@@ -124,4 +124,17 @@ public class RequestRepository implements IRequestRepository {
     public String getRequesterFromDocument(DocumentSnapshot documentSnapshot) {
         return (String) documentSnapshot.get("requester");
     }
+
+    public Task<String> sendRequest(String requester, String bookId) {
+        HashMap<String, String> data = new HashMap<>();
+        data.put("requester", requester);
+        data.put("bookId", bookId);
+        data.put("status", REQUEST_STATUS.OPENED.toString());
+        return requestCollection.add(data).continueWith(task -> {
+            if (task.isSuccessful()) {
+                return task.getResult().getId();
+            }
+            throw new UnexpectedException();
+        });
+    }
 }
