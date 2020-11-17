@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
-import com.cmput301f20t21.bookfriends.utils.GlideApp;
+import com.cmput301f20t21.bookfriends.utils.ImagePainter;
 
 public class BaseDetailActivity extends AppCompatActivity {
     public static final String BOOK_ACTION_KEY = "com.cmput301f20t21.bookfriends.BOOK_ACTION";
@@ -51,16 +51,7 @@ public class BaseDetailActivity extends AppCompatActivity {
         isbn.setText(book.getIsbn());
         title.setText(book.getTitle());
         author.setText(getString(R.string.author, book.getAuthor()));
-        if (book.getImageUrl() != null) {
-            GlideApp.with(this)
-                    .load(book.getImageUrl())
-                    .placeholder(R.drawable.no_image)
-                    .into(bookImage);
-        } else {
-            GlideApp.with(this)
-                    .load(R.drawable.no_image)
-                    .into(bookImage);
-        }
+        ImagePainter.paintImage(bookImage, book.getImageUrl());
     }
 
     @Override

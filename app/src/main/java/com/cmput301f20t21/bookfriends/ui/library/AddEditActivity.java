@@ -26,7 +26,7 @@ import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 import com.cmput301f20t21.bookfriends.ui.scanner.ScannerAddActivity;
-import com.cmput301f20t21.bookfriends.utils.GlideApp;
+import com.cmput301f20t21.bookfriends.utils.ImagePainter;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class AddEditActivity extends AppCompatActivity {
@@ -61,7 +61,7 @@ public class AddEditActivity extends AppCompatActivity {
         bindBookFromIntent();
         fetchRemoteCoverImage();
 
-        vm.getLocalImageUri().observe(this, this::paintImage);
+        vm.getLocalImageUri().observe(this, (uri) -> ImagePainter.paintImage(bookImage, uri));
         scanButton.setOnClickListener(view -> openScanner());
         uploadImgButton.setOnClickListener(view -> {
             showImageUpdateDialog();
@@ -76,7 +76,7 @@ public class AddEditActivity extends AppCompatActivity {
         Book oldBook = vm.getOldBook();
         if (oldBook == null) return;
 
-        paintImage(oldBook.getImageUrl());
+        ImagePainter.paintImage(bookImage, oldBook.getImageUrl());
     }
 
     private void setChildViews() {
@@ -250,37 +250,6 @@ public class AddEditActivity extends AppCompatActivity {
                 errorMessage = getString(R.string.unexpected_error);
         }
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * paint the image on new uri updated
-     * this means that the image view will be overridden by this paint if it originally has a
-     * remote image already painted but that's exactly what we want since the user wants to update
-     * @param uri the local image uri
-     */
-    private void paintImage(Uri uri) {
-        if (uri == null) {
-            GlideApp.with(this)
-                    .load(R.drawable.no_image)
-                    .into(bookImage);
-        } else {
-            GlideApp.with(this)
-                    .load(uri)
-                    .placeholder(R.drawable.no_image)
-                    .into(bookImage);
-        }
-    }
-    private void paintImage(String url) {
-        if (url == null) {
-            GlideApp.with(this)
-                    .load(R.drawable.no_image)
-                    .into(bookImage);
-        } else {
-            GlideApp.with(this)
-                    .load(url)
-                    .placeholder(R.drawable.no_image)
-                    .into(bookImage);
-        }
     }
 
     private void openScanner() {

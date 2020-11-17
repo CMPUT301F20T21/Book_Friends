@@ -17,10 +17,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cmput301f20t21.bookfriends.utils.GlideApp;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.ui.library.OwnedListFragment;
+import com.cmput301f20t21.bookfriends.utils.ImagePainter;
 
 import java.util.ArrayList;
 
@@ -59,16 +59,7 @@ public class RequestActivity extends AppCompatActivity {
             authorTextView.setText(book.getAuthor());
             descriptionTextView.setText(book.getDescription());
             bookStatus.setText(book.getStatus().toString());
-            if (book.getImageUrl() == null) {
-                GlideApp.with(this)
-                        .load(R.drawable.no_image)
-                        .into(bookImage);
-            } else {
-                GlideApp.with(this)
-                        .load(book.getImageUrl())
-                        .placeholder(R.drawable.no_image)
-                        .into(bookImage);
-            }
+            ImagePainter.paintImage(bookImage, book.getImageUrl());
         });
 
 
