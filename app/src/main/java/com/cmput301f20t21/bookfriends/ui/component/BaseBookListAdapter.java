@@ -15,7 +15,7 @@ import com.cmput301f20t21.bookfriends.utils.GlideApp;
 
 import java.util.List;
 
-public abstract class BaseBookListAdapter<T extends Book> extends RecyclerView.Adapter<BaseBookListAdapter.ViewHolder> {
+public abstract class BaseBookListAdapter<T extends Book> extends RecyclerView.Adapter<BaseBookListAdapter.ViewHolder<T>> {
     protected List<T> books;
 
     public BaseBookListAdapter(List<T> books) {
@@ -24,13 +24,13 @@ public abstract class BaseBookListAdapter<T extends Book> extends RecyclerView.A
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder<T> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_list, parent, false);
         return new ViewHolder<T>(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder<T> holder, int position) {
         holder.onBind(books.get(position));
     }
 
