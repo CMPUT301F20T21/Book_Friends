@@ -2,7 +2,6 @@ package com.cmput301f20t21.bookfriends.ui.browse;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -48,6 +47,8 @@ public class AvailableBookListAdapter extends BaseBookListAdapter {
         public void onBind(Book book) {
             super.onBind(book);
             this.owner.setText(this.itemView.getResources().getString(R.string.book_list_item_owner, book.getOwner()));
+            // don't display the status in Browse page
+            this.status.setText(null);
         }
     }
 }
