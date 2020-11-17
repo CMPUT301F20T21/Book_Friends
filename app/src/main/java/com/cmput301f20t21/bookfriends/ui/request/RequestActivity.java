@@ -186,6 +186,10 @@ public class RequestActivity extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * function to handle the map dialog
+     * allows users to enter an address or click to pin
+     */
     private void openMapDialog() {
 //        checkLocationPermission();
         Dialog dialog = new Dialog(RequestActivity.this);
@@ -201,6 +205,8 @@ public class RequestActivity extends AppCompatActivity {
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
+                LatLng edmontonLatLng = new LatLng(53.544388, -113.490929);
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(edmontonLatLng, 12f));
                 myMap = googleMap;
             }
         });
@@ -230,7 +236,6 @@ public class RequestActivity extends AppCompatActivity {
                         LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                         // move camera to that address
                         myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
-
 
                         MarkerOptions options = new MarkerOptions()
                                 .position(latLng)

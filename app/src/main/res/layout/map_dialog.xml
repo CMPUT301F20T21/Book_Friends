@@ -29,7 +29,8 @@
             android:hint="@string/address_search"
             android:textColor="@color/black"
             android:textSize="15sp"
-            android:imeOptions="actionSearch"/>
+            android:imeOptions="actionSearch"
+            android:inputType="text"/>
 
         <ImageView
             android:id="@+id/ic_magnify"
