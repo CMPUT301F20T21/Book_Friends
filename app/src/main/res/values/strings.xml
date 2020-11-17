@@ -3,8 +3,10 @@
     <string name="title_library">Your Library</string>
     <string name="tab_title_my_library">My Books</string>
     <string name="tab_title_borrowed_library">Borrowed Books</string>
-    <string name="tab_title_requested">Requested</string>
-    <string name="tab_title_accepted">Accepted</string>
+    <string name="string_available">Available</string>
+    <string name="string_requested">Requested</string>
+    <string name="string_accepted">Accepted</string>
+    <string name="string_borrowed">Borrowed</string>
     <string name="title_borrow">Borrow</string>
     <string name="title_browse">Browse</string>
     <string name="title_scanner_add">Scan to Add</string>
@@ -38,7 +40,7 @@
     <string name="back">Back</string>
     <string name="save">Save</string>
     <string name="scan_add">Scan and autofill</string>
-    <string name="upload_img">Upload cover image</string>
+    <string name="update_cover_img">Update cover image</string>
     <string name="empty_error">Cannot be empty</string>
     <string name="permission_denied">Permission denied…!</string>
     <string name ="string_confirm_password">Confirm Password</string>
@@ -74,4 +76,19 @@
     <string name="fail_to_edit_book">Failed to edit book</string>
     <string name="scanner_scanning">Scanning...</string>
     <string name="accept_this_request">Accept this request?</string>
+    <string name="request">Request</string>
+    <string name="delete">delete</string>
+    <string name="add_edit">Add/Edit</string>
+    <string name="edit_detail">Edit</string>
+    <string name="view_request">View All Requests</string>
+    <string name="view">View</string>
+    <string name="accepted_detail">he Book Detail (Accepted)</string>
+    <string name="browse_detail">The Book Detail (Available)</string>
+    <string name="requested_detail">The Book Detail (Requested)</string>
+    <string name="borrowed_detail">View A Borrowed Book</string>
+    <string name="author">Author: %s</string>
+    <string name="upload_new_image">Upload a new image</string>
+    <string name="replace_with_new_image">Replace with a new image</string>
+    <string name="delete_cover_image">Delete cover image</string>
+    <string name="request_book_successful">Request successfully sent</string>
 </resources>

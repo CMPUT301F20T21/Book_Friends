@@ -1,10 +1,21 @@
+/*
+ * OwnedListFragment.java
+ * Version: 1.0
+ * Date: November 4, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.ui.library;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,38 +30,80 @@ import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.ui.add.AddEditActivity;
+import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 import com.cmput301f20t21.bookfriends.ui.request.RequestActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
 public class OwnedListFragment extends Fragment {
-    public static final String BOOK_ACTION_KEY = "com.cmput301f20t21.bookfriends.BOOK_ACTION";
-    public static final String BOOK_EDIT_KEY = "com.cmput301f20t21.bookfriends.BOOK_EDIT";
     public static final String VIEW_REQUEST_KEY = "com.cmput301f20t21.bookfriends.VIEW_REQUEST";
 
     private OwnedViewModel vm;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
+    private FloatingActionButton filterButton;
+    private FloatingActionButton addBookButton;
+    private PopupWindow filterPopup;
+    private SwitchMaterial availableStatusSwitch;
+    private SwitchMaterial requestedStatusSwitch;
+    private SwitchMaterial acceptedStatusSwitch;
+    private SwitchMaterial borrowedStatusSwitch;
 
+    /**
+     * Called before creating the fragment view
+     * @param inflater the layout inflater
+     * @param container the view container
+     * @param savedInstanceState the saved objects, should contain nothing for this fragment
+     * @return the inflated view
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         vm = new ViewModelProvider(this).get(OwnedViewModel.class);
         View root = inflater.inflate(R.layout.owned_list_book, container, false);
-        final FloatingActionButton addBookButton = root.findViewById(R.id.add_button);
+        addBookButton = root.findViewById(R.id.add_button);
+        filterButton = root.findViewById(R.id.filter_button);
 
         addBookButton.setOnClickListener(
-                view -> openAddEditActivity(null)
+                view -> openAddEditActivity()
         );
 
+        View filterLayout = inflater.inflate(R.layout.owned_filter_menu, getActivity().findViewById(R.id.popup_element));
+        filterLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        int width = filterLayout.getMeasuredWidth();
+        int height = filterLayout.getMeasuredHeight();
+        filterPopup = new PopupWindow(filterLayout, width, height,true);
+        // elevation does not work in xml file so have to set it here
+        filterPopup.setElevation(12);
+
+        availableStatusSwitch = filterLayout.findViewById(R.id.filter_menu_available);
+        requestedStatusSwitch = filterLayout.findViewById(R.id.filter_menu_requested);
+        acceptedStatusSwitch = filterLayout.findViewById(R.id.filter_menu_accepted);
+        borrowedStatusSwitch = filterLayout.findViewById(R.id.filter_menu_borrowed);
+        availableStatusSwitch.setOnClickListener(this::onFilter);
+        requestedStatusSwitch.setOnClickListener(this::onFilter);
+        acceptedStatusSwitch.setOnClickListener(this::onFilter);
+        borrowedStatusSwitch.setOnClickListener(this::onFilter);
+
+        filterButton.setOnClickListener((view) -> {
+            // want to show the window above the view instead of below
+            // so offset the window by its width and height
+            filterPopup.showAsDropDown(view, -width, -height);
+        });
         return root;
     }
 
+    /**
+     * called after creating the fragment view
+     * @param view the fragment's view
+     * @param savedInstanceState the saved objects, should contain nothing for this fragment
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         recyclerView = view.findViewById(R.id.owned_recycler_list_book);
@@ -65,6 +118,20 @@ public class OwnedListFragment extends Fragment {
         adapter = new OwnedListAdapter(vm.getBooks().getValue(), this::onItemClick, this::onDeleteBook, this::onViewRequests);
         recyclerView.setAdapter(adapter);
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0) {
+                    filterButton.hide();
+                    addBookButton.hide();
+                } else {
+                    filterButton.show();
+                    addBookButton.show();
+                }
+            }
+        });
+
         vm.getBooks().observe(getViewLifecycleOwner(), (List<Book> books) -> adapter.notifyDataSetChanged());
 
         vm.getUpdatedPosition().observe(getViewLifecycleOwner(), (Integer pos) -> adapter.notifyItemChanged(pos));
@@ -78,6 +145,12 @@ public class OwnedListFragment extends Fragment {
         });
     }
 
+    /**
+     * called upon returning from the AddEditActivity, will add or update the book to the local data
+     * @param requestCode the request code that starts the activity
+     * @param resultCode the result code sent from the activity
+     * @param data the intent data that contains the added or updated book
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -86,38 +159,46 @@ public class OwnedListFragment extends Fragment {
                 Book book = data.getParcelableExtra(AddEditActivity.NEW_BOOK_INTENT_KEY);
                 vm.addBook(book);
                 Toast.makeText(getActivity(), getString(R.string.add_book_successful), Toast.LENGTH_SHORT).show();
-            } else if (requestCode == BOOK_ACTION.EDIT.getCode()) {
+            } else {
                 Book oldBook = data.getParcelableExtra(AddEditActivity.OLD_BOOK_INTENT_KEY);
                 Book updatedBook = data.getParcelableExtra(AddEditActivity.UPDATED_BOOK_INTENT_KEY);
 
                 vm.updateBook(oldBook, updatedBook);
-                Toast.makeText(getActivity(), getString(R.string.edit_book_successful), Toast.LENGTH_SHORT).show();
             }
+            resetFilter();
         }
     }
 
     /**
      * function allows user to jump into the add/edit screen when click on the floating button
      */
-    private void openAddEditActivity(@Nullable Book book) {
+    private void openAddEditActivity() {
         Intent intent = new Intent(this.getActivity(), AddEditActivity.class);
-        if (book == null) {
-            intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.ADD);
-            startActivityForResult(intent, BOOK_ACTION.ADD.getCode());
-        } else {
-            intent.putExtra(BOOK_ACTION_KEY, BOOK_ACTION.EDIT);
-            intent.putExtra(BOOK_EDIT_KEY, book);
-            startActivityForResult(intent, BOOK_ACTION.EDIT.getCode());
-        }
+        intent.putExtra(BaseDetailActivity.BOOK_ACTION_KEY, BOOK_ACTION.ADD);
+        startActivityForResult(intent, BOOK_ACTION.ADD.getCode());
     }
 
+    private void openDetailActivity(Book book){
+        Intent intent = new Intent(this.getActivity(), DetailLibraryActivity.class);
+        intent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, book);
+        startActivityForResult(intent, BOOK_ACTION.VIEW.getCode());
+    }
+
+    /**
+     * called when the user clicks on one of the books
+     * @param position the book's position
+     */
     public void onItemClick(int position) {
         if (position != RecyclerView.NO_POSITION) {
             Book book = vm.getBookByIndex(position);
-            openAddEditActivity(book);
+            openDetailActivity(book);
         }
     }
 
+    /**
+     * called when the user deletes one of the book
+     * @param book the book to delete
+     */
     public void onDeleteBook(Book book) {
         vm.deleteBook(book);
     }
@@ -131,6 +212,25 @@ public class OwnedListFragment extends Fragment {
         Intent intent = new Intent(this.getActivity(), RequestActivity.class);
         intent.putExtra(VIEW_REQUEST_KEY, bookId);
         startActivity(intent);
+    }
+
+    private void onFilter(View view) {
+        vm.filterBooks(
+                availableStatusSwitch.isChecked(),
+                requestedStatusSwitch.isChecked(),
+                acceptedStatusSwitch.isChecked(),
+                borrowedStatusSwitch.isChecked()
+        );
+    }
+
+    /**
+     * reset the switches, should be called whenever the book data is altered
+     */
+    private void resetFilter() {
+        availableStatusSwitch.setChecked(true);
+        requestedStatusSwitch.setChecked(true);
+        acceptedStatusSwitch.setChecked(true);
+        borrowedStatusSwitch.setChecked(true);
     }
 }
 

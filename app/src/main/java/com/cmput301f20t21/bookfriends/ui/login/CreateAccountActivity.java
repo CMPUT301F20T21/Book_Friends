@@ -1,3 +1,13 @@
+/*
+ * CreateAccountActivity.java
+ * Version: 1.0
+ * Date: November 4, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
+
 package com.cmput301f20t21.bookfriends.ui.login;
 import android.os.Bundle;
 import android.text.Editable;
@@ -25,7 +35,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     /**
      * this function is used to display errors and set up the function for creating accounts
-     * @param savedInstanceState
+     * @param savedInstanceState the saved objects, should be nothing for this activity
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +92,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     /**
      * back to the login in page when clicking cancel button
-     * @param view
+     * @param view the "Cancel" button's view
      */
     public void onCancelClicked(View view) {
         finish();
@@ -90,7 +100,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     /**
      * create the account if there's no input errors, or display errors
-     * @param view
+     * @param view "Create" button's view
      */
     public void onCreateClicked(View view){
         boolean allValid = true;
@@ -146,7 +156,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     /**
      * display sign up errors
-     * @param error
+     * @param error an enum that specify the specific error encountered during signup
      */
     public void onSignUpFail(SIGNUP_ERROR error) {
         switch (error) {

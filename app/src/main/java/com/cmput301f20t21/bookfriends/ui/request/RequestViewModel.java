@@ -1,3 +1,12 @@
+/*
+ * RequestViewModel.java
+ * Version: 1.0
+ * Date: November 4, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.ui.request;
 
 import androidx.lifecycle.LiveData;
@@ -8,6 +17,7 @@ import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.repositories.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.RequestRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.IRequestRepository;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
@@ -15,12 +25,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * The ViewModel for RequestActivity
+ */
 public class RequestViewModel extends ViewModel {
     private final MutableLiveData<Book> book = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<Request>> requests = new MutableLiveData<>(new ArrayList<>());
     private final ArrayList<Request> requestsData = requests.getValue();
 
-    private final RequestRepository requestService = RequestRepository.getInstance();
+    private final IRequestRepository requestService = RequestRepository.getInstance();
     private final BookRepository bookService = BookRepository.getInstance();
 
     /**
@@ -38,7 +51,7 @@ public class RequestViewModel extends ViewModel {
 
     /**
      * get all the requesters of a book based on its bookId
-     * @param bookId
+     * @param bookId the book id to query for requesters
      */
     private void fetchRequests(String bookId) {
         requestService.getByBookId(bookId).addOnSuccessListener(requesterDocumentsSnapShots -> {
@@ -56,7 +69,7 @@ public class RequestViewModel extends ViewModel {
     /**
      * function to notify the content displayed on device when the data is changed
      * @param bookId we get book information by book ID then pass the content to display
-     * @return
+     * @return a list of books
      */
     public LiveData<Book> getBook(String bookId) {
         fetchBook(bookId);
@@ -65,8 +78,8 @@ public class RequestViewModel extends ViewModel {
 
     /**
      * live data of requesters retrieving from FireStore
-     * @param bookId
-     * @return
+     * @param bookId the book id to query for requesters
+     * @return a list of requests
      */
     public LiveData<ArrayList<Request>> getRequests(String bookId) {
         fetchRequests(bookId);
@@ -76,7 +89,7 @@ public class RequestViewModel extends ViewModel {
     /**
      * When the requester is denied, remove his/her request.
      * update the status of this requester to DENIED
-     * @param position
+     * @param position the position of the request to remove
      */
     public void removeRequest(Integer position) {
         Request request = requestsData.get(position);
@@ -88,7 +101,7 @@ public class RequestViewModel extends ViewModel {
 
     /**
      * When the requester is accepted, update the status of this requester to ACCEPTED
-     * @param position
+     * @param position the position of the request to accept
      */
     public void acceptRequest(Integer position) {
         Request request = requestsData.get(position);

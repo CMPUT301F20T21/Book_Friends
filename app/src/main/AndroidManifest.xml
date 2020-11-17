@@ -24,7 +24,6 @@
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.scanner.ScannerAddActivity"
             android:label="@string/title_scanner_add"
-            android:parentActivityName=".ui.add.AddEditActivity"
             >
         </activity>
         <activity
@@ -44,13 +43,33 @@
 
         </activity>
         <activity android:name=".ui.add.AddEditActivity"
-            android:label="Add/Edit a Book">
+            android:label="@string/add_edit">
+        </activity>
+        <activity android:name=".ui.library.DetailLibraryActivity"
+            android:label="@string/view">
         </activity>
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.login.CreateAccountActivity"
             android:windowSoftInputMode="adjustPan"
             android:parentActivityName="com.cmput301f20t21.bookfriends.ui.login.LoginActivity" >
 
+        </activity>
+        <activity
+            android:name="com.cmput301f20t21.bookfriends.ui.borrow.DetailAcceptedActivity"
+            android:label="@string/accepted_detail">
+        </activity>
+        <activity
+            android:name="com.cmput301f20t21.bookfriends.ui.browse.BrowseDetailActivity"
+            android:label="@string/browse_detail">
+        </activity>
+
+        <activity
+            android:name="com.cmput301f20t21.bookfriends.ui.borrow.DetailRequestedActivity"
+            android:label="@string/requested_detail">
+        </activity>
+        <activity
+            android:name="com.cmput301f20t21.bookfriends.ui.library.DetailBorrowedActivity"
+            android:label="@string/borrowed_detail">
         </activity>
         <activity android:name=".ui.request.RequestActivity"
             android:label="Requests">
