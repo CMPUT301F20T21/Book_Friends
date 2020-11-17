@@ -43,6 +43,7 @@ public abstract class BaseBookListAdapter<T extends Book> extends RecyclerView.A
         protected final TextView title;
         protected final TextView author;
         protected final TextView isbn;
+        protected final TextView status;
         protected final ImageView bookImage;
         protected View holderView;
         protected T book;
@@ -54,6 +55,7 @@ public abstract class BaseBookListAdapter<T extends Book> extends RecyclerView.A
             title = v.findViewById(R.id.item_book_title);
             author = v.findViewById(R.id.item_book_author);
             isbn = v.findViewById(R.id.item_book_isbn);
+            status = v.findViewById(R.id.status);
             bookImage = v.findViewById(R.id.booklist_image_view);
         }
 
