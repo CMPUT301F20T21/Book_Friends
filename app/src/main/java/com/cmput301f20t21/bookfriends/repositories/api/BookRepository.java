@@ -9,7 +9,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
 
-public interface IBookRepository {
+public interface BookRepository {
     Task<Book> add(String isbn, String title, String author, String description, String owner, Uri imageUriFile);
     Task<String> addImage(String bookId, Uri imageUri);
     Task<Book> editBook(Book oldBook, String isbn, String title, String author, String description, Uri imageUriFile, Boolean shouldDeleteImage);

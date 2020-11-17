@@ -1,4 +1,4 @@
-package com.cmput301f20t21.bookfriends.ui.add;
+package com.cmput301f20t21.bookfriends.ui.library;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -20,7 +20,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.cmput301f20t21.bookfriends.R;
-import com.cmput301f20t21.bookfriends.databinding.AddEditActivityBinding;
+import com.cmput301f20t21.bookfriends.databinding.ActivityAddEditBinding;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
@@ -51,7 +51,7 @@ public class AddEditActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         vm = new ViewModelProvider(this).get(AddEditViewModel.class);
-        setContentView(R.layout.add_edit_activity);
+        setContentView(R.layout.activity_add_edit);
         setViewBindings();
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_white_18);
@@ -96,7 +96,7 @@ public class AddEditActivity extends AppCompatActivity {
      * Be very careful when setting views directly
      */
     private void setViewBindings() {
-        AddEditActivityBinding binding = DataBindingUtil.setContentView(this, R.layout.add_edit_activity);
+        ActivityAddEditBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_add_edit);
         binding.setLifecycleOwner(this);
         binding.setVm(vm);
     }

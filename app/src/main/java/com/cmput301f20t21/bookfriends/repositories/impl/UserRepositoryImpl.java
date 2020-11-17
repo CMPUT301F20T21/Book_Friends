@@ -1,10 +1,10 @@
-package com.cmput301f20t21.bookfriends.repositories;
+package com.cmput301f20t21.bookfriends.repositories.impl;
 
 import com.cmput301f20t21.bookfriends.entities.User;
 import com.cmput301f20t21.bookfriends.exceptions.UnexpectedException;
 import com.cmput301f20t21.bookfriends.exceptions.UserNotExistException;
 import com.cmput301f20t21.bookfriends.exceptions.UsernameNotExistException;
-import com.cmput301f20t21.bookfriends.repositories.api.IUserRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.UserRepository;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -16,16 +16,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class UserRepository implements IUserRepository {
+public class UserRepositoryImpl implements UserRepository {
     private CollectionReference userCollection;
 
-    private static final IUserRepository instance = new UserRepository();
+    private static final UserRepository instance = new UserRepositoryImpl();
 
-    private UserRepository() {
+    private UserRepositoryImpl() {
         userCollection = FirebaseFirestore.getInstance().collection("users");
     }
 
-    public static IUserRepository getInstance() {
+    public static UserRepository getInstance() {
         return instance;
     }
 
@@ -91,7 +91,7 @@ public class UserRepository implements IUserRepository {
     }
 
     public Task<Void> updateUserEmail(String email) {
-        User firebaseUser = AuthRepository.getInstance().getCurrentUser();
+        User firebaseUser = AuthRepositoryImpl.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             String userId = firebaseUser.getUid();
             return userCollection.document(userId).update("email", email);

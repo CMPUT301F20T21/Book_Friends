@@ -9,7 +9,6 @@
 
 package com.cmput301f20t21.bookfriends.ui.library;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,7 +28,6 @@ import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
-import com.cmput301f20t21.bookfriends.ui.add.AddEditActivity;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 import com.cmput301f20t21.bookfriends.ui.request.RequestActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -66,7 +64,7 @@ public class OwnedListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         vm = new ViewModelProvider(this).get(OwnedViewModel.class);
-        View root = inflater.inflate(R.layout.owned_list_book, container, false);
+        View root = inflater.inflate(R.layout.list_owned_book, container, false);
         addBookButton = root.findViewById(R.id.add_button);
         filterButton = root.findViewById(R.id.filter_button);
 
@@ -74,7 +72,7 @@ public class OwnedListFragment extends Fragment {
                 view -> openAddEditActivity()
         );
 
-        View filterLayout = inflater.inflate(R.layout.owned_filter_menu, getActivity().findViewById(R.id.popup_element));
+        View filterLayout = inflater.inflate(R.layout.menu_owned_filter, getActivity().findViewById(R.id.popup_element));
         filterLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         int width = filterLayout.getMeasuredWidth();
         int height = filterLayout.getMeasuredHeight();
@@ -179,7 +177,7 @@ public class OwnedListFragment extends Fragment {
     }
 
     private void openDetailActivity(Book book){
-        Intent intent = new Intent(this.getActivity(), DetailLibraryActivity.class);
+        Intent intent = new Intent(this.getActivity(), OwnedDetailActivity.class);
         intent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, book);
         startActivityForResult(intent, BOOK_ACTION.VIEW.getCode());
     }

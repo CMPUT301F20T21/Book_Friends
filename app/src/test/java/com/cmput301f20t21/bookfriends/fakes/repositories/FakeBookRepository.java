@@ -3,14 +3,14 @@ package com.cmput301f20t21.bookfriends.fakes.repositories;
 import android.net.Uri;
 
 import com.cmput301f20t21.bookfriends.entities.Book;
-import com.cmput301f20t21.bookfriends.repositories.api.IBookRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.BookRepository;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
 
-public class FakeBookRepository implements IBookRepository {
+public class FakeBookRepository implements BookRepository {
     @Override
     public Task<Book> add(String isbn, String title, String author, String description, String owner, Uri imageUriFile) {
         return null;

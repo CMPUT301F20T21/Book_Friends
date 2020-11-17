@@ -7,7 +7,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
 
-public interface IUserRepository {
+public interface UserRepository {
     Task<Void> add(String uid, String username, String email);
     Task<User> getByUsername(String username);
     Task<User> getByUid(String uid);

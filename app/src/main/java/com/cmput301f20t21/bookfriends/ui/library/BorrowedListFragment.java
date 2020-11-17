@@ -30,7 +30,7 @@ public class BorrowedListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         vm = new ViewModelProvider(this).get(BorrowedViewModel.class);
-        return inflater.inflate(R.layout.borrowed_list_book, container, false);
+        return inflater.inflate(R.layout.list_borrowed_book, container, false);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class BorrowedListFragment extends Fragment {
     }
 
     private void openDetailActivity(Book book) {
-        Intent intent = new Intent(this.getActivity(), DetailBorrowedActivity.class);
+        Intent intent = new Intent(this.getActivity(), BorrowedDetailActivity.class);
         intent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, book);
         startActivity(intent);
     }
