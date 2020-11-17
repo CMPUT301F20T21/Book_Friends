@@ -12,8 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.utils.GlideApp;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 public class BaseDetailActivity extends AppCompatActivity {
     public static final String BOOK_ACTION_KEY = "com.cmput301f20t21.bookfriends.BOOK_ACTION";
@@ -53,11 +51,16 @@ public class BaseDetailActivity extends AppCompatActivity {
         detailISBN.setText(detailBook.getIsbn());
         detailTitle.setText(detailBook.getTitle());
         detailAuthor.setText(getString(R.string.author, detailBook.getAuthor()));
-//        StorageReference storageReference = FirebaseStorage.getInstance().getReference(detailBook.getCoverImageName());
-//        GlideApp.with(this)
-//                .load(storageReference)
-//                .placeholder(R.drawable.no_image)
-//                .into(bookImage);
+        if (detailBook.getImageUrl() != null) {
+            GlideApp.with(this)
+                    .load(detailBook.getImageUrl())
+                    .placeholder(R.drawable.no_image)
+                    .into(bookImage);
+        } else {
+            GlideApp.with(this)
+                    .load(R.drawable.no_image)
+                    .into(bookImage);
+        }
     }
 
     @Override

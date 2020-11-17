@@ -19,7 +19,6 @@ import com.cmput301f20t21.bookfriends.callbacks.OnFailCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
-import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.IAuthRepository;
@@ -69,6 +68,7 @@ public class AddEditViewModel extends ViewModel {
         bookAuthor.setValue(book.getAuthor());
         bookDescription.setValue(book.getDescription());
         this.oldBook = book;
+        if (book.getImageUrl() != null) setHasImage(true);
     }
 
     public Book getOldBook() {
@@ -111,23 +111,8 @@ public class AddEditViewModel extends ViewModel {
         final Uri imageUri = localImageUri.getValue();
 
         String owner = authRepository.getCurrentUser().getUsername();
-        bookRepository.add(isbn, title, author, description, owner).addOnSuccessListener(
-                id -> {
-                    Book book = new Book(id, isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE);
-                    if (imageUri != null) {
-                        bookRepository.addImage(book.getCoverImageName(), imageUri).addOnCompleteListener(
-                                addImageTask -> {
-                                    if (addImageTask.isSuccessful()) {
-                                        successCallback.run(book);
-                                    } else {
-                                        failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
-                                    }
-                                }
-                        );
-                    } else {
-                        successCallback.run(book);
-                    }
-                }
+        bookRepository.add(isbn, title, author, description, owner, imageUri).addOnSuccessListener(
+                successCallback::run
         ).addOnFailureListener(e -> {
             failCallback.run(BOOK_ERROR.FAIL_TO_ADD_BOOK);
         });
@@ -147,33 +132,11 @@ public class AddEditViewModel extends ViewModel {
         final String title = bookTitle.getValue();
         final String author = bookAuthor.getValue();
         final String description = bookDescription.getValue();
-        final Uri newUri = localImageUri.getValue();
+        final Uri newUriFile = localImageUri.getValue();
+        final Boolean shouldDeleteImage = !hasImage;
 
-        bookRepository.editBook(oldBook, isbn, title, author, description).addOnSuccessListener(
-                newBook -> {
-                    // addImage will also replace if file with imageName already exist
-                    if (newUri != null) {
-                        // when the image is updated
-                        bookRepository.addImage(newBook.getCoverImageName(), newUri).addOnCompleteListener(
-                                addImageTask -> {
-                                    if (addImageTask.isSuccessful()) {
-                                        successCallback.run(newBook);
-                                    } else {
-                                        failCallback.run(BOOK_ERROR.FAIL_TO_ADD_IMAGE);
-                                    }
-                                }
-                        );
-                    } else {
-                        if (!hasImage) {
-                            bookRepository.deleteImage(newBook.getCoverImageName())
-                                    .addOnCompleteListener(Void -> {
-                                        successCallback.run(newBook);
-                                    });
-                        } else {
-                            successCallback.run(newBook);
-                        }
-                    }
-                }
+        bookRepository.editBook(oldBook, isbn, title, author, description, newUriFile, shouldDeleteImage).addOnSuccessListener(
+                    successCallback::run
         ).addOnFailureListener(e -> {
             failCallback.run(BOOK_ERROR.FAIL_TO_EDIT_BOOK);
         });

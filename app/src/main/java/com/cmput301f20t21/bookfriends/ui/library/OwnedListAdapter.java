@@ -65,18 +65,6 @@ public class OwnedListAdapter extends BaseBookListAdapter {
             this.viewRequestsListener = viewRequestsListener;
         }
 
-        @Override
-        protected void paintCover() {
-            // disable caching in owned list since we might update books a lot more frequently
-//            StorageReference storageReference = FirebaseStorage.getInstance().getReference(book.getCoverImageName());
-//            GlideApp.with(holderView)
-//                    .load(storageReference)
-//                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                    .skipMemoryCache(true)
-//                    .placeholder(R.drawable.no_image)
-//                    .into(bookImage);
-        }
-
         private void showPopup(View view) {
             PopupMenu popup = new PopupMenu(view.getContext(), moreBtn);
             MenuInflater inflater = popup.getMenuInflater();

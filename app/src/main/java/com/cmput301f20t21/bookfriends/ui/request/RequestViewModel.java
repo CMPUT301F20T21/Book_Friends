@@ -44,7 +44,7 @@ public class RequestViewModel extends ViewModel {
         bookService.getBookById(bookId).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
-                book.setValue(bookService.getBookFromDocument(document));
+                book.setValue(document.toObject(Book.class));
             }
         });
     }
