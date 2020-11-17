@@ -1,11 +1,11 @@
 package com.cmput301f20t21.bookfriends.ui.borrow;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,12 +16,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
+import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 
+import java.util.List;
+
 public class RequestedListFragment extends Fragment {
-    private RequestedViewModel mViewModel;
+    private RequestedViewModel vm;
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
 
@@ -29,7 +32,7 @@ public class RequestedListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mViewModel = new ViewModelProvider(this).get(RequestedViewModel.class);
+        vm = new ViewModelProvider(this).get(RequestedViewModel.class);
         return inflater.inflate(R.layout.requested_list_book, container, false);
     }
 
@@ -44,8 +47,16 @@ public class RequestedListFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         // specify an adapter (see also next example)
-        mAdapter = new RequestedListAdapter(mViewModel.getBooks(), this::onItemClick);
-        recyclerView.setAdapter(mAdapter);
+        adapter = new RequestedListAdapter(vm.getBooks().getValue(), this::onItemClick);
+        recyclerView.setAdapter(adapter);
+
+        vm.getBooks().observe(getViewLifecycleOwner(), (List<Book> books) -> adapter.notifyDataSetChanged());
+
+        vm.getErrorMessage().observe(getViewLifecycleOwner(), (BOOK_ERROR error) -> {
+            if (error == BOOK_ERROR.FAIL_TO_GET_BOOKS) {
+                Toast.makeText(getActivity(), getString(R.string.fail_to_get_books), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void openDetailActivity(Book book){
@@ -60,7 +71,7 @@ public class RequestedListFragment extends Fragment {
      */
     public void onItemClick(int position) {
         if (position != RecyclerView.NO_POSITION) {
-            Book book = mViewModel.getBookByIndex(position);
+            Book book = vm.getBookByIndex(position);
             openDetailActivity(book);
         }
     }

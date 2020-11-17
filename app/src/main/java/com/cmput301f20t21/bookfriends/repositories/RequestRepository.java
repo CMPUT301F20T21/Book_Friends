@@ -46,8 +46,9 @@ public class RequestRepository implements IRequestRepository {
                 .whereEqualTo("status", REQUEST_STATUS.BORROWED.toString()).get();
     }
 
-    public Task<List<Request>> getAllRequestsByUsername(String username) {
-        return requestCollection.whereEqualTo("requester", username).get()
+    public Task<List<Request>> getAllRequestsByUsername(String username, REQUEST_STATUS status) {
+        return requestCollection.whereEqualTo("requester", username)
+                .whereEqualTo("status", status.toString()).get()
                 .continueWith(task -> {
                     if (task.isSuccessful()) {
                         List<Request> requests = new ArrayList<Request>();
@@ -122,5 +123,18 @@ public class RequestRepository implements IRequestRepository {
 
     public String getRequesterFromDocument(DocumentSnapshot documentSnapshot) {
         return (String) documentSnapshot.get("requester");
+    }
+
+    public Task<String> sendRequest(String requester, String bookId) {
+        HashMap<String, String> data = new HashMap<>();
+        data.put("requester", requester);
+        data.put("bookId", bookId);
+        data.put("status", REQUEST_STATUS.OPENED.toString());
+        return requestCollection.add(data).continueWith(task -> {
+            if (task.isSuccessful()) {
+                return task.getResult().getId();
+            }
+            throw new UnexpectedException();
+        });
     }
 }

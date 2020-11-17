@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
     android:layout_marginBottom="8dp"
+    android:visibility="visible"
     app:cardElevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -85,6 +86,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/item_book_more_btn"
             app:layout_constraintVertical_bias="0.98" />
+
+        <Button
+            android:id="@+id/request_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/request"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
