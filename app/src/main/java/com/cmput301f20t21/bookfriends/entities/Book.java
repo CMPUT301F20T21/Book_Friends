@@ -49,8 +49,8 @@ public class Book implements Parcelable {
         return imageUrl;
     }
 
-    public void setImageUrl(String uri) {
-        this.imageUrl = uri;
+    public void setImageUrl(String url) {
+        this.imageUrl = url;
     }
 
     public String getId() {
