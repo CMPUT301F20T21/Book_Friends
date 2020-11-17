@@ -33,6 +33,7 @@ import com.cmput301f20t21.bookfriends.ui.add.AddEditActivity;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 import com.cmput301f20t21.bookfriends.ui.request.RequestActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.List;
 
@@ -47,6 +48,12 @@ public class OwnedListFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private FloatingActionButton filterButton;
     private FloatingActionButton addBookButton;
+    private PopupWindow filterPopup;
+    private SwitchMaterial availableStatusSwitch;
+    private SwitchMaterial requestedStatusSwitch;
+    private SwitchMaterial acceptedStatusSwitch;
+    private SwitchMaterial borrowedStatusSwitch;
+
     /**
      * Called before creating the fragment view
      * @param inflater the layout inflater
@@ -67,7 +74,28 @@ public class OwnedListFragment extends Fragment {
                 view -> openAddEditActivity()
         );
 
-        filterButton.setOnClickListener(this::showFilterPopup);
+        View filterLayout = inflater.inflate(R.layout.owned_filter_menu, getActivity().findViewById(R.id.popup_element));
+        filterLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        int width = filterLayout.getMeasuredWidth();
+        int height = filterLayout.getMeasuredHeight();
+        filterPopup = new PopupWindow(filterLayout, width, height,true);
+        // elevation does not work in xml file so have to set it here
+        filterPopup.setElevation(12);
+
+        availableStatusSwitch = filterLayout.findViewById(R.id.filter_menu_available);
+        requestedStatusSwitch = filterLayout.findViewById(R.id.filter_menu_requested);
+        acceptedStatusSwitch = filterLayout.findViewById(R.id.filter_menu_accepted);
+        borrowedStatusSwitch = filterLayout.findViewById(R.id.filter_menu_borrowed);
+        availableStatusSwitch.setOnClickListener(this::onFilter);
+        requestedStatusSwitch.setOnClickListener(this::onFilter);
+        acceptedStatusSwitch.setOnClickListener(this::onFilter);
+        borrowedStatusSwitch.setOnClickListener(this::onFilter);
+
+        filterButton.setOnClickListener((view) -> {
+            // want to show the window above the view instead of below
+            // so offset the window by its width and height
+            filterPopup.showAsDropDown(view, -width, -height);
+        });
         return root;
     }
 
@@ -137,6 +165,7 @@ public class OwnedListFragment extends Fragment {
 
                 vm.updateBook(oldBook, updatedBook);
             }
+            resetFilter();
         }
     }
 
@@ -185,23 +214,23 @@ public class OwnedListFragment extends Fragment {
         startActivity(intent);
     }
 
-    /**
-     * when the user click on the filter button
-     * @param view the filter button view
-     */
-    private void showFilterPopup(View view) {
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout = inflater.inflate(R.layout.owned_filter_menu, getActivity().findViewById(R.id.popup_element));
-        layout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        int width = layout.getMeasuredWidth();
-        int height = layout.getMeasuredHeight();
-        PopupWindow popup = new PopupWindow(layout, width, height,true);
+    private void onFilter(View view) {
+        vm.filterBooks(
+                availableStatusSwitch.isChecked(),
+                requestedStatusSwitch.isChecked(),
+                acceptedStatusSwitch.isChecked(),
+                borrowedStatusSwitch.isChecked()
+        );
+    }
 
-        // elevation does not work in xml file so have to set it here
-        popup.setElevation(12);
-        // want to show the window above the view instead of below
-        // so offset the window by its width and height
-        popup.showAsDropDown(view, -width, -height);
+    /**
+     * reset the switches, should be called whenever the book data is altered
+     */
+    private void resetFilter() {
+        availableStatusSwitch.setChecked(true);
+        requestedStatusSwitch.setChecked(true);
+        acceptedStatusSwitch.setChecked(true);
+        borrowedStatusSwitch.setChecked(true);
     }
 }
 
