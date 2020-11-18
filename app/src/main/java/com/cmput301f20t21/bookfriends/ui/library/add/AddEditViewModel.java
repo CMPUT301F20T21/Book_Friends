@@ -7,7 +7,7 @@
  * github URL: https://github.com/CMPUT301F20T21/Book_Friends
  */
 
-package com.cmput301f20t21.bookfriends.ui.library;
+package com.cmput301f20t21.bookfriends.ui.library.add;
 
 import android.net.Uri;
 

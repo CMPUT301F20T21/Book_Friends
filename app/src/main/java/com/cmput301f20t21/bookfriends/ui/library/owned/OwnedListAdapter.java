@@ -1,4 +1,4 @@
-package com.cmput301f20t21.bookfriends.ui.library;
+package com.cmput301f20t21.bookfriends.ui.library.owned;
 
 import android.view.Gravity;
 import android.view.LayoutInflater;

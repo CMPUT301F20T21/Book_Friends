@@ -1,4 +1,4 @@
-package com.cmput301f20t21.bookfriends.ui.borrow;
+package com.cmput301f20t21.bookfriends.ui.borrow.requested;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 
-public class DetailAcceptedActivity extends BaseDetailActivity {
+public class RequestedDetailActivity extends BaseDetailActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -20,9 +20,6 @@ public class DetailAcceptedActivity extends BaseDetailActivity {
         super.onOptionsItemSelected(item);
         return true;
     }
-
-
 }
-
 
 
