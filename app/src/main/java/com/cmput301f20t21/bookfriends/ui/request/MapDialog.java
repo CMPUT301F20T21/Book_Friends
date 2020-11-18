@@ -1,6 +1,9 @@
 package com.cmput301f20t21.bookfriends.ui.request;
 
+import android.Manifest;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -9,12 +12,16 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.cmput301f20t21.bookfriends.R;
@@ -36,9 +43,11 @@ public class MapDialog extends DialogFragment {
     private Button confirmSearchButton;
     private RequestViewModel vm;
     private int position;
+    private Context context;
 
     // constructor
-    public MapDialog(RequestViewModel vm, int position) {
+    public MapDialog(Context context,RequestViewModel vm, int position) {
+        this.context = context;
         this.vm = vm;
         this.position = position;
     }
@@ -94,9 +103,8 @@ public class MapDialog extends DialogFragment {
                                 .position(latLng)
                                 .title(address.getAddressLine(0));
                         myMap.addMarker(options);
-                        // TODO: hide the keyboard after searching (optional)
-                        // not sure why this is not working properly
-                        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        inputMethodManager.hideSoftInputFromWindow(textView.getWindowToken(),0);
                     }
                 }
                 return false;
@@ -116,6 +124,7 @@ public class MapDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
                 // accept the request only when user specifies the location of meeting
+                Toast.makeText(context, "Accepted Request", Toast.LENGTH_SHORT).show();
                 vm.acceptRequest(position);
                 dialog.dismiss();
             }
@@ -123,5 +132,4 @@ public class MapDialog extends DialogFragment {
 
         return dialog;
     }
-
 }
