@@ -22,6 +22,7 @@ public class BrowseDetailActivity extends BaseDetailActivity {
         super.onCreate(savedInstanceState);
         vm = new ViewModelProvider(this).get(BrowseDetailViewModel.class);
         button.setText(R.string.click_to_request);
+        button.setOnClickListener(this::sendRequest);
     }
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

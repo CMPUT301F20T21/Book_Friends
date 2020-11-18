@@ -13,7 +13,7 @@ public class BorrowedDetailActivity extends BaseDetailActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        button.setText(R.string.borrowed_button);
+        button.setText(R.string.scan_to_return);
     }
 
     @Override

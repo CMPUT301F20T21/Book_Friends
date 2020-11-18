@@ -96,7 +96,7 @@
     <string name="scan_to_receive">scan to receive</string>
     <string name="wait_for_acceptance">waiting for acceptance</string>
     <string name="click_to_request">click to request</string>
-    <string name="borrowed_button">scan to return </string>
+    <string name="scan_to_return">scan to return </string>
     <string name="click_to_see_requests">click to see requests</string>
     <string name="scan_to_hand_over">scan to hand over</string>
 
