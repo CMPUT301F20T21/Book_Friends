@@ -6,7 +6,7 @@
     <data>
         <variable
             name="vm"
-            type="com.cmput301f20t21.bookfriends.ui.add.AddEditViewModel" />
+            type="com.cmput301f20t21.bookfriends.ui.library.AddEditViewModel" />
     </data>
 
     <ScrollView
@@ -157,6 +157,8 @@
                     android:layout_height="wrap_content"
                     android:text="@={vm.bookIsbn}"
                     android:hint="@string/string_isbn"
+                    android:inputType="number"
+                    android:maxLength="13"
                     android:singleLine="true" />
             </com.google.android.material.textfield.TextInputLayout>
 

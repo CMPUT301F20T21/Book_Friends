@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.User;
-import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
+import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
 import com.cmput301f20t21.bookfriends.ui.login.LoginActivity;
 
 public class ProfileFragment extends Fragment implements ProfileEditDialog.EditListener {
@@ -43,7 +43,7 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.EditL
 
 
         // get the login information from firebase
-        User firebaseUser = AuthRepository.getInstance().getCurrentUser();
+        User firebaseUser = AuthRepositoryImpl.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             String userId = firebaseUser.getUid();
             String username = firebaseUser.getUsername();
@@ -60,7 +60,7 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.EditL
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             //logout from the firebase
-            AuthRepository.getInstance().signOut();
+            AuthRepositoryImpl.getInstance().signOut();
         });
 
         //click on the the edit icon, bring to another fragment to edit

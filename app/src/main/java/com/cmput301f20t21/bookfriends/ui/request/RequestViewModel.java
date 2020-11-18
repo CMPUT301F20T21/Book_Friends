@@ -15,9 +15,9 @@ import androidx.lifecycle.ViewModel;
 
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.entities.Request;
-import com.cmput301f20t21.bookfriends.repositories.BookRepository;
-import com.cmput301f20t21.bookfriends.repositories.RequestRepository;
-import com.cmput301f20t21.bookfriends.repositories.api.IRequestRepository;
+import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
+import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
+import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
@@ -33,8 +33,8 @@ public class RequestViewModel extends ViewModel {
     private final MutableLiveData<ArrayList<Request>> requests = new MutableLiveData<>(new ArrayList<>());
     private final ArrayList<Request> requestsData = requests.getValue();
 
-    private final IRequestRepository requestService = RequestRepository.getInstance();
-    private final BookRepository bookService = BookRepository.getInstance();
+    private final RequestRepository requestService = RequestRepositoryImpl.getInstance();
+    private final BookRepositoryImpl bookService = BookRepositoryImpl.getInstance();
 
     /**
      * Function to get the book information from FireStore
@@ -44,7 +44,7 @@ public class RequestViewModel extends ViewModel {
         bookService.getBookById(bookId).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
-                book.setValue(bookService.getBookFromDocument(document));
+                book.setValue(document.toObject(Book.class));
             }
         });
     }

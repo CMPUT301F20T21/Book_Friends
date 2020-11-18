@@ -9,7 +9,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
 
-public interface IRequestRepository {
+public interface RequestRepository {
     Task<QuerySnapshot> getByBookId(String bookId);
     Task<QuerySnapshot> getBorrowedRequestByUsername(String username);
     Task<List<Request>> getAllRequestsByUsername(String username, REQUEST_STATUS status);

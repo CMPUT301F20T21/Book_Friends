@@ -33,21 +33,18 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cmput301f20t21.bookfriends.utils.GlideApp;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.ui.library.OwnedListFragment;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import com.cmput301f20t21.bookfriends.utils.ImagePainter;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -64,7 +61,6 @@ public class RequestActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private TextView titleTextView;
     private TextView authorTextView;
-    private TextView descriptionTextView;
     private TextView bookStatus;
     private ImageView bookImage;
 
@@ -73,12 +69,11 @@ public class RequestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.view_all_requests_activity);
+        setContentView(R.layout.activity_view_all_requests);
 
         // bind the text view
-        titleTextView = findViewById(R.id.title_text_view);
-        authorTextView = findViewById(R.id.author_text_view);
-        descriptionTextView = findViewById(R.id.description_text_view);
+        titleTextView = findViewById(R.id.detail_title);
+        authorTextView = findViewById(R.id.detail_author);
         bookStatus = findViewById(R.id.status_text_view);
         bookImage = findViewById(R.id.book_image_view);
 
@@ -90,13 +85,8 @@ public class RequestActivity extends AppCompatActivity {
         vm.getBook(bookId).observe(this, book -> {
             titleTextView.setText(book.getTitle());
             authorTextView.setText(book.getAuthor());
-            descriptionTextView.setText(book.getDescription());
             bookStatus.setText(book.getStatus().toString());
-//            StorageReference storageReference = FirebaseStorage.getInstance().getReference(book.getCoverImageName());
-//            GlideApp.with(this)
-//                    .load(storageReference)
-//                    .placeholder(R.drawable.no_image)
-//                    .into(bookImage);
+            ImagePainter.paintImage(bookImage, book.getImageUrl());
         });
 
 
@@ -170,7 +160,7 @@ public class RequestActivity extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(inflater.inflate(R.layout.confirm_dialog, null))
+        builder.setView(inflater.inflate(R.layout.dialog_confirm, null))
                 .setTitle(getString(R.string.accept_this_request))
                 .setPositiveButton(R.string.edit_confirm, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.cmput301f20t21.bookfriends.R;
-import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 
 public class BrowseDetailActivity extends BaseDetailActivity {
@@ -36,12 +35,12 @@ public class BrowseDetailActivity extends BaseDetailActivity {
     }
 
     private void sendRequest(View view) {
-        vm.sendRequest(detailBook, this::onSendRequestSuccess, this::onSendRequestFailure);
+        vm.sendRequest(book, this::onSendRequestSuccess, this::onSendRequestFailure);
     }
 
     private void onSendRequestSuccess() {
         Intent intent = new Intent();
-        intent.putExtra(REQUESTED_BOOK_INTENT_KEY, detailBook);
+        intent.putExtra(REQUESTED_BOOK_INTENT_KEY, book);
         setResult(RESULT_OK, intent);
         finish();
     }

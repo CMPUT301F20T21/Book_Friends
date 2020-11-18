@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 
-public class DetailBorrowedActivity extends BaseDetailActivity {
+public class BorrowedDetailActivity extends BaseDetailActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

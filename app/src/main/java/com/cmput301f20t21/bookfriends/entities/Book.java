@@ -17,6 +17,7 @@ public class Book implements Parcelable {
     private String description;
     private String owner; // the owner's username
     private BOOK_STATUS status;
+    private String imageUrl; // the downloadable, public url of the cover image
 
     // used for firebase document toObject call
     public Book() {
@@ -30,6 +31,26 @@ public class Book implements Parcelable {
         this.description = description;
         this.owner = owner;
         this.status = status;
+        this.imageUrl = null;
+    }
+
+    public Book(String id, String isbn, String title, String author, String description, String owner, BOOK_STATUS status, String imageUrl) {
+        this.id = id;
+        this.isbn = isbn;
+        this.title = title;
+        this.author = author;
+        this.description = description;
+        this.owner = owner;
+        this.status = status;
+        this.imageUrl = imageUrl;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String url) {
+        this.imageUrl = url;
     }
 
     public String getId() {
@@ -76,12 +97,15 @@ public class Book implements Parcelable {
                 author.equals(book.author) &&
                 Objects.equals(description, book.description) &&
                 owner.equals(book.owner) &&
+                (
+                        (imageUrl != null && imageUrl.equals(book.imageUrl))  || (imageUrl == null && book.imageUrl == null)
+                ) &&
                 status == book.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, isbn, title, author, description, owner, status);
+        return Objects.hash(id, isbn, title, author, description, owner, status, imageUrl);
     }
 
     // Implement parcelable boilerplate
@@ -99,6 +123,7 @@ public class Book implements Parcelable {
         dest.writeString(description);
         dest.writeString(owner);
         dest.writeString(status.toString());
+        dest.writeString(imageUrl);
     }
 
     public static final Parcelable.Creator<Book> CREATOR = new Parcelable.Creator<Book>() {
@@ -119,5 +144,6 @@ public class Book implements Parcelable {
         description = in.readString();
         owner = in.readString();
         status = BOOK_STATUS.valueOf(in.readString());
+        imageUrl = in.readString();
     }
 }
