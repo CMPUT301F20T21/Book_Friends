@@ -4,6 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.cmput301f20t21.bookfriends.ui.borrow.accepted.AcceptedListFragment;
+import com.cmput301f20t21.bookfriends.ui.borrow.requested.RequestedListFragment;
+
 public class BorrowTabCollectionAdapter extends FragmentStateAdapter {
     public enum TabType {
         REQUESTED_BOOKS,

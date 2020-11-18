@@ -7,7 +7,7 @@
  * github URL: https://github.com/CMPUT301F20T21/Book_Friends
  */
 
-package com.cmput301f20t21.bookfriends.ui.library;
+package com.cmput301f20t21.bookfriends.ui.library.owned;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,7 +30,7 @@ import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
-import com.cmput301f20t21.bookfriends.ui.request.RequestActivity;
+import com.cmput301f20t21.bookfriends.ui.library.add.AddEditActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 

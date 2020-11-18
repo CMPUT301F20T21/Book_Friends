@@ -1,4 +1,4 @@
-package com.cmput301f20t21.bookfriends.ui.library;
+package com.cmput301f20t21.bookfriends.ui.library.owned;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
+import com.cmput301f20t21.bookfriends.ui.library.add.AddEditActivity;
 
 public class OwnedDetailActivity extends BaseDetailActivity {
 

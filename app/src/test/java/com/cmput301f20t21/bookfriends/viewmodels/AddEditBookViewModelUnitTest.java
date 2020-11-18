@@ -11,7 +11,7 @@ import com.cmput301f20t21.bookfriends.fakes.callbacks.FakeSuccessCallbackWithMes
 import com.cmput301f20t21.bookfriends.fakes.repositories.FakeAuthRepository;
 import com.cmput301f20t21.bookfriends.fakes.repositories.FakeBookRepository;
 import com.cmput301f20t21.bookfriends.fakes.tasks.FakeSuccessTask;
-import com.cmput301f20t21.bookfriends.ui.library.AddEditViewModel;
+import com.cmput301f20t21.bookfriends.ui.library.add.AddEditViewModel;
 
 import org.junit.Before;
 import org.junit.Rule;
