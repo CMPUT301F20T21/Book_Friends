@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,14 +20,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Request;
+import com.cmput301f20t21.bookfriends.ui.library.owned.OwnedListFragment;
+import com.google.android.gms.maps.GoogleMap;
 import com.cmput301f20t21.bookfriends.utils.ImagePainter;
-
 import java.util.ArrayList;
 
 public class RequestActivity extends AppCompatActivity {
+
     private RecyclerView recyclerView;
     private RequestAdapter requestAdapter;
-    //    private final ArrayList<Request> requestDataList = new ArrayList<>();
     private RecyclerView.LayoutManager layoutManager;
     private TextView titleTextView;
     private TextView authorTextView;
@@ -133,8 +135,9 @@ public class RequestActivity extends AppCompatActivity {
                 .setTitle(getString(R.string.accept_this_request))
                 .setPositiveButton(R.string.edit_confirm, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(RequestActivity.this, "Accepted Request", Toast.LENGTH_SHORT).show();
-                        vm.acceptRequest(position);
+                        MapDialog mapDialog = new MapDialog(getApplicationContext(), vm, position);
+                        mapDialog.show(getSupportFragmentManager(), "map");
+//                        vm.acceptRequest(position);
                     }
                 })
                 .setNegativeButton(R.string.edit_cancel, null)
