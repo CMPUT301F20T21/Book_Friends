@@ -60,8 +60,4 @@ public class AcceptedOwnedDetailActivity extends BaseDetailActivity {
             }
         }
     }
-
-    private void test(View view) {
-        vm.handleScannedIsbn(book.getIsbn(), book.getIsbn());
-    }
 }
