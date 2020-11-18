@@ -8,21 +8,21 @@ import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
-import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
-import com.cmput301f20t21.bookfriends.repositories.BookRepository;
-import com.cmput301f20t21.bookfriends.repositories.RequestRepository;
-import com.cmput301f20t21.bookfriends.repositories.api.IAuthRepository;
-import com.cmput301f20t21.bookfriends.repositories.api.IBookRepository;
-import com.cmput301f20t21.bookfriends.repositories.api.IRequestRepository;
+import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
+import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
+import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
+import com.cmput301f20t21.bookfriends.repositories.api.AuthRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.BookRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class RequestedViewModel extends ViewModel {
-    private final IAuthRepository authRepository;
-    private final IBookRepository bookRepository;
-    private final IRequestRepository requestRepository;
+    private final AuthRepository authRepository;
+    private final BookRepository bookRepository;
+    private final RequestRepository requestRepository;
 
 
     private final MutableLiveData<List<Book>> books = new MutableLiveData<>(new ArrayList<>());
@@ -31,11 +31,11 @@ public class RequestedViewModel extends ViewModel {
 
     // production
     public RequestedViewModel() {
-        this(AuthRepository.getInstance(), BookRepository.getInstance(), RequestRepository.getInstance());
+        this(AuthRepositoryImpl.getInstance(), BookRepositoryImpl.getInstance(), RequestRepositoryImpl.getInstance());
     }
 
     // test
-    public RequestedViewModel(IAuthRepository authRepository, IBookRepository bookRepository, IRequestRepository requestRepository){
+    public RequestedViewModel(AuthRepository authRepository, BookRepository bookRepository, RequestRepository requestRepository){
         this.authRepository = authRepository;
         this.bookRepository = bookRepository;
         this.requestRepository = requestRepository;

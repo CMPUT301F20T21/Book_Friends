@@ -1,14 +1,12 @@
 package com.cmput301f20t21.bookfriends.fakes.repositories;
 
 import com.cmput301f20t21.bookfriends.entities.User;
-import com.cmput301f20t21.bookfriends.repositories.api.IUserRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.UserRepository;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
 
-public class FakeUserRepository implements IUserRepository {
+public class FakeUserRepository implements UserRepository {
     @Override
     public Task<Void> add(String uid, String username, String email) {
         return null;

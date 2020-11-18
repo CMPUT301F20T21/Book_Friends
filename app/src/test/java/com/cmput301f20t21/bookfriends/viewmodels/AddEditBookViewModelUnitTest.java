@@ -6,14 +6,12 @@ import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.entities.User;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
-import com.cmput301f20t21.bookfriends.enums.LOGIN_ERROR;
 import com.cmput301f20t21.bookfriends.fakes.callbacks.FakeFailCallbackWithMessage;
-import com.cmput301f20t21.bookfriends.fakes.callbacks.FakeSuccessCallback;
 import com.cmput301f20t21.bookfriends.fakes.callbacks.FakeSuccessCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.fakes.repositories.FakeAuthRepository;
 import com.cmput301f20t21.bookfriends.fakes.repositories.FakeBookRepository;
 import com.cmput301f20t21.bookfriends.fakes.tasks.FakeSuccessTask;
-import com.cmput301f20t21.bookfriends.ui.add.AddEditViewModel;
+import com.cmput301f20t21.bookfriends.ui.library.AddEditViewModel;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -21,7 +19,6 @@ import org.junit.Test;
 import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.times;

@@ -19,10 +19,10 @@ import androidx.lifecycle.ViewModel;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
-import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
-import com.cmput301f20t21.bookfriends.repositories.BookRepository;
-import com.cmput301f20t21.bookfriends.repositories.api.IAuthRepository;
-import com.cmput301f20t21.bookfriends.repositories.api.IBookRepository;
+import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
+import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
+import com.cmput301f20t21.bookfriends.repositories.api.AuthRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.BookRepository;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
@@ -34,8 +34,8 @@ import java.util.stream.Collectors;
  */
 public class OwnedViewModel extends ViewModel {
 
-    private final IAuthRepository authRepository;
-    private final IBookRepository bookRepository;
+    private final AuthRepository authRepository;
+    private final BookRepository bookRepository;
 
     private final MutableLiveData<List<Book>> books = new MutableLiveData<>(new ArrayList<>());
     private final List<Book> bookData = books.getValue();
@@ -45,10 +45,10 @@ public class OwnedViewModel extends ViewModel {
     private MutableLiveData<BOOK_ERROR> errorMessageObserver = new MutableLiveData<>();
 
     public OwnedViewModel() {
-        this(AuthRepository.getInstance(), BookRepository.getInstance());
+        this(AuthRepositoryImpl.getInstance(), BookRepositoryImpl.getInstance());
     }
 
-    public OwnedViewModel(IAuthRepository authRepository, IBookRepository bookRepository) {
+    public OwnedViewModel(AuthRepository authRepository, BookRepository bookRepository) {
         this.authRepository = authRepository;
         this.bookRepository = bookRepository;
 

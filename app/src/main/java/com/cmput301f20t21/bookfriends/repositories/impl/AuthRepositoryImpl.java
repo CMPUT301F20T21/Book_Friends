@@ -1,24 +1,24 @@
-package com.cmput301f20t21.bookfriends.repositories;
+package com.cmput301f20t21.bookfriends.repositories.impl;
 
 import com.cmput301f20t21.bookfriends.entities.User;
 import com.cmput301f20t21.bookfriends.exceptions.InvalidLoginCredentialsException;
-import com.cmput301f20t21.bookfriends.repositories.api.IAuthRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.AuthRepository;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class AuthRepository implements IAuthRepository{
+public class AuthRepositoryImpl implements AuthRepository {
     private FirebaseAuth mAuth;
     private String username;
 
-    private static final IAuthRepository instance = new AuthRepository();
+    private static final AuthRepository instance = new AuthRepositoryImpl();
 
-    private AuthRepository() {
+    private AuthRepositoryImpl() {
         mAuth = FirebaseAuth.getInstance();
     }
 
-    public static IAuthRepository getInstance() {
+    public static AuthRepository getInstance() {
         return instance;
     }
 

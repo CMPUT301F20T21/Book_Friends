@@ -42,10 +42,10 @@
             </intent-filter>
 
         </activity>
-        <activity android:name=".ui.add.AddEditActivity"
+        <activity android:name=".ui.library.AddEditActivity"
             android:label="@string/add_edit">
         </activity>
-        <activity android:name=".ui.library.DetailLibraryActivity"
+        <activity android:name=".ui.library.OwnedDetailActivity"
             android:label="@string/view">
         </activity>
         <activity
@@ -68,7 +68,7 @@
             android:label="@string/requested_detail">
         </activity>
         <activity
-            android:name="com.cmput301f20t21.bookfriends.ui.library.DetailBorrowedActivity"
+            android:name="com.cmput301f20t21.bookfriends.ui.library.BorrowedDetailActivity"
             android:label="@string/borrowed_detail">
         </activity>
         <activity android:name=".ui.request.RequestActivity"

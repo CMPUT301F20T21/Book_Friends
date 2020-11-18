@@ -1,11 +1,11 @@
-package com.cmput301f20t21.bookfriends.repositories;
+package com.cmput301f20t21.bookfriends.repositories.impl;
 
 import android.util.Log;
 
 import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 import com.cmput301f20t21.bookfriends.exceptions.UnexpectedException;
-import com.cmput301f20t21.bookfriends.repositories.api.IRequestRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -19,16 +19,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class RequestRepository implements IRequestRepository {
+public class RequestRepositoryImpl implements RequestRepository {
     private CollectionReference requestCollection;
 
-    private static final IRequestRepository instance = new RequestRepository();
+    private static final RequestRepository instance = new RequestRepositoryImpl();
 
-    private RequestRepository() {
+    private RequestRepositoryImpl() {
         requestCollection = FirebaseFirestore.getInstance().collection("requests");
     }
 
-    public static IRequestRepository getInstance() {
+    public static RequestRepository getInstance() {
         return instance;
     }
 

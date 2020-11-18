@@ -27,7 +27,7 @@ public class ProfileEditDialog extends DialogFragment {
     @NotNull
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container,Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_editprofile,container,false);
+        View view = inflater.inflate(R.layout.dialog_edit_profile,container,false);
         editEmail = view.findViewById(R.id.edit_email);
         cancel = view.findViewById(R.id.text_cancel);
         confirm = view.findViewById(R.id.text_confirm);

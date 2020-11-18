@@ -32,7 +32,7 @@ public class AcceptedListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         mViewModel = new ViewModelProvider(this).get(AcceptedListViewModel.class);
-        return inflater.inflate(R.layout.accepted_list_book, container, false);
+        return inflater.inflate(R.layout.list_accepted_book, container, false);
     }
 
     @Override

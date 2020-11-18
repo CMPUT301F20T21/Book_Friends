@@ -17,10 +17,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cmput301f20t21.bookfriends.utils.GlideApp;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.ui.library.OwnedListFragment;
+import com.cmput301f20t21.bookfriends.utils.ImagePainter;
 
 import java.util.ArrayList;
 
@@ -39,7 +39,7 @@ public class RequestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.view_all_requests_activity);
+        setContentView(R.layout.activity_view_all_requests);
 
         // bind the text view
         titleTextView = findViewById(R.id.detail_title);
@@ -56,16 +56,7 @@ public class RequestActivity extends AppCompatActivity {
             titleTextView.setText(book.getTitle());
             authorTextView.setText(book.getAuthor());
             bookStatus.setText(book.getStatus().toString());
-            if (book.getImageUrl() == null) {
-                GlideApp.with(this)
-                        .load(R.drawable.no_image)
-                        .into(bookImage);
-            } else {
-                GlideApp.with(this)
-                        .load(book.getImageUrl())
-                        .placeholder(R.drawable.no_image)
-                        .into(bookImage);
-            }
+            ImagePainter.paintImage(bookImage, book.getImageUrl());
         });
 
 
@@ -139,7 +130,7 @@ public class RequestActivity extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(inflater.inflate(R.layout.confirm_dialog, null))
+        builder.setView(inflater.inflate(R.layout.dialog_confirm, null))
                 .setTitle(getString(R.string.accept_this_request))
                 .setPositiveButton(R.string.edit_confirm, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

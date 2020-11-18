@@ -11,13 +11,9 @@ import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.ui.component.BaseBookListAdapter;
-import com.cmput301f20t21.bookfriends.utils.GlideApp;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 

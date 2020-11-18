@@ -7,7 +7,7 @@
  * github URL: https://github.com/CMPUT301F20T21/Book_Friends
  */
 
-package com.cmput301f20t21.bookfriends.ui.add;
+package com.cmput301f20t21.bookfriends.ui.library;
 
 import android.net.Uri;
 
@@ -19,10 +19,10 @@ import com.cmput301f20t21.bookfriends.callbacks.OnFailCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
-import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
-import com.cmput301f20t21.bookfriends.repositories.BookRepository;
-import com.cmput301f20t21.bookfriends.repositories.api.IAuthRepository;
-import com.cmput301f20t21.bookfriends.repositories.api.IBookRepository;
+import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
+import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
+import com.cmput301f20t21.bookfriends.repositories.api.AuthRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.BookRepository;
 
 import javax.annotation.Nullable;
 
@@ -35,8 +35,8 @@ public class AddEditViewModel extends ViewModel {
     public final MutableLiveData<String> bookTitle = new MutableLiveData<>();
     public final MutableLiveData<String> bookAuthor = new MutableLiveData<>();
     public final MutableLiveData<String> bookDescription = new MutableLiveData<>();
-    private final IAuthRepository authRepository;
-    private final IBookRepository bookRepository;
+    private final AuthRepository authRepository;
+    private final BookRepository bookRepository;
     // the local, updated image uri that might update after first remote image fetch
     private final MutableLiveData<Uri> localImageUri = new MutableLiveData<>();
     // the book we are editing
@@ -52,11 +52,11 @@ public class AddEditViewModel extends ViewModel {
 
     // production
     public AddEditViewModel() {
-        this(AuthRepository.getInstance(), BookRepository.getInstance());
+        this(AuthRepositoryImpl.getInstance(), BookRepositoryImpl.getInstance());
     }
 
     // test - allow us to inject repository dependency in test
-    public AddEditViewModel(IAuthRepository authRepository, IBookRepository bookRepository) {
+    public AddEditViewModel(AuthRepository authRepository, BookRepository bookRepository) {
         this.authRepository = authRepository;
         this.bookRepository = bookRepository;
     }

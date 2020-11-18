@@ -8,25 +8,25 @@ import com.cmput301f20t21.bookfriends.callbacks.OnFailCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallback;
 import com.cmput301f20t21.bookfriends.enums.SIGNUP_ERROR;
 import com.cmput301f20t21.bookfriends.exceptions.UsernameNotExistException;
-import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
-import com.cmput301f20t21.bookfriends.repositories.UserRepository;
-import com.cmput301f20t21.bookfriends.repositories.api.IAuthRepository;
-import com.cmput301f20t21.bookfriends.repositories.api.IUserRepository;
+import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
+import com.cmput301f20t21.bookfriends.repositories.impl.UserRepositoryImpl;
+import com.cmput301f20t21.bookfriends.repositories.api.AuthRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.UserRepository;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
 
 public class CreateAccountViewModel extends ViewModel {
-    private final IAuthRepository authRepository;
-    private final IUserRepository userRepository;
+    private final AuthRepository authRepository;
+    private final UserRepository userRepository;
     private final String TAG = "SIGNUP_ERROR";
 
     // production
     public CreateAccountViewModel() {
-        this(AuthRepository.getInstance(), UserRepository.getInstance());
+        this(AuthRepositoryImpl.getInstance(), UserRepositoryImpl.getInstance());
     }
-    public CreateAccountViewModel(IAuthRepository authRepository, IUserRepository userRepository){
+    public CreateAccountViewModel(AuthRepository authRepository, UserRepository userRepository){
         this.authRepository = authRepository;
         this.userRepository = userRepository;
     }
