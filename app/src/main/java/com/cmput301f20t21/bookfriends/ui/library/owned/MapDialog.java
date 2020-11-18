@@ -41,7 +41,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapDialog extends DialogFragment {
+public class MapDialog extends DialogFragment implements OnMapReadyCallback {
     private GoogleMap myMap;
     private EditText searchText;
     private Button cancelSearchButton;
@@ -78,26 +78,7 @@ public class MapDialog extends DialogFragment {
 
         mapView.onCreate(dialog.onSaveInstanceState());
         mapView.onResume();
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                myMap = googleMap;
-                if (locationPermissionGranted) {
-                    getDeviceLocation(dialog);
-                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        return;
-                    }
-                    myMap.setMyLocationEnabled(true);
-                } else {
-                    LatLng edmontonLatLng = new LatLng(53.544388, -113.490929);
-                    moveCamera(edmontonLatLng, 12f);
-//                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(edmontonLatLng, 12f));
-                }
-                LatLng edmontonLatLng = new LatLng(53.544388, -113.490929);
-                moveCamera(edmontonLatLng, 12f);
-            }
-        });
+        mapView.getMapAsync(this);
 
         searchText = (EditText) dialog.findViewById(R.id.input_search);
         searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -220,5 +201,21 @@ public class MapDialog extends DialogFragment {
 
     private void moveCamera(LatLng latLng, float zoom) {
         myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        myMap = googleMap;
+        if (locationPermissionGranted) {
+            getDeviceLocation(getDialog());
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            myMap.setMyLocationEnabled(true);
+        } else {
+            LatLng edmontonLatLng = new LatLng(53.544388, -113.490929);
+            moveCamera(edmontonLatLng, 12f);
+        }
     }
 }
