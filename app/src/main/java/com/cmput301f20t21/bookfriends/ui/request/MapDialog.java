@@ -79,6 +79,8 @@ public class MapDialog extends DialogFragment {
                     }
 
                     if (addressList.size() > 0) {
+                        // clear the previous marker
+                        myMap.clear();
                         // get the first address
                         Address address = addressList.get(0);
                         LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
