@@ -9,6 +9,7 @@
     <string name="string_borrowed">Borrowed</string>
     <string name="title_borrow">Borrow</string>
     <string name="title_browse">Browse</string>
+    <string name="title_scanner">Scan to Add</string>
     <string name="title_scanner_add">Scan to Add</string>
     <string name="title_profile">Me</string>
     <string name="title_notifications">Notifications</string>
@@ -86,6 +87,7 @@
     <string name="accepted_detail">he Book Detail (Accepted)</string>
     <string name="browse_detail">The Book Detail (Available)</string>
     <string name="requested_detail">The Book Detail (Requested)</string>
+    <string name="accepted_owned_detail">The Book Detail (Accepted Owned)</string>
     <string name="borrowed_detail">View A Borrowed Book</string>
     <string name="author">Author: %s</string>
     <string name="upload_new_image">Upload a new image</string>
@@ -93,4 +95,7 @@
     <string name="delete_cover_image">Delete cover image</string>
     <string name="address_search">Enter Address</string>
     <string name="request_book_successful">Request successfully sent</string>
+    <string name="scan_hand_over">Scan to hand over</string>
+    <string name="scan_invalid_isbn_error">Scanned ISBN does not match current ISBN</string>
+    <string name="scan_hand_over_success">Waiting for %s to receive...</string>
 </resources>
