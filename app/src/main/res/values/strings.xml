@@ -76,6 +76,7 @@
     <string name="fail_to_edit_book">Failed to edit book</string>
     <string name="scanner_scanning">Scanning...</string>
     <string name="accept_this_request">Accept this request?</string>
+    <string name="isbn_invalid">isbn should be 10 or 13 digits</string>
     <string name="request">Request</string>
     <string name="delete">delete</string>
     <string name="add_edit">Add/Edit</string>

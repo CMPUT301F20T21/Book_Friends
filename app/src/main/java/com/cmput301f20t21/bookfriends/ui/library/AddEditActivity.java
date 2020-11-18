@@ -203,8 +203,8 @@ public class AddEditActivity extends AppCompatActivity {
         String title = titleLayout.getEditText().getText().toString();
         String author = authorLayout.getEditText().getText().toString();
 
-        if (isbn.length() == 0) {
-            isbnLayout.setError(getString(R.string.empty_error));
+        if (isbn.length() != 10 && isbn.length() != 13) {
+            isbnLayout.setError(getString(R.string.isbn_invalid));
             isValid = false;
         }
 
@@ -217,6 +217,7 @@ public class AddEditActivity extends AppCompatActivity {
             authorLayout.setError(getString(R.string.empty_error));
             isValid = false;
         }
+
         return isValid;
     }
 
