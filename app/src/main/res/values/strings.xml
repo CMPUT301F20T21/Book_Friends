@@ -83,7 +83,7 @@
     <string name="edit_detail">Edit</string>
     <string name="view_request">View All Requests</string>
     <string name="view">View</string>
-    <string name="accepted_detail">he Book Detail (Accepted)</string>
+    <string name="accepted_detail">The Book Detail (Accepted)</string>
     <string name="browse_detail">The Book Detail (Available)</string>
     <string name="requested_detail">The Book Detail (Requested)</string>
     <string name="borrowed_detail">View A Borrowed Book</string>
