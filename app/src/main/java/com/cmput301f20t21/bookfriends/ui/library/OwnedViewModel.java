@@ -166,7 +166,7 @@ public class OwnedViewModel extends ViewModel {
     /**
      * fetch a list of book that belongs to current user
      */
-    private void fetchBooks() {
+    protected void fetchBooks() {
         String currentUsername = authRepository.getCurrentUser().getUsername();
         bookRepository.getBooksOfOwnerId(currentUsername)
                 .addOnSuccessListener(

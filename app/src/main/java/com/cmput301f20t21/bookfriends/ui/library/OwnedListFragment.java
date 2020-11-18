@@ -28,6 +28,7 @@ import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
+import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 import com.cmput301f20t21.bookfriends.ui.request.RequestActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -39,6 +40,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class OwnedListFragment extends Fragment {
     public static final String VIEW_REQUEST_KEY = "com.cmput301f20t21.bookfriends.VIEW_REQUEST";
+    public static final String BOOK_STATUS_KEY = "com.cmput301f20t21.bookfriends.BOOK_STATUS";
 
     private OwnedViewModel vm;
     private RecyclerView recyclerView;
@@ -157,6 +159,13 @@ public class OwnedListFragment extends Fragment {
                 Book book = data.getParcelableExtra(AddEditActivity.NEW_BOOK_INTENT_KEY);
                 vm.addBook(book);
                 Toast.makeText(getActivity(), getString(R.string.add_book_successful), Toast.LENGTH_SHORT).show();
+            } else if (requestCode == BOOK_ACTION.VIEW_REQUESTS.getCode()) {
+                BOOK_STATUS bookStatus = (BOOK_STATUS) data.getSerializableExtra(BOOK_STATUS_KEY);
+                if (bookStatus != BOOK_STATUS.REQUESTED) {
+                    // if the previously "Requested" book now have a new status
+                    // just fetch all books from firestore again
+                    vm.fetchBooks();
+                }
             } else {
                 Book oldBook = data.getParcelableExtra(AddEditActivity.OLD_BOOK_INTENT_KEY);
                 Book updatedBook = data.getParcelableExtra(AddEditActivity.UPDATED_BOOK_INTENT_KEY);
@@ -209,7 +218,7 @@ public class OwnedListFragment extends Fragment {
     private void onViewRequests(String bookId) {
         Intent intent = new Intent(this.getActivity(), RequestActivity.class);
         intent.putExtra(VIEW_REQUEST_KEY, bookId);
-        startActivity(intent);
+        startActivityForResult(intent, BOOK_ACTION.VIEW_REQUESTS.getCode());
     }
 
     private void onFilter(View view) {

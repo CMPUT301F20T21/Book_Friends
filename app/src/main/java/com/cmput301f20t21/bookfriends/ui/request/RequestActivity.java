@@ -1,6 +1,7 @@
 package com.cmput301f20t21.bookfriends.ui.request;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -27,7 +28,6 @@ import java.util.ArrayList;
 public class RequestActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RequestAdapter requestAdapter;
-    //    private final ArrayList<Request> requestDataList = new ArrayList<>();
     private RecyclerView.LayoutManager layoutManager;
     private TextView titleTextView;
     private TextView authorTextView;
@@ -44,6 +44,7 @@ public class RequestActivity extends AppCompatActivity {
         // bind the text view
         titleTextView = findViewById(R.id.detail_title);
         authorTextView = findViewById(R.id.detail_author);
+        // the text of the book status might change according to user action
         bookStatus = findViewById(R.id.status_text_view);
         bookImage = findViewById(R.id.book_image_view);
 
@@ -55,10 +56,13 @@ public class RequestActivity extends AppCompatActivity {
         vm.getBook(bookId).observe(this, book -> {
             titleTextView.setText(book.getTitle());
             authorTextView.setText(book.getAuthor());
-            bookStatus.setText(book.getStatus().toString());
+            bookStatus.setText(book.getStatus().toString().toLowerCase());
             ImagePainter.paintImage(bookImage, book.getImageUrl());
         });
 
+        vm.getBookStatus().observe(this, status -> {
+            bookStatus.setText(status.toString().toLowerCase());
+        });
 
         // set up the back button
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_white_18);
@@ -100,6 +104,9 @@ public class RequestActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra(OwnedListFragment.BOOK_STATUS_KEY, vm.getBookStatus().getValue());
+            setResult(RESULT_OK, resultIntent);
             finish();
             return true;
         }
@@ -136,6 +143,7 @@ public class RequestActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         Toast.makeText(RequestActivity.this, "Accepted Request", Toast.LENGTH_SHORT).show();
                         vm.acceptRequest(position);
+                        bookStatus.setText(vm.getBookStatus().toString().toLowerCase());
                     }
                 })
                 .setNegativeButton(R.string.edit_cancel, null)
