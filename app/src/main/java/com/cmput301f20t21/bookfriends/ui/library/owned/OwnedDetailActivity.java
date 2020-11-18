@@ -29,14 +29,13 @@ public class OwnedDetailActivity extends BaseDetailActivity {
             button.setVisibility(View.INVISIBLE);
         }
         else if (status == BOOK_STATUS.REQUESTED) {
-            button.setText(R.string.owned_requested_button);
+            button.setText(R.string.click_to_see_requests);
         }
         else if (status == BOOK_STATUS.ACCEPTED) {
-            button.setText(R.string.owned_accepted_button);
-
+            button.setText(R.string.scan_to_hand_over);
         }
         else if (status == BOOK_STATUS.BORROWED) {
-            button.setText(R.string.owned_borrowed_button);
+            button.setText(R.string.scan_to_receive);
         }
     }
 

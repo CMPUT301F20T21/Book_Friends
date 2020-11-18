@@ -14,7 +14,7 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        button.setText(R.string.accepted_button);
+        button.setText(R.string.scan_to_receive);
     }
 
     @Override
