@@ -1,5 +1,4 @@
-package com.cmput301f20t21.bookfriends.ui.borrow;
-
+package com.cmput301f20t21.bookfriends.ui.library.borrowed;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,23 +14,22 @@ import com.cmput301f20t21.bookfriends.ui.component.BaseBookListAdapter;
 
 import java.util.List;
 
-public class RequestedListAdapter extends BaseBookListAdapter {
-    private OnItemClickListener itemClickListener;
+public class BorrowedListAdapter extends BaseBookListAdapter {
+    private BorrowedListAdapter.OnItemClickListener itemClickListener;
 
     public interface OnItemClickListener {
         void run(int position);
     }
-
-    public RequestedListAdapter(List<Book> books, OnItemClickListener itemClickListener) {
+    public BorrowedListAdapter(List<Book> books, OnItemClickListener itemClickListener) {
         super(books);
         this.itemClickListener = itemClickListener;
     }
 
     @NonNull
     @Override
-    public RequestedListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_list, parent, false);
-        return new RequestedListAdapter.ViewHolder(itemView, itemClickListener);
+        return new ViewHolder(itemView, itemClickListener);
     }
 
     public static class ViewHolder extends BaseBookListAdapter.ViewHolder {
@@ -52,4 +50,6 @@ public class RequestedListAdapter extends BaseBookListAdapter {
             this.owner.setText(this.itemView.getResources().getString(R.string.book_list_item_owner, book.getOwner()));
         }
     }
+
+
 }

@@ -1,4 +1,4 @@
-package com.cmput301f20t21.bookfriends.ui.request;
+package com.cmput301f20t21.bookfriends.ui.library.owned;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -25,6 +25,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.cmput301f20t21.bookfriends.R;
+import com.cmput301f20t21.bookfriends.ui.library.owned.RequestViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
