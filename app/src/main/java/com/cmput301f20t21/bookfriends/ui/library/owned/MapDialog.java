@@ -6,11 +6,11 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -25,13 +25,17 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.cmput301f20t21.bookfriends.R;
-import com.cmput301f20t21.bookfriends.ui.library.owned.RequestViewModel;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,8 +50,16 @@ public class MapDialog extends DialogFragment {
     private int position;
     private Context context;
 
+    private FusedLocationProviderClient fusedLocationProviderClient;
+
+    private Boolean locationPermissionGranted = false;
+    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+    private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
+
     // constructor
-    public MapDialog(Context context,RequestViewModel vm, int position) {
+    public MapDialog(Context context, RequestViewModel vm, int position) {
         this.context = context;
         this.vm = vm;
         this.position = position;
@@ -56,20 +68,34 @@ public class MapDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        Dialog dialog =  super.onCreateDialog(savedInstanceState);
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.map_dialog);
+        getLocationPermission(dialog);
 
         MapView mapView = (MapView) dialog.findViewById(R.id.map_view);
+        MapsInitializer.initialize(getActivity());
 
         mapView.onCreate(dialog.onSaveInstanceState());
         mapView.onResume();
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
-                LatLng edmontonLatLng = new LatLng(53.544388, -113.490929);
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(edmontonLatLng, 12f));
                 myMap = googleMap;
+                if (locationPermissionGranted) {
+                    getDeviceLocation(dialog);
+                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                            && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    myMap.setMyLocationEnabled(true);
+                } else {
+                    LatLng edmontonLatLng = new LatLng(53.544388, -113.490929);
+                    moveCamera(edmontonLatLng, 12f);
+//                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(edmontonLatLng, 12f));
+                }
+                LatLng edmontonLatLng = new LatLng(53.544388, -113.490929);
+                moveCamera(edmontonLatLng, 12f);
             }
         });
 
@@ -104,6 +130,7 @@ public class MapDialog extends DialogFragment {
                                 .position(latLng)
                                 .title(address.getAddressLine(0));
                         myMap.addMarker(options);
+                        // hide the keyboard after searching
                         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
                         inputMethodManager.hideSoftInputFromWindow(textView.getWindowToken(),0);
                     }
@@ -132,5 +159,66 @@ public class MapDialog extends DialogFragment {
         });
 
         return dialog;
+    }
+
+    private void getLocationPermission(Dialog dialog) {
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION};
+        if (ContextCompat.checkSelfPermission(dialog.getContext().getApplicationContext(),
+                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(dialog.getContext().getApplicationContext(),
+                    COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                locationPermissionGranted = true;
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), permissions, LOCATION_PERMISSION_REQUEST_CODE);
+            }
+        } else {
+            ActivityCompat.requestPermissions(getActivity(), permissions, LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        locationPermissionGranted = false;
+        switch (requestCode) {
+            case LOCATION_PERMISSION_REQUEST_CODE: {
+                if (grantResults.length >0) {
+                    for (int i = 0; i < grantResults.length; i++) {
+                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                            locationPermissionGranted = false;
+                            return;
+                        }
+                        locationPermissionGranted = true;
+                    }
+                }
+            }
+        }
+    }
+
+    private void getDeviceLocation(Dialog dialog) {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(dialog.getContext());
+
+        try {
+            if (locationPermissionGranted) {
+                Task location = fusedLocationProviderClient.getLastLocation();
+                location.addOnCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                        if (task.isSuccessful()) {
+                            Location currentLocation = (Location) task.getResult();
+                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15f);
+                        } else {
+                            Toast.makeText(context, "Unable to get current location", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        } catch (SecurityException e) {
+
+        }
+    }
+
+    private void moveCamera(LatLng latLng, float zoom) {
+        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
 }
