@@ -1,4 +1,4 @@
-package com.cmput301f20t21.bookfriends.ui.request;
+package com.cmput301f20t21.bookfriends.ui.library.owned;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Request;
-import com.cmput301f20t21.bookfriends.ui.library.OwnedListFragment;
 import com.cmput301f20t21.bookfriends.utils.ImagePainter;
 
 import java.util.ArrayList;

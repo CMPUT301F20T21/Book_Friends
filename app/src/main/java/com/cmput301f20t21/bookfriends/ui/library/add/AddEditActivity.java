@@ -1,4 +1,4 @@
-package com.cmput301f20t21.bookfriends.ui.library;
+package com.cmput301f20t21.bookfriends.ui.library.add;
 
 import android.Manifest;
 import android.app.AlertDialog;
