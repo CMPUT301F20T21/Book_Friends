@@ -175,7 +175,9 @@ public class RequestActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.edit_confirm, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Toast.makeText(RequestActivity.this, "Accepted Request", Toast.LENGTH_SHORT).show();
-                        openMapDialog();
+                        MapDialog mapDialog = new MapDialog();
+                        mapDialog.show(getSupportFragmentManager(), "map");
+//                        openMapDialog();
                         vm.acceptRequest(position);
                     }
                 })
