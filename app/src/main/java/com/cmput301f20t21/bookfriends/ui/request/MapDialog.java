@@ -34,10 +34,13 @@ public class MapDialog extends DialogFragment {
     private EditText searchText;
     private Button cancelSearchButton;
     private Button confirmSearchButton;
+    private RequestViewModel vm;
+    private int position;
 
     // constructor
-    public MapDialog() {
-
+    public MapDialog(RequestViewModel vm, int position) {
+        this.vm = vm;
+        this.position = position;
     }
 
     @NonNull
@@ -112,7 +115,8 @@ public class MapDialog extends DialogFragment {
         confirmSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: accept the request only when user specifies the location of meeting
+                // accept the request only when user specifies the location of meeting
+                vm.acceptRequest(position);
                 dialog.dismiss();
             }
         });
