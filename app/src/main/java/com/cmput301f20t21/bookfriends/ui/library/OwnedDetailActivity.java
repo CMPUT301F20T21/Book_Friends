@@ -12,10 +12,9 @@ import androidx.annotation.Nullable;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
-import com.cmput301f20t21.bookfriends.ui.add.AddEditActivity;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 
-public class DetailLibraryActivity extends BaseDetailActivity {
+public class OwnedDetailActivity extends BaseDetailActivity {
 
     private Book oldBook;
 
@@ -25,7 +24,7 @@ public class DetailLibraryActivity extends BaseDetailActivity {
     }
 
     private void openAddEditActivity(Book book) {
-        Intent intent = new Intent(DetailLibraryActivity.this, AddEditActivity.class);
+        Intent intent = new Intent(OwnedDetailActivity.this, AddEditActivity.class);
         intent.putExtra(BaseDetailActivity.BOOK_ACTION_KEY, BOOK_ACTION.EDIT);
         intent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, book);
         startActivityForResult(intent, BOOK_ACTION.EDIT.getCode());
@@ -38,13 +37,13 @@ public class DetailLibraryActivity extends BaseDetailActivity {
                 if (oldBook != null) {
                     Intent resultIntent = new Intent();
                     resultIntent.putExtra(AddEditActivity.OLD_BOOK_INTENT_KEY, oldBook);
-                    resultIntent.putExtra(AddEditActivity.UPDATED_BOOK_INTENT_KEY, detailBook);
+                    resultIntent.putExtra(AddEditActivity.UPDATED_BOOK_INTENT_KEY, book);
                     setResult(RESULT_OK, resultIntent);
                 }
                 finish();
                 return true;
             case R.id.edit_button:
-                openAddEditActivity(detailBook);
+                openAddEditActivity(book);
                 return true;
         }
         return super.onOptionsItemSelected(item);

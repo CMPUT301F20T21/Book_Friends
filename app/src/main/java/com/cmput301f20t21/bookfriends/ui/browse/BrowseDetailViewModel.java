@@ -5,20 +5,20 @@ import androidx.lifecycle.ViewModel;
 import com.cmput301f20t21.bookfriends.callbacks.OnFailCallback;
 import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallback;
 import com.cmput301f20t21.bookfriends.entities.Book;
-import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
-import com.cmput301f20t21.bookfriends.repositories.RequestRepository;
-import com.cmput301f20t21.bookfriends.repositories.api.IAuthRepository;
-import com.cmput301f20t21.bookfriends.repositories.api.IRequestRepository;
+import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
+import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
+import com.cmput301f20t21.bookfriends.repositories.api.AuthRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
 
 public class BrowseDetailViewModel extends ViewModel {
-    private final IRequestRepository requestRepository;
+    private final RequestRepository requestRepository;
     private final String currentUsername;
 
     public BrowseDetailViewModel() {
-        this(AuthRepository.getInstance(), RequestRepository.getInstance());
+        this(AuthRepositoryImpl.getInstance(), RequestRepositoryImpl.getInstance());
     }
 
-    public BrowseDetailViewModel(IAuthRepository authRepository, IRequestRepository requestRepository) {
+    public BrowseDetailViewModel(AuthRepository authRepository, RequestRepository requestRepository) {
         this.requestRepository = requestRepository;
         currentUsername = authRepository.getCurrentUser().getUsername();
     }

@@ -12,7 +12,6 @@ package com.cmput301f20t21.bookfriends.ui.profile;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -20,13 +19,10 @@ import androidx.lifecycle.ViewModel;
 import com.cmput301f20t21.bookfriends.callbacks.OnFailCallback;
 import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.entities.User;
-import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
-import com.cmput301f20t21.bookfriends.repositories.UserRepository;
-import com.cmput301f20t21.bookfriends.repositories.api.IUserRepository;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
+import com.cmput301f20t21.bookfriends.repositories.impl.UserRepositoryImpl;
+import com.cmput301f20t21.bookfriends.repositories.api.UserRepository;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 
@@ -34,14 +30,14 @@ import java.util.ArrayList;
  * The ViewModel for ProfileFragment, ProfileSearchFragment, and ProfileViewUserActivity
  */
 public class ProfileViewModel extends ViewModel {
-    private final IUserRepository userRepository;
+    private final UserRepository userRepository;
     private final MutableLiveData<ArrayList<User>> searchedUsers = new MutableLiveData<>(new ArrayList<>());
 
     public ProfileViewModel() {
-        this(UserRepository.getInstance());
+        this(UserRepositoryImpl.getInstance());
     }
 
-    public ProfileViewModel(IUserRepository userRepository) {
+    public ProfileViewModel(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -83,7 +79,7 @@ public class ProfileViewModel extends ViewModel {
      */
     public void updateCurrentUserEmail(String inputEmail, String TAG){
         //update email authentication
-        Task<Void> updateEmail = AuthRepository.getInstance().updateEmail(inputEmail);
+        Task<Void> updateEmail = AuthRepositoryImpl.getInstance().updateEmail(inputEmail);
         updateEmail.addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 // TODO: change one of the update function to have async callback with a success message

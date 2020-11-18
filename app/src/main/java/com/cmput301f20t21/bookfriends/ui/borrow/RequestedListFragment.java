@@ -33,7 +33,7 @@ public class RequestedListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         vm = new ViewModelProvider(this).get(RequestedViewModel.class);
-        return inflater.inflate(R.layout.requested_list_book, container, false);
+        return inflater.inflate(R.layout.list_requested_book, container, false);
     }
 
     @Override

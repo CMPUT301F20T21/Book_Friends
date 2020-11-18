@@ -14,24 +14,22 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.cmput301f20t21.bookfriends.entities.Book;
-import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
-import com.cmput301f20t21.bookfriends.repositories.BookRepository;
-import com.cmput301f20t21.bookfriends.repositories.RequestRepository;
-import com.cmput301f20t21.bookfriends.repositories.api.IAuthRepository;
-import com.cmput301f20t21.bookfriends.repositories.api.IRequestRepository;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
+import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
+import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
+import com.cmput301f20t21.bookfriends.repositories.api.AuthRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The ViewModel for BorrowedListFragment
  */
 public class BorrowedViewModel extends ViewModel {
-    private IRequestRepository requestRepository = RequestRepository.getInstance();
-    private BookRepository bookRepository = BookRepository.getInstance();
-    private IAuthRepository authRepository = AuthRepository.getInstance();
+    private RequestRepository requestRepository = RequestRepositoryImpl.getInstance();
+    private BookRepositoryImpl bookRepository = BookRepositoryImpl.getInstance();
+    private AuthRepository authRepository = AuthRepositoryImpl.getInstance();
 
     private MutableLiveData<List<Book>> books = new MutableLiveData<>(new ArrayList<Book>());
     private List<Book> bookData = books.getValue();

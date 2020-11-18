@@ -1,11 +1,11 @@
-package com.cmput301f20t21.bookfriends.repositories;
+package com.cmput301f20t21.bookfriends.repositories.impl;
 
 import android.net.Uri;
 
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.exceptions.UnexpectedException;
-import com.cmput301f20t21.bookfriends.repositories.api.IBookRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.BookRepository;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -19,17 +19,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BookRepository implements IBookRepository {
+public class BookRepositoryImpl implements BookRepository {
 
-    private static final BookRepository instance = new BookRepository();
+    private static final BookRepositoryImpl instance = new BookRepositoryImpl();
     private final StorageReference imageStorageReference = FirebaseStorage.getInstance().getReference();
     private final CollectionReference bookCollection;
 
-    private BookRepository() {
+    private BookRepositoryImpl() {
         bookCollection = FirebaseFirestore.getInstance().collection("books");
     }
 
-    public static BookRepository getInstance() {
+    public static BookRepositoryImpl getInstance() {
         return instance;
     }
 

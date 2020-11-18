@@ -40,7 +40,7 @@ public class RequestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.view_all_requests_activity);
+        setContentView(R.layout.activity_view_all_requests);
 
         // bind the text view
         titleTextView = findViewById(R.id.title_text_view);
@@ -133,7 +133,7 @@ public class RequestActivity extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(inflater.inflate(R.layout.confirm_dialog, null))
+        builder.setView(inflater.inflate(R.layout.dialog_confirm, null))
                 .setTitle(getString(R.string.accept_this_request))
                 .setPositiveButton(R.string.edit_confirm, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

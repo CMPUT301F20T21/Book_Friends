@@ -19,39 +19,39 @@ public class BaseDetailActivity extends AppCompatActivity {
     public static final String VIEW_REQUEST_KEY = "com.cmput301f20t21.bookfriends.VIEW_REQUEST";
     public static final String BOOK_DATA_KEY = "com.cmput301f20t21.bookfriends.BOOK_DATA";
 
-    protected Book detailBook;
+    protected Book book;
     private ImageView bookImage;
-    private TextView detailTitle;
-    private TextView detailISBN;
-    private TextView detailAuthor;
+    private TextView title;
+    private TextView isbn;
+    private TextView author;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.detail_page);
+        setContentView(R.layout.activity_detail);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_white_18);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         bookImage = findViewById(R.id.book_image_view); // will be replaced with actual image
-        detailISBN = findViewById(R.id.detail_ISBN);
-        detailTitle = findViewById(R.id.detail_title);
-        detailAuthor = findViewById(R.id.detail_author);
+        isbn = findViewById(R.id.detail_ISBN);
+        title = findViewById(R.id.detail_title);
+        author = findViewById(R.id.detail_author);
 
         Intent getIntent = getIntent();
-        detailBook = getIntent.getParcelableExtra(BOOK_DATA_KEY);
+        book = getIntent.getParcelableExtra(BOOK_DATA_KEY);
         setDetails();
     }
 
     public void updateBook(Book updateBook) {
-        detailBook = updateBook;
+        book = updateBook;
         setDetails();
     }
 
     public void setDetails() {
-        detailISBN.setText(detailBook.getIsbn());
-        detailTitle.setText(detailBook.getTitle());
-        detailAuthor.setText(getString(R.string.author, detailBook.getAuthor()));
-        ImagePainter.paintImage(bookImage, detailBook.getImageUrl());
+        isbn.setText(book.getIsbn());
+        title.setText(book.getTitle());
+        author.setText(getString(R.string.author, book.getAuthor()));
+        ImagePainter.paintImage(bookImage, book.getImageUrl());
     }
 
     @Override
@@ -63,7 +63,4 @@ public class BaseDetailActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-
 }
