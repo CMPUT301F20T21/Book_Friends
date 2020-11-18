@@ -31,7 +31,6 @@ public class RequestActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private TextView titleTextView;
     private TextView authorTextView;
-    private TextView descriptionTextView;
     private TextView bookStatus;
     private ImageView bookImage;
 
@@ -43,9 +42,8 @@ public class RequestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_all_requests);
 
         // bind the text view
-        titleTextView = findViewById(R.id.title_text_view);
-        authorTextView = findViewById(R.id.author_text_view);
-        descriptionTextView = findViewById(R.id.description_text_view);
+        titleTextView = findViewById(R.id.detail_title);
+        authorTextView = findViewById(R.id.detail_author);
         bookStatus = findViewById(R.id.status_text_view);
         bookImage = findViewById(R.id.book_image_view);
 
@@ -57,7 +55,6 @@ public class RequestActivity extends AppCompatActivity {
         vm.getBook(bookId).observe(this, book -> {
             titleTextView.setText(book.getTitle());
             authorTextView.setText(book.getAuthor());
-            descriptionTextView.setText(book.getDescription());
             bookStatus.setText(book.getStatus().toString());
             ImagePainter.paintImage(bookImage, book.getImageUrl());
         });
