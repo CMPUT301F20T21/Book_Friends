@@ -15,7 +15,6 @@ import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 
 public class BrowseDetailActivity extends BaseDetailActivity {
     public static final String REQUESTED_BOOK_INTENT_KEY = "com.cmput301f20t21.bookfriends.REQUESTED_BOOK";
-
     private Button actionButton;
     private BrowseDetailViewModel vm;
 
@@ -24,9 +23,9 @@ public class BrowseDetailActivity extends BaseDetailActivity {
         super.onCreate(savedInstanceState);
         vm = new ViewModelProvider(this).get(BrowseDetailViewModel.class);
         actionButton = findViewById(R.id.detail_action_button);
-
         actionButton.setText(R.string.request);
         actionButton.setOnClickListener(this::sendRequest);
+        button.setText(R.string.browse_button);
     }
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -48,5 +47,4 @@ public class BrowseDetailActivity extends BaseDetailActivity {
     private void onSendRequestFailure() {
 
     }
-
 }
