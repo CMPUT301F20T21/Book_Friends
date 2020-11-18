@@ -1,4 +1,4 @@
-package com.cmput301f20t21.bookfriends.ui.request;
+package com.cmput301f20t21.bookfriends.ui.library.owned;
 
 import android.view.LayoutInflater;
 import android.view.View;

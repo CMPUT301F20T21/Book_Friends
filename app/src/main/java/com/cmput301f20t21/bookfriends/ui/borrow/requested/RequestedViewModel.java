@@ -1,4 +1,4 @@
-package com.cmput301f20t21.bookfriends.ui.borrow;
+package com.cmput301f20t21.bookfriends.ui.borrow.requested;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

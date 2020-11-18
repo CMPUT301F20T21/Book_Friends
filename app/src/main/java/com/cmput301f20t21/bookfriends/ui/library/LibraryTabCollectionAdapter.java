@@ -4,6 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.cmput301f20t21.bookfriends.ui.library.borrowed.BorrowedListFragment;
+import com.cmput301f20t21.bookfriends.ui.library.owned.OwnedListFragment;
+
 public class LibraryTabCollectionAdapter extends FragmentStateAdapter {
     public enum TabType {
         MY_BOOKS,

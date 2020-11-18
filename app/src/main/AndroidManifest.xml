@@ -42,10 +42,10 @@
             </intent-filter>
 
         </activity>
-        <activity android:name=".ui.library.AddEditActivity"
+        <activity android:name=".ui.library.add.AddEditActivity"
             android:label="@string/add_edit">
         </activity>
-        <activity android:name=".ui.library.OwnedDetailActivity"
+        <activity android:name=".ui.library.owned.OwnedDetailActivity"
             android:label="@string/view">
         </activity>
         <activity
@@ -55,7 +55,7 @@
 
         </activity>
         <activity
-            android:name="com.cmput301f20t21.bookfriends.ui.borrow.DetailAcceptedActivity"
+            android:name="com.cmput301f20t21.bookfriends.ui.borrow.accepted.AcceptedDetailActivity"
             android:label="@string/accepted_detail">
         </activity>
         <activity
@@ -64,14 +64,14 @@
         </activity>
 
         <activity
-            android:name="com.cmput301f20t21.bookfriends.ui.borrow.DetailRequestedActivity"
+            android:name="com.cmput301f20t21.bookfriends.ui.borrow.requested.RequestedDetailActivity"
             android:label="@string/requested_detail">
         </activity>
         <activity
-            android:name="com.cmput301f20t21.bookfriends.ui.library.BorrowedDetailActivity"
+            android:name="com.cmput301f20t21.bookfriends.ui.library.borrowed.BorrowedDetailActivity"
             android:label="@string/borrowed_detail">
         </activity>
-        <activity android:name=".ui.request.RequestActivity"
+        <activity android:name=".ui.library.owned.RequestActivity"
             android:label="Requests">
 
 
