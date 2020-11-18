@@ -9,16 +9,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
-import com.cmput301f20t21.bookfriends.utils.GlideApp;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import com.cmput301f20t21.bookfriends.utils.ImagePainter;
 
 import java.util.List;
 
-public abstract class BaseBookListAdapter<T extends Book> extends RecyclerView.Adapter<BaseBookListAdapter.ViewHolder> {
+public abstract class BaseBookListAdapter<T extends Book> extends RecyclerView.Adapter<BaseBookListAdapter.ViewHolder<T>> {
     protected List<T> books;
 
     public BaseBookListAdapter(List<T> books) {
@@ -27,13 +24,13 @@ public abstract class BaseBookListAdapter<T extends Book> extends RecyclerView.A
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder<T> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_list, parent, false);
         return new ViewHolder<T>(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder<T> holder, int position) {
         holder.onBind(books.get(position));
     }
 
@@ -46,6 +43,7 @@ public abstract class BaseBookListAdapter<T extends Book> extends RecyclerView.A
         protected final TextView title;
         protected final TextView author;
         protected final TextView isbn;
+        protected final TextView status;
         protected final ImageView bookImage;
         protected View holderView;
         protected T book;
@@ -57,6 +55,7 @@ public abstract class BaseBookListAdapter<T extends Book> extends RecyclerView.A
             title = v.findViewById(R.id.item_book_title);
             author = v.findViewById(R.id.item_book_author);
             isbn = v.findViewById(R.id.item_book_isbn);
+            status = v.findViewById(R.id.status);
             bookImage = v.findViewById(R.id.booklist_image_view);
         }
 
@@ -65,15 +64,8 @@ public abstract class BaseBookListAdapter<T extends Book> extends RecyclerView.A
             this.author.setText(this.itemView.getResources().getString(R.string.book_list_item_author, book.getAuthor()));
             this.isbn.setText(book.getIsbn());
             this.book = book;
-            paintCover();
-        }
-
-        protected void paintCover() {
-//            StorageReference storageReference = FirebaseStorage.getInstance().getReference(book.getCoverImageName());
-//            GlideApp.with(holderView)
-//                    .load(storageReference)
-//                    .placeholder(R.drawable.no_image)
-//                    .into(bookImage);
+            this.status.setText(book.getStatus().toString().toLowerCase());
+            ImagePainter.paintImage(bookImage, book.getImageUrl());
         }
     }
 }

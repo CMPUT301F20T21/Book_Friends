@@ -7,7 +7,7 @@ import androidx.test.filters.LargeTest;
 import androidx.test.runner.AndroidJUnit4;
 
 import com.cmput301f20t21.bookfriends.R;
-import com.cmput301f20t21.bookfriends.repositories.BookRepository;
+import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import org.junit.After;
@@ -33,7 +33,7 @@ import static org.hamcrest.Matchers.allOf;
 @RunWith(AndroidJUnit4.class)
 public class AddBookTest {
 
-    BookRepository bookRepository = BookRepository.getInstance();
+    BookRepositoryImpl bookRepository = BookRepositoryImpl.getInstance();
     @Rule
     public ActivityScenarioRule<LoginActivity> mActivityTestRule = new ActivityScenarioRule<>(LoginActivity.class);
 

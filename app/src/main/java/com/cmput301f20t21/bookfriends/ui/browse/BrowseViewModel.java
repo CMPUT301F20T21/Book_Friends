@@ -10,12 +10,12 @@ import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
-import com.cmput301f20t21.bookfriends.repositories.AuthRepository;
-import com.cmput301f20t21.bookfriends.repositories.BookRepository;
-import com.cmput301f20t21.bookfriends.repositories.RequestRepository;
-import com.cmput301f20t21.bookfriends.repositories.api.IAuthRepository;
-import com.cmput301f20t21.bookfriends.repositories.api.IBookRepository;
-import com.cmput301f20t21.bookfriends.repositories.api.IRequestRepository;
+import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
+import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
+import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
+import com.cmput301f20t21.bookfriends.repositories.api.AuthRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.BookRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,17 +36,17 @@ public class BrowseViewModel extends ViewModel {
     // raw book data
     private final List<Book> bookData = books.getValue();
 
-    private final IRequestRepository requestRepository;
-    private final IBookRepository bookRepository;
+    private final RequestRepository requestRepository;
+    private final BookRepository bookRepository;
     private final String currentUsername;
 
     // production
     public BrowseViewModel() {
-        this(AuthRepository.getInstance(), RequestRepository.getInstance(), BookRepository.getInstance());
+        this(AuthRepositoryImpl.getInstance(), RequestRepositoryImpl.getInstance(), BookRepositoryImpl.getInstance());
     }
 
     // dependency injection for unit test
-    public BrowseViewModel(IAuthRepository authRepository, IRequestRepository requestRepository, IBookRepository bookRepository) {
+    public BrowseViewModel(AuthRepository authRepository, RequestRepository requestRepository, BookRepository bookRepository) {
         this.requestRepository = requestRepository;
         this.bookRepository = bookRepository;
         // get logged in user's username

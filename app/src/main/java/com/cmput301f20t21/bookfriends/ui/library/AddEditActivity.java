@@ -1,10 +1,9 @@
-package com.cmput301f20t21.bookfriends.ui.add;
+package com.cmput301f20t21.bookfriends.ui.library;
 
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,22 +19,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.cmput301f20t21.bookfriends.R;
-import com.cmput301f20t21.bookfriends.databinding.AddEditActivityBinding;
+import com.cmput301f20t21.bookfriends.databinding.ActivityAddEditBinding;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 import com.cmput301f20t21.bookfriends.ui.scanner.ScannerAddActivity;
-import com.cmput301f20t21.bookfriends.utils.GlideApp;
+import com.cmput301f20t21.bookfriends.utils.ImagePainter;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 public class AddEditActivity extends AppCompatActivity {
     public static final String NEW_BOOK_INTENT_KEY = "com.cmput301f20t21.bookfriends.NEW_BOOK";
@@ -59,7 +51,7 @@ public class AddEditActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         vm = new ViewModelProvider(this).get(AddEditViewModel.class);
-        setContentView(R.layout.add_edit_activity);
+        setContentView(R.layout.activity_add_edit);
         setViewBindings();
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_white_18);
@@ -69,7 +61,7 @@ public class AddEditActivity extends AppCompatActivity {
         bindBookFromIntent();
         fetchRemoteCoverImage();
 
-        vm.getLocalImageUri().observe(this, this::paintImage);
+        vm.getLocalImageUri().observe(this, (uri) -> ImagePainter.paintImage(bookImage, uri));
         scanButton.setOnClickListener(view -> openScanner());
         uploadImgButton.setOnClickListener(view -> {
             showImageUpdateDialog();
@@ -82,29 +74,9 @@ public class AddEditActivity extends AppCompatActivity {
      */
     private void fetchRemoteCoverImage() {
         Book oldBook = vm.getOldBook();
-
         if (oldBook == null) return;
 
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference(oldBook.getCoverImageName());
-        GlideApp.with(this)
-                .load(storageReference)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .addListener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        vm.setHasImage(false);
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        vm.setHasImage(true);
-                        return false;
-                    }
-                })
-                .placeholder(R.drawable.no_image)
-                .into(bookImage);
+        ImagePainter.paintImage(bookImage, oldBook.getImageUrl());
     }
 
     private void setChildViews() {
@@ -124,7 +96,7 @@ public class AddEditActivity extends AppCompatActivity {
      * Be very careful when setting views directly
      */
     private void setViewBindings() {
-        AddEditActivityBinding binding = DataBindingUtil.setContentView(this, R.layout.add_edit_activity);
+        ActivityAddEditBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_add_edit);
         binding.setLifecycleOwner(this);
         binding.setVm(vm);
     }
@@ -280,22 +252,6 @@ public class AddEditActivity extends AppCompatActivity {
         }
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
     }
-
-    /**
-     * paint the image on new uri updated
-     * this means that the image view will be overridden by this paint if it originally has a
-     * remote image already painted but that's exactly what we want since the user wants to update
-     * @param uri the local image uri
-     */
-    private void paintImage(Uri uri) {
-        GlideApp.with(this)
-                .load(uri)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .placeholder(R.drawable.no_image)
-                .into(bookImage);
-    }
-
 
     private void openScanner() {
         Intent intent = new Intent(this, ScannerAddActivity.class);
