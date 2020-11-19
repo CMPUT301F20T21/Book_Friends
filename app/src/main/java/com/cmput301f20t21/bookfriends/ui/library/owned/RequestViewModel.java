@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.entities.Request;
+import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
@@ -33,15 +34,23 @@ public class RequestViewModel extends ViewModel {
     private final MutableLiveData<ArrayList<Request>> requests = new MutableLiveData<>(new ArrayList<>());
     private final ArrayList<Request> requestsData = requests.getValue();
 
+    /**
+     * Indicating the updated status of the book, book might or might not have a new status
+     * If user rejects all requests -> Available
+     * If user accepts a request -> Accepted
+     * Otherwise -> Requested(i.e. not changed)
+     */
+    private final MutableLiveData<BOOK_STATUS> bookStatus = new MutableLiveData<>(BOOK_STATUS.REQUESTED);
+
     private final RequestRepository requestService = RequestRepositoryImpl.getInstance();
-    private final BookRepositoryImpl bookService = BookRepositoryImpl.getInstance();
+    private final BookRepositoryImpl bookRepository = BookRepositoryImpl.getInstance();
 
     /**
      * Function to get the book information from FireStore
      * @param bookId we will query the book information based on the bookID
      */
     private void fetchBook(String bookId) {
-        bookService.getBookById(bookId).addOnCompleteListener(task -> {
+        bookRepository.getBookById(bookId).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 book.setValue(document.toObject(Book.class));
@@ -54,7 +63,7 @@ public class RequestViewModel extends ViewModel {
      * @param bookId the book id to query for requesters
      */
     private void fetchRequests(String bookId) {
-        requestService.getByBookId(bookId).addOnSuccessListener(requesterDocumentsSnapShots -> {
+        requestService.getOpenedRequestByBookId(bookId).addOnSuccessListener(requesterDocumentsSnapShots -> {
            List<DocumentSnapshot> documents = requesterDocumentsSnapShots.getDocuments();
            requestsData.clear(); // we are sure to always refresh the requests list
            requestsData.addAll(IntStream.range(0, documents.size()).mapToObj(i -> {
@@ -87,6 +96,13 @@ public class RequestViewModel extends ViewModel {
     }
 
     /**
+     * Indicating the updated status of the book, book might or might not have a new status
+     */
+    public LiveData<BOOK_STATUS> getBookStatus() {
+        return this.bookStatus;
+    }
+
+    /**
      * When the requester is denied, remove his/her request.
      * update the status of this requester to DENIED
      * @param position the position of the request to remove
@@ -96,6 +112,14 @@ public class RequestViewModel extends ViewModel {
         requestService.deny(request.getId()).addOnSuccessListener(aVoid -> {
             requestsData.remove(request);
             requests.setValue(requestsData);
+            if (requestsData.isEmpty()) {
+                Book bookData = book.getValue();
+                if (bookData != null) {
+                    bookRepository.updateBookStatus(bookData.getId(), BOOK_STATUS.AVAILABLE)
+                            .addOnSuccessListener(aVoid1 -> bookStatus.setValue(BOOK_STATUS.AVAILABLE));
+                }
+
+            }
         });
     }
 
@@ -116,6 +140,11 @@ public class RequestViewModel extends ViewModel {
             requestService.batchDeny(ids).addOnSuccessListener(aVoid1 -> {
                 requestsData.clear();
                 requests.setValue(requestsData);
+                Book bookData = book.getValue();
+                if (bookData != null) {
+                    bookRepository.updateBookStatus(bookData.getId(), BOOK_STATUS.ACCEPTED)
+                            .addOnSuccessListener(aVoid2 -> bookStatus.setValue(BOOK_STATUS.ACCEPTED));
+                }
             }).addOnFailureListener(err -> {
                 err.printStackTrace();
                 requestsData.clear();

@@ -37,8 +37,29 @@ public class RequestRepositoryImpl implements RequestRepository {
      * @param bookId
      * @return Task QuerySnapshot for request
      */
-    public Task<QuerySnapshot> getByBookId(String bookId) {
-        return requestCollection.whereEqualTo("bookId", bookId).whereEqualTo("status", "OPENED").get();
+    public Task<QuerySnapshot> getOpenedRequestByBookId(String bookId) {
+        return requestCollection
+                .whereEqualTo("bookId", bookId)
+                .whereEqualTo("status", REQUEST_STATUS.OPENED.toString())
+                .get();
+    }
+
+    public Task<List<Request>> getRequestByBookIdAndStatus(String bookId, List<REQUEST_STATUS> statusList) {
+        return requestCollection
+                .whereEqualTo("bookId", bookId)
+                .whereIn("status", statusList)
+                .get()
+                .continueWith(task -> {
+                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        return task
+                                .getResult()
+                                .getDocuments()
+                                .stream()
+                                .map(doc -> doc.toObject(Request.class))
+                                .collect(Collectors.toList());
+                    }
+                    throw new UnexpectedException();
+                });
     }
 
     public Task<QuerySnapshot> getBorrowedRequestByUsername(String username) {
@@ -136,5 +157,17 @@ public class RequestRepositoryImpl implements RequestRepository {
             }
             throw new UnexpectedException();
         });
+    }
+
+    public Task<Request> updateRequestStatus(Request request, REQUEST_STATUS newStatus) {
+        return requestCollection
+                .document(request.getId())
+                .update("status", newStatus.toString())
+                .continueWith(task -> {
+                    if (task.isSuccessful()) {
+                        return new Request(request.getId(), request.getRequester(), request.getBookId(), newStatus);
+                    }
+                    throw new UnexpectedException();
+                });
     }
 }
