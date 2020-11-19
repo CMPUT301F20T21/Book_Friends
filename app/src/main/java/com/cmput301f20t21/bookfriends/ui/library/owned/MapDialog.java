@@ -153,6 +153,10 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
         return dialog;
     }
 
+    /**
+     * function to get location permission from user
+     * @param dialog
+     */
     private void getLocationPermission(Dialog dialog) {
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
                                 Manifest.permission.ACCESS_COARSE_LOCATION};
@@ -187,6 +191,10 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
         }
     }
 
+    /**
+     * function to move the camera to user's location
+     * @param dialog
+     */
     private void getDeviceLocation(Dialog dialog) {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(dialog.getContext());
 
@@ -210,6 +218,11 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
         }
     }
 
+    /**
+     * function to move camera to a desired location
+     * @param latLng the lat and long of location that we want to move camera to
+     * @param zoom how big the map should be displayed at that location
+     */
     private void moveCamera(LatLng latLng, float zoom) {
         myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
