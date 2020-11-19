@@ -53,6 +53,18 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        vm.registerSnapshotListener();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        vm.unregisterSnapshotListener();
+    }
+
     private void openScanner(View view) {
         Intent intent = new Intent(this, ScannerBaseActivity.class);
         startActivityForResult(intent, GET_SCANNED_ISBN);

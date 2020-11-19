@@ -1,5 +1,8 @@
 package com.cmput301f20t21.bookfriends.ui.borrow.accepted;
 
+import android.util.Log;
+
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -14,6 +17,11 @@ import com.cmput301f20t21.bookfriends.repositories.api.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
 import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.Arrays;
 
@@ -23,6 +31,8 @@ public class AcceptedDetailViewModel extends ViewModel {
 
     private final MutableLiveData<Request> request = new MutableLiveData<>();
     private final MutableLiveData<SCAN_ERROR> errorMessage = new MutableLiveData<>();
+
+    private ListenerRegistration listenerRegistration;
 
     public AcceptedDetailViewModel() {
         this(RequestRepositoryImpl.getInstance(), BookRepositoryImpl.getInstance());
@@ -65,4 +75,28 @@ public class AcceptedDetailViewModel extends ViewModel {
             errorMessage.setValue(SCAN_ERROR.INVALID_ISBN);
         }
     }
+
+    // https://stackoverflow.com/questions/48699032/how-to-set-addsnapshotlistener-and-remove-in-populateviewholder-in-recyclerview
+    public void registerSnapshotListener() {
+        if (listenerRegistration == null) {
+            if (request.getValue() != null) {
+                requestRepository.getRefById(request.getValue().getId()).addSnapshotListener((snapshot, error) -> {
+                    if (error != null) {
+                        Log.d("REQUEST_SNAPSHOT_ERROR", error.getMessage());
+                    }
+
+                    if (snapshot != null && snapshot.exists()) {
+                        request.setValue(snapshot.toObject(Request.class));
+                    }
+                });
+            }
+        }
+    }
+
+    public void unregisterSnapshotListener() {
+        if (listenerRegistration != null) {
+            listenerRegistration.remove();
+        }
+    }
+
 }

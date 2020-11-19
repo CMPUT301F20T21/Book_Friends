@@ -32,6 +32,10 @@ public class RequestRepositoryImpl implements RequestRepository {
         return instance;
     }
 
+    public DocumentReference getRefById(String requestId) {
+        return requestCollection.document(requestId);
+    }
+
     /**
      * get request by bookId, only for books that are opened
      * @param bookId
