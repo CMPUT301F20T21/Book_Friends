@@ -1,7 +1,5 @@
 package com.cmput301f20t21.bookfriends.ui.browse;
 
-import android.util.Log;
-
 import androidx.lifecycle.ViewModel;
 
 import com.cmput301f20t21.bookfriends.callbacks.OnFailCallback;
@@ -15,7 +13,6 @@ import com.cmput301f20t21.bookfriends.utils.NotificationSender;
 
 public class BrowseDetailViewModel extends ViewModel {
     private final RequestRepository requestRepository;
-    private final AuthRepository authRepository;
     private final String currentUsername;
 
     public BrowseDetailViewModel() {
@@ -24,7 +21,6 @@ public class BrowseDetailViewModel extends ViewModel {
 
     public BrowseDetailViewModel(AuthRepository authRepository, RequestRepository requestRepository) {
         this.requestRepository = requestRepository;
-        this.authRepository = authRepository;
         currentUsername = authRepository.getCurrentUser().getUsername();
     }
 
@@ -32,13 +28,12 @@ public class BrowseDetailViewModel extends ViewModel {
         requestRepository
                 .sendRequest(currentUsername, book.getId())
                 .addOnSuccessListener(requestId -> {
-                    NotificationSender.getInstance().request(book, authRepository.getCurrentUser(), res -> {
-                        Log.e("bfriends", res);
-                        successCallback.run();
-                    }, err -> {
-                        err.printStackTrace();
-                        failCallback.run();
-                    });
+                    NotificationSender.getInstance().request(book, currentUsername,
+                            res -> successCallback.run(),
+                            err -> {
+                                err.printStackTrace();
+                                failCallback.run();
+                            });
                 })
                 .addOnFailureListener(e -> failCallback.run());
     }

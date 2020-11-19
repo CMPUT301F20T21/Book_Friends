@@ -33,7 +33,7 @@ public class BookFriendsFirebaseMessagingService extends FirebaseMessagingServic
     @Override
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
-        Log.e(TAG, "Refreshed token: " + s);
+        Log.d(TAG, "Refreshed token: " + s);
     }
 
     // https://firebase.google.com/docs/cloud-messaging/android/send-multiple#java_3
@@ -52,11 +52,11 @@ public class BookFriendsFirebaseMessagingService extends FirebaseMessagingServic
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
-            Log.e(TAG, "Message data payload: " + remoteMessage.getData());
+            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
         }
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
-            Log.e(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
         }
 
         Task<PendingIntent> buildIntentTask = buildIntent(remoteMessage);

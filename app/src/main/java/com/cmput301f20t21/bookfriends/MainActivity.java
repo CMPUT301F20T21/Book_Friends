@@ -3,7 +3,6 @@ package com.cmput301f20t21.bookfriends;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -18,8 +17,6 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "bfriends_messaging";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,14 +59,12 @@ public class MainActivity extends AppCompatActivity {
         FirebaseMessaging.getInstance().subscribeToTopic(newTopic).continueWith(Void -> {
             if (oldTopic != null && !oldTopic.equals(newTopic)) {
                 FirebaseMessaging.getInstance().unsubscribeFromTopic(oldTopic).continueWith(Void1 -> {
-                    Log.e(TAG, "successfully un-subbed " + oldTopic);
                     return null;
                 });
             }
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString(getString(R.string.saved_cloud_messaging_topic), newTopic);
             editor.apply();
-            Log.e(TAG, "successfully subbed " + newTopic);
             return null;
         });
     }
