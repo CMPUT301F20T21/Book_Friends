@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +48,7 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
     private EditText searchText;
     private Button cancelSearchButton;
     private Button confirmSearchButton;
+    private ImageView gpsButton;
     private RequestViewModel vm;
     private int position;
     private Context context;
@@ -79,6 +82,14 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
         mapView.onCreate(dialog.onSaveInstanceState());
         mapView.onResume();
         mapView.getMapAsync(this);
+
+        gpsButton = (ImageView) dialog.findViewById(R.id.ic_gps);
+        gpsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getDeviceLocation(dialog);
+            }
+        });
 
         searchText = (EditText) dialog.findViewById(R.id.input_search);
         searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -213,6 +224,7 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
                 return;
             }
             myMap.setMyLocationEnabled(true);
+            myMap.getUiSettings().setMyLocationButtonEnabled(false);
         } else {
             LatLng edmontonLatLng = new LatLng(53.544388, -113.490929);
             moveCamera(edmontonLatLng, 12f);
