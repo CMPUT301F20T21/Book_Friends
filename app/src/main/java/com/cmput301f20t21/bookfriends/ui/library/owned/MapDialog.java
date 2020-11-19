@@ -169,7 +169,7 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
             @Override
             public void onClick(View view) {
                 // accept the request only when user specifies the location of meeting
-                Toast.makeText(context, "Accepted Request", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, getString(R.string.accepted_request), Toast.LENGTH_SHORT).show();
                 vm.acceptRequest(position);
                 dialog.dismiss();
             }
@@ -201,7 +201,7 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
                             Location currentLocation = (Location) task.getResult();
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15f);
                         } else {
-                            Toast.makeText(context, "Unable to get current location", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, getString(R.string.fail_to_get_location), Toast.LENGTH_SHORT).show();
                             LatLng edmontonLatLng = new LatLng(53.544388, -113.490929);
                             moveCamera(edmontonLatLng, 12f);
                         }

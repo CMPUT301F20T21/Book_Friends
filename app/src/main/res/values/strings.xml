@@ -83,7 +83,7 @@
     <string name="edit_detail">Edit</string>
     <string name="view_request">View All Requests</string>
     <string name="view">View</string>
-    <string name="accepted_detail">he Book Detail (Accepted)</string>
+    <string name="accepted_detail">The Book Detail (Accepted)</string>
     <string name="browse_detail">The Book Detail (Available)</string>
     <string name="requested_detail">The Book Detail (Requested)</string>
     <string name="borrowed_detail">View A Borrowed Book</string>
@@ -93,4 +93,6 @@
     <string name="delete_cover_image">Delete cover image</string>
     <string name="address_search">Enter Address</string>
     <string name="request_book_successful">Request successfully sent</string>
+    <string name="accepted_request">Accepted Request</string>
+    <string name="fail_to_get_location">Unable to get current location</string>
 </resources>
