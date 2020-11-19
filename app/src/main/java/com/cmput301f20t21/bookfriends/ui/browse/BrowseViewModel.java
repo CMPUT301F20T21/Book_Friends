@@ -18,6 +18,7 @@ import com.cmput301f20t21.bookfriends.repositories.api.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -132,7 +133,7 @@ public class BrowseViewModel extends ViewModel {
 
     private void fetchBooks() {
         // first, get all the request made by this user.
-        requestRepository.getAllRequestsByUsername(currentUsername, REQUEST_STATUS.OPENED).addOnSuccessListener(requests -> {
+        requestRepository.getRequestsByUsernameAndStatus(currentUsername, Arrays.asList(REQUEST_STATUS.OPENED)).addOnSuccessListener(requests -> {
             // get available book for current user (book in available status and not owned by this user)
             bookRepository.getAvailableBooksForUser(currentUsername).addOnSuccessListener(availableBooks -> {
                 bookData.clear();

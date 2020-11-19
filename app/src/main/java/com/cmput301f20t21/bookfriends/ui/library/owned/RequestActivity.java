@@ -62,10 +62,6 @@ public class RequestActivity extends AppCompatActivity {
             ImagePainter.paintImage(bookImage, book.getImageUrl());
         });
 
-        vm.getBookStatus().observe(this, status -> {
-            bookStatus.setText(status.toString().toLowerCase());
-        });
-
         // set up the back button
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_white_18);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

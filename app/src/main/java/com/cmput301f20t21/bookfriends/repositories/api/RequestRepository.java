@@ -11,9 +11,9 @@ import java.util.List;
 
 public interface RequestRepository {
     Task<QuerySnapshot> getOpenedRequestByBookId(String bookId);
-    Task<List<Request>> getRequestByBookIdAndStatus(String bookId, List<REQUEST_STATUS> statusList);
+    Task<List<Request>> getRequestsByBookIdAndStatus(String bookId, List<REQUEST_STATUS> statusList);
+    Task<List<Request>> getRequestsByUsernameAndStatus(String username, List<REQUEST_STATUS> statusList);
     Task<QuerySnapshot> getBorrowedRequestByUsername(String username);
-    Task<List<Request>> getAllRequestsByUsername(String username, REQUEST_STATUS status);
     Task<DocumentReference> add(String bookId, String requesterId);
     Task<Void> accept(String id);
     Task<Void> deny(String id);

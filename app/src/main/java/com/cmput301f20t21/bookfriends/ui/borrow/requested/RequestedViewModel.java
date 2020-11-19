@@ -16,6 +16,7 @@ import com.cmput301f20t21.bookfriends.repositories.api.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,7 +58,7 @@ public class RequestedViewModel extends ViewModel {
   
     private void fetchBooks() {
         String username = authRepository.getCurrentUser().getUsername();
-        requestRepository.getAllRequestsByUsername(username, REQUEST_STATUS.OPENED).addOnSuccessListener(requests -> {
+        requestRepository.getRequestsByUsernameAndStatus(username, Arrays.asList(REQUEST_STATUS.OPENED)).addOnSuccessListener(requests -> {
             List<String> requestedBookIds = requests
                     .stream()
                     .map(Request::getBookId)

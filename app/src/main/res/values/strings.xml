@@ -98,4 +98,7 @@
     <string name="scan_hand_over">Scan to hand over</string>
     <string name="scan_invalid_isbn_error">Scanned ISBN does not match current ISBN</string>
     <string name="scan_hand_over_success">Waiting for %s to receive...</string>
+    <string name="scan_wait_for_hand_over">Waiting for %s to hand over...</string>
+    <string name="scan_receive">Scan to receive</string>
+    <string name="scan_receive_success">Successfully borrowed %s</string>
 </resources>
