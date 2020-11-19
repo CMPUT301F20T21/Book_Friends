@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -28,22 +27,24 @@ import androidx.fragment.app.DialogFragment;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.CancellationTokenSource;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MapDialog extends DialogFragment implements OnMapReadyCallback {
+    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+    private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private GoogleMap myMap;
     private EditText searchText;
     private Button cancelSearchButton;
@@ -53,14 +54,7 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
     private int position;
     private Context context;
     private MapView mapView;
-
     private FusedLocationProviderClient fusedLocationProviderClient;
-
-    private Boolean locationPermissionGranted = false;
-    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-    private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
-
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
 
     // constructor
     public MapDialog(Context context, RequestViewModel vm, int position) {
@@ -75,6 +69,7 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.map_dialog);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(dialog.getContext());
         getLocationPermission(dialog);
 
         return dialog;
@@ -82,16 +77,16 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
 
     /**
      * function to get location permission from user
+     *
      * @param dialog
      */
     private void getLocationPermission(Dialog dialog) {
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
-                                Manifest.permission.ACCESS_COARSE_LOCATION};
+                Manifest.permission.ACCESS_COARSE_LOCATION};
         if (ContextCompat.checkSelfPermission(dialog.getContext().getApplicationContext(),
                 FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(dialog.getContext().getApplicationContext(),
                     COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                locationPermissionGranted = true;
                 initMap(dialog);
             } else {
                 ActivityCompat.requestPermissions(getActivity(), permissions, LOCATION_PERMISSION_REQUEST_CODE);
@@ -99,6 +94,12 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
         } else {
             ActivityCompat.requestPermissions(getActivity(), permissions, LOCATION_PERMISSION_REQUEST_CODE);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getLocationPermission(getDialog());
     }
 
     private void initMap(Dialog dialog) {
@@ -111,7 +112,7 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
         gpsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getDeviceLocation(dialog);
+                getDeviceLocation();
             }
         });
 
@@ -148,7 +149,7 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
                         myMap.addMarker(options);
                         // hide the keyboard after searching
                         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                        inputMethodManager.hideSoftInputFromWindow(textView.getWindowToken(),0);
+                        inputMethodManager.hideSoftInputFromWindow(textView.getWindowToken(), 0);
                     }
                 }
                 return false;
@@ -177,15 +178,12 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        locationPermissionGranted = false;
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0) {
                 for (int grantResult : grantResults) {
                     if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                        locationPermissionGranted = false;
                         return;
                     }
-                    locationPermissionGranted = true;
                     initMap(getDialog());
                 }
             }
@@ -194,39 +192,30 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
 
     /**
      * function to move the camera to user's location
-     * @param dialog
      */
-    private void getDeviceLocation(Dialog dialog) {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(dialog.getContext());
-
+    private void getDeviceLocation() {
         try {
-            if (locationPermissionGranted) {
-                Task location = fusedLocationProviderClient.getLastLocation();
-                if (location != null) {
-                    location.addOnCompleteListener(new OnCompleteListener() {
-                        @Override
-                        public void onComplete(@NonNull Task task) {
-                            if (task.isSuccessful()) {
-                                Location currentLocation = (Location) task.getResult();
-                                moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15f);
-                            } else {
-                                Toast.makeText(context, "Unable to get current location", Toast.LENGTH_SHORT).show();
-                            }
+            fusedLocationProviderClient.getCurrentLocation(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY, null)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            Location currentLocation = (Location) task.getResult();
+                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15f);
+                        } else {
+                            Toast.makeText(context, "Unable to get current location", Toast.LENGTH_SHORT).show();
+                            LatLng edmontonLatLng = new LatLng(53.544388, -113.490929);
+                            moveCamera(edmontonLatLng, 12f);
                         }
                     });
-                } else {
-                    Toast.makeText(context, "Unable to get current location", Toast.LENGTH_SHORT).show();
-                }
-            }
         } catch (SecurityException e) {
-
+            e.printStackTrace();
         }
     }
 
     /**
      * function to move camera to a desired location
+     *
      * @param latLng the lat and long of location that we want to move camera to
-     * @param zoom how big the map should be displayed at that location
+     * @param zoom   how big the map should be displayed at that location
      */
     private void moveCamera(LatLng latLng, float zoom) {
         myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
@@ -235,17 +224,13 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         myMap = googleMap;
-        if (locationPermissionGranted) {
-            getDeviceLocation(getDialog());
-            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            myMap.setMyLocationEnabled(true);
-            myMap.getUiSettings().setMyLocationButtonEnabled(false);
-        } else {
-            LatLng edmontonLatLng = new LatLng(53.544388, -113.490929);
-            moveCamera(edmontonLatLng, 12f);
+        getDeviceLocation();
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
         }
+        myMap.setMyLocationEnabled(true);
+        myMap.getUiSettings().setMyLocationButtonEnabled(false);
+
     }
 }
