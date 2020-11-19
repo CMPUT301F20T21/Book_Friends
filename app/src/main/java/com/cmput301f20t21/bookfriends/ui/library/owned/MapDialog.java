@@ -52,6 +52,7 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
     private RequestViewModel vm;
     private int position;
     private Context context;
+    private MapView mapView;
 
     private FusedLocationProviderClient fusedLocationProviderClient;
 
@@ -76,9 +77,32 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
         dialog.setContentView(R.layout.map_dialog);
         getLocationPermission(dialog);
 
-        MapView mapView = (MapView) dialog.findViewById(R.id.map_view);
-        MapsInitializer.initialize(getActivity());
+        return dialog;
+    }
 
+    /**
+     * function to get location permission from user
+     * @param dialog
+     */
+    private void getLocationPermission(Dialog dialog) {
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION};
+        if (ContextCompat.checkSelfPermission(dialog.getContext().getApplicationContext(),
+                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(dialog.getContext().getApplicationContext(),
+                    COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                locationPermissionGranted = true;
+                initMap(dialog);
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), permissions, LOCATION_PERMISSION_REQUEST_CODE);
+            }
+        } else {
+            ActivityCompat.requestPermissions(getActivity(), permissions, LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    private void initMap(Dialog dialog) {
+        mapView = (MapView) dialog.findViewById(R.id.map_view);
         mapView.onCreate(dialog.onSaveInstanceState());
         mapView.onResume();
         mapView.getMapAsync(this);
@@ -149,43 +173,20 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
                 dialog.dismiss();
             }
         });
-
-        return dialog;
-    }
-
-    /**
-     * function to get location permission from user
-     * @param dialog
-     */
-    private void getLocationPermission(Dialog dialog) {
-        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
-                                Manifest.permission.ACCESS_COARSE_LOCATION};
-        if (ContextCompat.checkSelfPermission(dialog.getContext().getApplicationContext(),
-                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            if (ContextCompat.checkSelfPermission(dialog.getContext().getApplicationContext(),
-                    COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                locationPermissionGranted = true;
-            } else {
-                ActivityCompat.requestPermissions(getActivity(), permissions, LOCATION_PERMISSION_REQUEST_CODE);
-            }
-        } else {
-            ActivityCompat.requestPermissions(getActivity(), permissions, LOCATION_PERMISSION_REQUEST_CODE);
-        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         locationPermissionGranted = false;
-        switch (requestCode) {
-            case LOCATION_PERMISSION_REQUEST_CODE: {
-                if (grantResults.length >0) {
-                    for (int i = 0; i < grantResults.length; i++) {
-                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                            locationPermissionGranted = false;
-                            return;
-                        }
-                        locationPermissionGranted = true;
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0) {
+                for (int grantResult : grantResults) {
+                    if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                        locationPermissionGranted = false;
+                        return;
                     }
+                    locationPermissionGranted = true;
+                    initMap(getDialog());
                 }
             }
         }
@@ -201,17 +202,21 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
         try {
             if (locationPermissionGranted) {
                 Task location = fusedLocationProviderClient.getLastLocation();
-                location.addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        if (task.isSuccessful()) {
-                            Location currentLocation = (Location) task.getResult();
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15f);
-                        } else {
-                            Toast.makeText(context, "Unable to get current location", Toast.LENGTH_SHORT).show();
+                if (location != null) {
+                    location.addOnCompleteListener(new OnCompleteListener() {
+                        @Override
+                        public void onComplete(@NonNull Task task) {
+                            if (task.isSuccessful()) {
+                                Location currentLocation = (Location) task.getResult();
+                                moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15f);
+                            } else {
+                                Toast.makeText(context, "Unable to get current location", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+                } else {
+                    Toast.makeText(context, "Unable to get current location", Toast.LENGTH_SHORT).show();
+                }
             }
         } catch (SecurityException e) {
 
