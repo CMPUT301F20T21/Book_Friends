@@ -9,6 +9,8 @@
 
 package com.cmput301f20t21.bookfriends.ui.library.owned;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -18,6 +20,7 @@ import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
+import com.cmput301f20t21.bookfriends.utils.NotificationSender;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
@@ -112,6 +115,13 @@ public class RequestViewModel extends ViewModel {
             for (int i = 0; i < requestsData.size(); i++) {
                 ids.add(requestsData.get(i).getId());
             }
+
+            NotificationSender.getInstance().accept(request, res -> {
+                Log.e("bfriends", "accept call response: " + res);
+            }, err -> {
+                err.printStackTrace();
+                Log.e("bfriends", "accept call failed: " + err.getLocalizedMessage());
+            });
             // clear the requests array anyways
             requestService.batchDeny(ids).addOnSuccessListener(aVoid1 -> {
                 requestsData.clear();
