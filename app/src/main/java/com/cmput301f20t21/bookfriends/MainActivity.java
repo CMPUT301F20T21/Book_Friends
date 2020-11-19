@@ -9,6 +9,7 @@ import com.cmput301f20t21.bookfriends.repositories.api.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.UserRepository;
 import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
 import com.cmput301f20t21.bookfriends.ui.login.LoginActivity;
+import com.cmput301f20t21.bookfriends.utils.NotificationSender;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
@@ -42,9 +43,11 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-        // this intent should contain the user class that is used to log in?
-        // Intent userIntent = getIntent();
+        subscribeToNotifications(); // subscribe to incoming notifications
+        initNotificationSender(); // prepare util singleton for future notification sending
+    }
 
+    private void subscribeToNotifications() {
         String TAG = "bfriends_messaging";
         final String username = AuthRepositoryImpl.getInstance().getCurrentUser().getUsername();
         FirebaseMessaging.getInstance().subscribeToTopic(username)
@@ -54,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
                     }
                     Log.e(TAG, "successfully sub to " + username);
                 });
+    }
 
+    private void initNotificationSender() {
+        NotificationSender.getInstance();
     }
 }
