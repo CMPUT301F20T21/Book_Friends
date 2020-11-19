@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
+import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 import com.cmput301f20t21.bookfriends.ui.library.add.AddEditActivity;
 
@@ -52,8 +53,12 @@ public class OwnedDetailActivity extends BaseDetailActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.top_detail_menu, menu);
-        return true;
+        if (book.getStatus() == BOOK_STATUS.AVAILABLE) {
+            getMenuInflater().inflate(R.menu.top_detail_menu, menu);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
