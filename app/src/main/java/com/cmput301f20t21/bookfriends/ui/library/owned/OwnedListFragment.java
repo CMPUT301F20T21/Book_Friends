@@ -143,6 +143,12 @@ public class OwnedListFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        vm.fetchBooks();
+    }
+
     /**
      * called upon returning from the AddEditActivity, will add or update the book to the local data
      * @param requestCode the request code that starts the activity

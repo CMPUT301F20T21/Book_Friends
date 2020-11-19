@@ -244,4 +244,9 @@ public class BookRepositoryImpl implements BookRepository {
     public Task<QuerySnapshot> getDocumentBy(String isbn, String title, String author) {
         return bookCollection.whereEqualTo("isbn", isbn).whereEqualTo("title", title).whereEqualTo("author", author).get();
     }
+
+    public Task<Void> updateBookStatus(String bookId, BOOK_STATUS newStatus) {
+        return bookCollection.document(bookId).update("status", newStatus.toString());
+    }
+
 }
