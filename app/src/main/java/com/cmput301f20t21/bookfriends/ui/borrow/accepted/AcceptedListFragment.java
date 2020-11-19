@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,7 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
+import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
+
+import java.util.List;
 
 
 public class AcceptedListFragment extends Fragment {
@@ -47,8 +51,16 @@ public class AcceptedListFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new AcceptedListAdapter(mViewModel.getBooks(), this::onItemClick);
+        mAdapter = new AcceptedListAdapter(mViewModel.getBooks().getValue(), this::onItemClick);
         recyclerView.setAdapter(mAdapter);
+
+        mViewModel.getBooks().observe(getViewLifecycleOwner(), (List<Book> books) -> mAdapter.notifyDataSetChanged());
+
+        mViewModel.getErrorMessage().observe(getViewLifecycleOwner(), (BOOK_ERROR error) -> {
+            if (error == BOOK_ERROR.FAIL_TO_GET_BOOKS) {
+                Toast.makeText(getActivity(), getString(R.string.fail_to_get_books), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void openDetailActivity(Book book){
