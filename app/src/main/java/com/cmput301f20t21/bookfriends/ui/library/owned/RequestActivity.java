@@ -106,9 +106,6 @@ public class RequestActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra(OwnedListFragment.BOOK_STATUS_KEY, vm.getBookStatus().getValue());
-            setResult(RESULT_OK, resultIntent);
             finish();
             return true;
         }

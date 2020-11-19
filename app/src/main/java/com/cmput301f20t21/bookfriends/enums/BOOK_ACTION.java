@@ -10,8 +10,7 @@ public enum BOOK_ACTION {
     ADD(0),
     EDIT(1),
     VIEW(2),
-    SEND_REQUEST(3),
-    VIEW_REQUESTS(4);
+    SEND_REQUEST(3);
 
     private int code;
 
