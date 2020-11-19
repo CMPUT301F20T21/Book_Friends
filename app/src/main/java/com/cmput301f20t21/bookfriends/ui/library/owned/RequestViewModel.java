@@ -63,7 +63,7 @@ public class RequestViewModel extends ViewModel {
      * @param bookId the book id to query for requesters
      */
     private void fetchRequests(String bookId) {
-        requestService.getByBookId(bookId).addOnSuccessListener(requesterDocumentsSnapShots -> {
+        requestService.getOpenedRequestByBookId(bookId).addOnSuccessListener(requesterDocumentsSnapShots -> {
            List<DocumentSnapshot> documents = requesterDocumentsSnapShots.getDocuments();
            requestsData.clear(); // we are sure to always refresh the requests list
            requestsData.addAll(IntStream.range(0, documents.size()).mapToObj(i -> {

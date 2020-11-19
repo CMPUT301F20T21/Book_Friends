@@ -28,11 +28,14 @@ import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
+import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
+import com.cmput301f20t21.bookfriends.ui.borrow.accepted.AcceptedDetailActivity;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 import com.cmput301f20t21.bookfriends.ui.library.add.AddEditActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import java.lang.reflect.AnnotatedElement;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -183,9 +186,21 @@ public class OwnedListFragment extends Fragment {
     }
 
     private void openDetailActivity(Book book){
-        Intent intent = new Intent(this.getActivity(), OwnedDetailActivity.class);
+        Intent intent = new Intent(this.getActivity(), getDetailClass(book.getStatus()));
         intent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, book);
         startActivityForResult(intent, BOOK_ACTION.VIEW.getCode());
+    }
+
+    private Class<? extends BaseDetailActivity> getDetailClass(BOOK_STATUS bookStatus) {
+        switch (bookStatus) {
+            case ACCEPTED:
+                return AcceptedOwnedDetailActivity.class;
+            case BORROWED:
+            case REQUESTED:
+            case AVAILABLE:
+            default:
+                return OwnedDetailActivity.class;
+        }
     }
 
     /**
