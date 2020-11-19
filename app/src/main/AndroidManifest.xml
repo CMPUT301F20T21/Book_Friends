@@ -22,6 +22,11 @@
             android:label="@string/app_name">
         </activity>
         <activity
+            android:name="com.cmput301f20t21.bookfriends.ui.scanner.ScannerBaseActivity"
+            android:label="@string/title_scanner"
+            >
+        </activity>
+        <activity
             android:name="com.cmput301f20t21.bookfriends.ui.scanner.ScannerAddActivity"
             android:label="@string/title_scanner_add"
             >
@@ -66,6 +71,10 @@
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.borrow.requested.RequestedDetailActivity"
             android:label="@string/requested_detail">
+        </activity>
+        <activity
+            android:name="com.cmput301f20t21.bookfriends.ui.library.owned.AcceptedOwnedDetailActivity"
+            android:label="@string/accepted_owned_detail">
         </activity>
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.library.borrowed.BorrowedDetailActivity"
