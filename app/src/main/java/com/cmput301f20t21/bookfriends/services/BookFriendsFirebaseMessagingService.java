@@ -10,9 +10,6 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.cmput301f20t21.bookfriends.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -38,8 +35,7 @@ public class BookFriendsFirebaseMessagingService extends FirebaseMessagingServic
                 .setSmallIcon(R.drawable.no_image)
                 .setContentTitle(remoteMessage.getNotification().getTitle())
                 .setContentText(remoteMessage.getNotification().getBody())
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
 
         NotificationManagerCompat nm = NotificationManagerCompat.from(this);
         nm.notify(onetimeId.get(), builder.build());

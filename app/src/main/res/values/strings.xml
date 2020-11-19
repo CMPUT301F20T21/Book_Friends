@@ -93,4 +93,6 @@
     <string name="delete_cover_image">Delete cover image</string>
     <string name="address_search">Enter Address</string>
     <string name="request_book_successful">Request successfully sent</string>
+    <string name="preference_file_key">com.cmput301f20t21.bookfriends.PREFERENCE_FILE_KEY</string>
+    <string name="saved_cloud_messaging_topic">com.cmput301f20t21.bookfriends</string>
 </resources>

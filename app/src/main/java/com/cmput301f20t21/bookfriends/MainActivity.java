@@ -1,18 +1,9 @@
 package com.cmput301f20t21.bookfriends;
 
-import android.content.Intent;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Message;
 import android.util.Log;
-
-import com.cmput301f20t21.bookfriends.repositories.api.AuthRepository;
-import com.cmput301f20t21.bookfriends.repositories.api.UserRepository;
-import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
-import com.cmput301f20t21.bookfriends.ui.login.LoginActivity;
-import com.cmput301f20t21.bookfriends.utils.NotificationSender;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.RemoteMessage;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -20,10 +11,14 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
+import com.cmput301f20t21.bookfriends.utils.NotificationSender;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "bfriends_messaging";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,18 +43,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void subscribeToNotifications() {
-        String TAG = "bfriends_messaging";
         final String username = AuthRepositoryImpl.getInstance().getCurrentUser().getUsername();
-        FirebaseMessaging.getInstance().subscribeToTopic(username)
-                .addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        Log.e(TAG, "failed sub to " + username);
-                    }
-                    Log.e(TAG, "successfully sub to " + username);
-                });
+        freshSubscribeToTopic(username);
     }
 
     private void initNotificationSender() {
         NotificationSender.getInstance();
     }
+
+    /**
+     * clean up all the previous subscription and subscribe to this particular topic only
+     *
+     * @param newTopic the topic to subscribe to.
+     */
+    private void freshSubscribeToTopic(String newTopic) {
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String oldTopic = sharedPref.getString(getString(R.string.saved_cloud_messaging_topic), null);
+        FirebaseMessaging.getInstance().subscribeToTopic(newTopic).continueWith(Void -> {
+            if (oldTopic != null && !oldTopic.equals(newTopic)) {
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(oldTopic).continueWith(Void1 -> {
+                    Log.e(TAG, "successfully un-subbed " + oldTopic);
+                    return null;
+                });
+            }
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(getString(R.string.saved_cloud_messaging_topic), newTopic);
+            editor.apply();
+            Log.e(TAG, "successfully subbed " + newTopic);
+            return null;
+        });
+    }
+
 }

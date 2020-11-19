@@ -47,6 +47,7 @@
             android:label="@string/add_edit">
         </activity>
         <activity android:name=".ui.library.owned.OwnedDetailActivity"
+            android:parentActivityName=".MainActivity"
             android:label="@string/view">
         </activity>
         <activity
@@ -57,19 +58,23 @@
         </activity>
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.borrow.accepted.AcceptedDetailActivity"
+            android:parentActivityName=".MainActivity"
             android:label="@string/accepted_detail">
         </activity>
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.browse.BrowseDetailActivity"
+            android:parentActivityName=".MainActivity"
             android:label="@string/browse_detail">
         </activity>
 
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.borrow.requested.RequestedDetailActivity"
+            android:parentActivityName=".MainActivity"
             android:label="@string/requested_detail">
         </activity>
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.library.borrowed.BorrowedDetailActivity"
+            android:parentActivityName=".MainActivity"
             android:label="@string/borrowed_detail">
         </activity>
         <activity android:name=".ui.library.owned.RequestActivity"

@@ -39,10 +39,10 @@ public class NotificationSender {
         Thread thread = new Thread() {
             @Override
             public void run() {
-//                String url = "https://postman-echo.com/get?foo1=bar1&foo2=bar2";
                 String url = ENDPOINT + "/accept/" + request.getId();
                 okhttp3.Request req = new okhttp3.Request.Builder()
                         .url(url)
+                        .get()
                         .build();
 
                 try {
@@ -61,7 +61,6 @@ public class NotificationSender {
         Thread thread = new Thread() {
             @Override
             public void run() {
-//                String url = "https://postman-echo.com/get?foo1=bar1&foo2=bar2";
                 String url = ENDPOINT + "/request/" + borrower.getUsername() + "/" + book.getId();
                 okhttp3.Request req = new okhttp3.Request.Builder()
                         .addHeader("connection", "close")
