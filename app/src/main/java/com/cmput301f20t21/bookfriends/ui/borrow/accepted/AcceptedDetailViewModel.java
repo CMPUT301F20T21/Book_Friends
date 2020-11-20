@@ -79,14 +79,18 @@ public class AcceptedDetailViewModel extends ViewModel {
     // https://stackoverflow.com/questions/48699032/how-to-set-addsnapshotlistener-and-remove-in-populateviewholder-in-recyclerview
     public void registerSnapshotListener() {
         if (listenerRegistration == null) {
-            if (request.getValue() != null) {
-                requestRepository.getRefById(request.getValue().getId()).addSnapshotListener((snapshot, error) -> {
+            Request currentRequest = request.getValue();
+            if (currentRequest != null) {
+                requestRepository.getRefById(currentRequest.getId()).addSnapshotListener((snapshot, error) -> {
                     if (error != null) {
                         Log.d("REQUEST_SNAPSHOT_ERROR", error.getMessage());
                     }
 
                     if (snapshot != null && snapshot.exists()) {
-                        request.setValue(snapshot.toObject(Request.class));
+                        Request requestFromSnapshot = snapshot.toObject(Request.class);
+                        if (!currentRequest.equals(requestFromSnapshot)) {
+                            request.setValue(requestFromSnapshot);
+                        }
                     }
                 });
             }
