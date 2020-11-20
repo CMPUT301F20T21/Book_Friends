@@ -95,6 +95,8 @@
     <string name="delete_cover_image">Delete cover image</string>
     <string name="address_search">Enter Address</string>
     <string name="request_book_successful">Request successfully sent</string>
+    <string name="accepted_request">Accepted Request</string>
+    <string name="fail_to_get_location">Unable to get current location</string>
     <string name="scan_hand_over">Scan to hand over</string>
     <string name="scan_invalid_isbn_error">Scanned ISBN does not match current ISBN</string>
     <string name="scan_hand_over_success">Waiting for %s to receive...</string>
