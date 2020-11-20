@@ -84,7 +84,7 @@ public class AcceptedDetailViewModel extends ViewModel {
         if (listenerRegistration == null) {
             Request currentRequest = request.getValue();
             if (currentRequest != null) {
-                requestRepository.getRefById(currentRequest.getId()).addSnapshotListener((snapshot, error) -> {
+                listenerRegistration = requestRepository.getRefById(currentRequest.getId()).addSnapshotListener((snapshot, error) -> {
                     if (error != null) {
                         Log.d("REQUEST_SNAPSHOT_ERROR", error.getMessage());
                     }
