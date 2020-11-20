@@ -32,7 +32,6 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
         actionButton = findViewById(R.id.detail_action_button);
 
         vm.getRequest(book).observe(this, request -> {
-            vm.registerSnapshotListener();
             if (request.getStatus().equals(REQUEST_STATUS.ACCEPTED)) {
                 actionButton.setText(getString(R.string.scan_wait_for_hand_over, book.getOwner()));
                 actionButton.setClickable(false);
