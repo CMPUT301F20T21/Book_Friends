@@ -32,6 +32,7 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
         actionButton = findViewById(R.id.detail_action_button);
 
         vm.getRequest(book).observe(this, request -> {
+            vm.registerSnapshotListener();
             if (request.getStatus().equals(REQUEST_STATUS.ACCEPTED)) {
                 actionButton.setText(getString(R.string.scan_wait_for_hand_over, book.getOwner()));
                 actionButton.setClickable(false);
@@ -51,6 +52,18 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
                 Toast.makeText(this, getString(R.string.unexpected_error), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        vm.registerSnapshotListener();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        vm.unregisterSnapshotListener();
     }
 
     private void openScanner(View view) {

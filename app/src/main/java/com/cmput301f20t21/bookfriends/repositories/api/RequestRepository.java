@@ -10,6 +10,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.List;
 
 public interface RequestRepository {
+    DocumentReference getRefById(String requestId);
     Task<QuerySnapshot> getOpenedRequestByBookId(String bookId);
     Task<List<Request>> getRequestsByBookIdAndStatus(String bookId, List<REQUEST_STATUS> statusList);
     Task<List<Request>> getRequestsByUsernameAndStatus(String username, List<REQUEST_STATUS> statusList);
