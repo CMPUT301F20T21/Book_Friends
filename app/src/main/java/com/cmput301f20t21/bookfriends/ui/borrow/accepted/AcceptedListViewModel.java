@@ -58,7 +58,7 @@ public class AcceptedListViewModel extends ViewModel {
 
     private void fetchBooks() {
         String username = authRepository.getCurrentUser().getUsername();
-        requestRepository.getRequestsByUsernameAndStatus(username, Arrays.asList(REQUEST_STATUS.ACCEPTED)).addOnSuccessListener(requests -> {
+        requestRepository.getRequestsByUsernameAndStatus(username, Arrays.asList(REQUEST_STATUS.ACCEPTED, REQUEST_STATUS.HANDING)).addOnSuccessListener(requests -> {
             List<String> requestedBookIds = requests
                     .stream()
                     .map(Request::getBookId)
