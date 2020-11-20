@@ -38,7 +38,7 @@ public class AcceptedOwnedDetailViewModel extends ViewModel {
 
     private void fetchRequest(String bookId) {
         requestRepository
-                .getRequestByBookIdAndStatus(bookId, Arrays.asList(REQUEST_STATUS.ACCEPTED, REQUEST_STATUS.HANDING))
+                .getRequestsByBookIdAndStatus(bookId, Arrays.asList(REQUEST_STATUS.ACCEPTED, REQUEST_STATUS.HANDING))
                 .addOnSuccessListener(requests -> request.setValue(requests.get(0)))
                 .addOnFailureListener(e -> errorMessage.setValue(SCAN_ERROR.UNEXPECTED));
     }

@@ -37,7 +37,7 @@ public class BrowseDetailViewModel extends ViewModel {
                 .sendRequest(currentUsername, book.getId())
                 .addOnSuccessListener(requestId -> {
                     if (book.getStatus() == BOOK_STATUS.AVAILABLE) {
-                        bookRepository.updateBookStatus(book.getId(), BOOK_STATUS.REQUESTED)
+                        bookRepository.updateBookStatus(book, BOOK_STATUS.REQUESTED)
                                 .addOnSuccessListener(aVoid -> successCallback.run())
                                 .addOnFailureListener(e -> failCallback.run());
                     } else {

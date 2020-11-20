@@ -34,14 +34,6 @@ public class RequestViewModel extends ViewModel {
     private final MutableLiveData<ArrayList<Request>> requests = new MutableLiveData<>(new ArrayList<>());
     private final ArrayList<Request> requestsData = requests.getValue();
 
-    /**
-     * Indicating the updated status of the book, book might or might not have a new status
-     * If user rejects all requests -> Available
-     * If user accepts a request -> Accepted
-     * Otherwise -> Requested(i.e. not changed)
-     */
-    private final MutableLiveData<BOOK_STATUS> bookStatus = new MutableLiveData<>(BOOK_STATUS.REQUESTED);
-
     private final RequestRepository requestService = RequestRepositoryImpl.getInstance();
     private final BookRepositoryImpl bookRepository = BookRepositoryImpl.getInstance();
 
@@ -96,13 +88,6 @@ public class RequestViewModel extends ViewModel {
     }
 
     /**
-     * Indicating the updated status of the book, book might or might not have a new status
-     */
-    public LiveData<BOOK_STATUS> getBookStatus() {
-        return this.bookStatus;
-    }
-
-    /**
      * When the requester is denied, remove his/her request.
      * update the status of this requester to DENIED
      * @param position the position of the request to remove
@@ -115,10 +100,9 @@ public class RequestViewModel extends ViewModel {
             if (requestsData.isEmpty()) {
                 Book bookData = book.getValue();
                 if (bookData != null) {
-                    bookRepository.updateBookStatus(bookData.getId(), BOOK_STATUS.AVAILABLE)
-                            .addOnSuccessListener(aVoid1 -> bookStatus.setValue(BOOK_STATUS.AVAILABLE));
+                    bookRepository.updateBookStatus(bookData, BOOK_STATUS.AVAILABLE)
+                            .addOnSuccessListener(updatedBook -> book.setValue(updatedBook));
                 }
-
             }
         });
     }
@@ -142,8 +126,8 @@ public class RequestViewModel extends ViewModel {
                 requests.setValue(requestsData);
                 Book bookData = book.getValue();
                 if (bookData != null) {
-                    bookRepository.updateBookStatus(bookData.getId(), BOOK_STATUS.ACCEPTED)
-                            .addOnSuccessListener(aVoid2 -> bookStatus.setValue(BOOK_STATUS.ACCEPTED));
+                    bookRepository.updateBookStatus(bookData, BOOK_STATUS.ACCEPTED)
+                            .addOnSuccessListener(updatedBook -> book.setValue(updatedBook));
                 }
             }).addOnFailureListener(err -> {
                 err.printStackTrace();

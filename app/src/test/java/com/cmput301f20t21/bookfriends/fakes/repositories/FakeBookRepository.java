@@ -83,7 +83,7 @@ public class FakeBookRepository implements BookRepository {
     }
 
     @Override
-    public Task<Void> updateBookStatus(String bookId, BOOK_STATUS newStatus) {
+    public Task<Book> updateBookStatus(Book book, BOOK_STATUS newStatus) {
         return null;
     }
 }

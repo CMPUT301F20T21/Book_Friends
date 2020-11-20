@@ -245,8 +245,25 @@ public class BookRepositoryImpl implements BookRepository {
         return bookCollection.whereEqualTo("isbn", isbn).whereEqualTo("title", title).whereEqualTo("author", author).get();
     }
 
-    public Task<Void> updateBookStatus(String bookId, BOOK_STATUS newStatus) {
-        return bookCollection.document(bookId).update("status", newStatus.toString());
+    public Task<Book> updateBookStatus(Book book, BOOK_STATUS newStatus) {
+        return bookCollection
+                .document(book.getId())
+                .update("status", newStatus.toString())
+                .continueWith(task -> {
+                    if (task.isSuccessful()) {
+                        return new Book(
+                                book.getId(),
+                                book.getIsbn(),
+                                book.getTitle(),
+                                book.getAuthor(),
+                                book.getDescription(),
+                                book.getOwner(),
+                                newStatus,
+                                book.getImageUrl()
+                        );
+                    }
+                    throw new UnexpectedException();
+                });
     }
 
 }

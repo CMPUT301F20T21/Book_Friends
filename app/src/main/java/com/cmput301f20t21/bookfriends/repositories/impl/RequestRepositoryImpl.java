@@ -32,6 +32,10 @@ public class RequestRepositoryImpl implements RequestRepository {
         return instance;
     }
 
+    public DocumentReference getRefById(String requestId) {
+        return requestCollection.document(requestId);
+    }
+
     /**
      * get request by bookId, only for books that are opened
      * @param bookId
@@ -44,7 +48,7 @@ public class RequestRepositoryImpl implements RequestRepository {
                 .get();
     }
 
-    public Task<List<Request>> getRequestByBookIdAndStatus(String bookId, List<REQUEST_STATUS> statusList) {
+    public Task<List<Request>> getRequestsByBookIdAndStatus(String bookId, List<REQUEST_STATUS> statusList) {
         return requestCollection
                 .whereEqualTo("bookId", bookId)
                 .whereIn("status", statusList)
@@ -67,9 +71,9 @@ public class RequestRepositoryImpl implements RequestRepository {
                 .whereEqualTo("status", REQUEST_STATUS.BORROWED.toString()).get();
     }
 
-    public Task<List<Request>> getAllRequestsByUsername(String username, REQUEST_STATUS status) {
+    public Task<List<Request>> getRequestsByUsernameAndStatus(String username, List<REQUEST_STATUS> statusList) {
         return requestCollection.whereEqualTo("requester", username)
-                .whereEqualTo("status", status.toString()).get()
+                .whereIn("status", statusList).get()
                 .continueWith(task -> {
                     if (task.isSuccessful()) {
                         List<Request> requests = new ArrayList<Request>();
