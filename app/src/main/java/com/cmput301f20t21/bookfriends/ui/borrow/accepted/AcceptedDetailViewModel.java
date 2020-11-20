@@ -103,6 +103,7 @@ public class AcceptedDetailViewModel extends ViewModel {
     public void unregisterSnapshotListener() {
         if (listenerRegistration != null) {
             listenerRegistration.remove();
+            listenerRegistration = null;
         }
     }
 
