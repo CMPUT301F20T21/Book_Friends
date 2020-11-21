@@ -32,13 +32,38 @@ public class RequestRepositoryImpl implements RequestRepository {
         return instance;
     }
 
+    public DocumentReference getRefById(String requestId) {
+        return requestCollection.document(requestId);
+    }
+
     /**
      * get request by bookId, only for books that are opened
      * @param bookId
      * @return Task QuerySnapshot for request
      */
-    public Task<QuerySnapshot> getByBookId(String bookId) {
-        return requestCollection.whereEqualTo("bookId", bookId).whereEqualTo("status", "OPENED").get();
+    public Task<QuerySnapshot> getOpenedRequestByBookId(String bookId) {
+        return requestCollection
+                .whereEqualTo("bookId", bookId)
+                .whereEqualTo("status", REQUEST_STATUS.OPENED.toString())
+                .get();
+    }
+
+    public Task<List<Request>> getRequestsByBookIdAndStatus(String bookId, List<REQUEST_STATUS> statusList) {
+        return requestCollection
+                .whereEqualTo("bookId", bookId)
+                .whereIn("status", statusList)
+                .get()
+                .continueWith(task -> {
+                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        return task
+                                .getResult()
+                                .getDocuments()
+                                .stream()
+                                .map(doc -> doc.toObject(Request.class))
+                                .collect(Collectors.toList());
+                    }
+                    throw new UnexpectedException();
+                });
     }
 
     public Task<QuerySnapshot> getBorrowedRequestByUsername(String username) {
@@ -46,9 +71,9 @@ public class RequestRepositoryImpl implements RequestRepository {
                 .whereEqualTo("status", REQUEST_STATUS.BORROWED.toString()).get();
     }
 
-    public Task<List<Request>> getAllRequestsByUsername(String username, REQUEST_STATUS status) {
+    public Task<List<Request>> getRequestsByUsernameAndStatus(String username, List<REQUEST_STATUS> statusList) {
         return requestCollection.whereEqualTo("requester", username)
-                .whereEqualTo("status", status.toString()).get()
+                .whereIn("status", statusList).get()
                 .continueWith(task -> {
                     if (task.isSuccessful()) {
                         List<Request> requests = new ArrayList<Request>();
@@ -136,5 +161,17 @@ public class RequestRepositoryImpl implements RequestRepository {
             }
             throw new UnexpectedException();
         });
+    }
+
+    public Task<Request> updateRequestStatus(Request request, REQUEST_STATUS newStatus) {
+        return requestCollection
+                .document(request.getId())
+                .update("status", newStatus.toString())
+                .continueWith(task -> {
+                    if (task.isSuccessful()) {
+                        return new Request(request.getId(), request.getRequester(), request.getBookId(), newStatus);
+                    }
+                    throw new UnexpectedException();
+                });
     }
 }

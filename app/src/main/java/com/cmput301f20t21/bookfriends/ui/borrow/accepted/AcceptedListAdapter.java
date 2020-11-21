@@ -14,14 +14,14 @@ import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.ui.component.BaseBookListAdapter;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class AcceptedListAdapter extends BaseBookListAdapter {
-    private AcceptedListAdapter.OnItemClickListener itemClickListener;
+    private OnItemClickListener itemClickListener;
     public interface OnItemClickListener {
         void run(int position);
     }
-    public AcceptedListAdapter(ArrayList<Book> books, OnItemClickListener itemClickListener) {
+    public AcceptedListAdapter(List<Book> books, OnItemClickListener itemClickListener) {
         super(books);
         this.itemClickListener = itemClickListener;
     }

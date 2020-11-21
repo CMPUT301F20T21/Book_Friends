@@ -1,13 +1,12 @@
 package com.cmput301f20t21.bookfriends.ui.library.owned;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,9 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Request;
-import com.cmput301f20t21.bookfriends.ui.library.owned.OwnedListFragment;
-import com.google.android.gms.maps.GoogleMap;
 import com.cmput301f20t21.bookfriends.utils.ImagePainter;
+
 import java.util.ArrayList;
 
 public class RequestActivity extends AppCompatActivity {
@@ -32,6 +30,7 @@ public class RequestActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private TextView titleTextView;
     private TextView authorTextView;
+    private TextView isbnTextView;
     private TextView bookStatus;
     private ImageView bookImage;
 
@@ -45,6 +44,8 @@ public class RequestActivity extends AppCompatActivity {
         // bind the text view
         titleTextView = findViewById(R.id.detail_title);
         authorTextView = findViewById(R.id.detail_author);
+        isbnTextView = findViewById(R.id.detail_ISBN);
+        // the text of the book status might change according to user action
         bookStatus = findViewById(R.id.status_text_view);
         bookImage = findViewById(R.id.book_image_view);
 
@@ -56,10 +57,10 @@ public class RequestActivity extends AppCompatActivity {
         vm.getBook(bookId).observe(this, book -> {
             titleTextView.setText(book.getTitle());
             authorTextView.setText(book.getAuthor());
-            bookStatus.setText(book.getStatus().toString());
+            isbnTextView.setText(book.getIsbn());
+            bookStatus.setText(book.getStatus().toString().toLowerCase());
             ImagePainter.paintImage(bookImage, book.getImageUrl());
         });
-
 
         // set up the back button
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_white_18);
@@ -137,11 +138,9 @@ public class RequestActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         MapDialog mapDialog = new MapDialog(getApplicationContext(), vm, position);
                         mapDialog.show(getSupportFragmentManager(), "map");
-//                        vm.acceptRequest(position);
                     }
                 })
                 .setNegativeButton(R.string.edit_cancel, null)
                 .show();
     }
-
 }

@@ -3,6 +3,8 @@ package com.cmput301f20t21.bookfriends.entities;
 import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 import com.google.firebase.firestore.DocumentId;
 
+import java.util.Objects;
+
 public class Request {
     @DocumentId
     private String id;
@@ -35,5 +37,21 @@ public class Request {
 
     public REQUEST_STATUS getStatus() {
         return status;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Request request = (Request) o;
+        return id.equals(request.id) &&
+                requester.equals(request.requester) &&
+                bookId.equals(request.bookId) &&
+                status == request.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, requester, bookId, status);
     }
 }

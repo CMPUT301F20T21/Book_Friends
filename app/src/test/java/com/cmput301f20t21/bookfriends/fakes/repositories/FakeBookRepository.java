@@ -3,6 +3,7 @@ package com.cmput301f20t21.bookfriends.fakes.repositories;
 import android.net.Uri;
 
 import com.cmput301f20t21.bookfriends.entities.Book;
+import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.repositories.api.BookRepository;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -78,6 +79,11 @@ public class FakeBookRepository implements BookRepository {
 
     @Override
     public Task<QuerySnapshot> getDocumentBy(String isbn, String title, String author) {
+        return null;
+    }
+
+    @Override
+    public Task<Book> updateBookStatus(Book book, BOOK_STATUS newStatus) {
         return null;
     }
 }

@@ -9,6 +9,7 @@
     <string name="string_borrowed">Borrowed</string>
     <string name="title_borrow">Borrow</string>
     <string name="title_browse">Browse</string>
+    <string name="title_scanner">Scan to Add</string>
     <string name="title_scanner_add">Scan to Add</string>
     <string name="title_profile">Me</string>
     <string name="title_notifications">Notifications</string>
@@ -83,9 +84,10 @@
     <string name="edit_detail">Edit</string>
     <string name="view_request">View All Requests</string>
     <string name="view">View</string>
-    <string name="accepted_detail">he Book Detail (Accepted)</string>
+    <string name="accepted_detail">The Book Detail (Accepted)</string>
     <string name="browse_detail">The Book Detail (Available)</string>
     <string name="requested_detail">The Book Detail (Requested)</string>
+    <string name="accepted_owned_detail">The Book Detail (Accepted Owned)</string>
     <string name="borrowed_detail">View A Borrowed Book</string>
     <string name="author">Author: %s</string>
     <string name="upload_new_image">Upload a new image</string>
@@ -98,4 +100,12 @@
     <string name="notification_channel_name">Book Friends Notification Channel</string>
     <string name="notification_channel_description">description</string>
     <string name="notification_channel_id">BOOKFRIENDS_NOTIFICATION_CHANNEL_ID</string>
+    <string name="accepted_request">Accepted Request</string>
+    <string name="fail_to_get_location">Unable to get current location</string>
+    <string name="scan_hand_over">Scan to hand over</string>
+    <string name="scan_invalid_isbn_error">Scanned ISBN does not match current ISBN</string>
+    <string name="scan_hand_over_success">Waiting for %s to receive...</string>
+    <string name="scan_wait_for_hand_over">Waiting for %s to hand over...</string>
+    <string name="scan_receive">Scan to receive</string>
+    <string name="scan_receive_success">Successfully borrowed %s</string>
 </resources>

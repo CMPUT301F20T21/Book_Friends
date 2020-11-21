@@ -5,6 +5,11 @@ import androidx.lifecycle.ViewModel;
 import com.cmput301f20t21.bookfriends.callbacks.OnFailCallback;
 import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallback;
 import com.cmput301f20t21.bookfriends.entities.Book;
+import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
+import com.cmput301f20t21.bookfriends.repositories.api.BookRepository;
+import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
+import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
+import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.api.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
 import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
@@ -12,14 +17,20 @@ import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
 import com.cmput301f20t21.bookfriends.utils.NotificationSender;
 
 public class BrowseDetailViewModel extends ViewModel {
+    private final BookRepository bookRepository;
     private final RequestRepository requestRepository;
     private final String currentUsername;
 
     public BrowseDetailViewModel() {
-        this(AuthRepositoryImpl.getInstance(), RequestRepositoryImpl.getInstance());
+        this(AuthRepositoryImpl.getInstance(), RequestRepositoryImpl.getInstance(), BookRepositoryImpl.getInstance());
     }
 
-    public BrowseDetailViewModel(AuthRepository authRepository, RequestRepository requestRepository) {
+    public BrowseDetailViewModel(
+            AuthRepository authRepository,
+            RequestRepository requestRepository,
+            BookRepository bookRepository
+    ) {
+        this.bookRepository = bookRepository;
         this.requestRepository = requestRepository;
         currentUsername = authRepository.getCurrentUser().getUsername();
     }
@@ -28,12 +39,20 @@ public class BrowseDetailViewModel extends ViewModel {
         requestRepository
                 .sendRequest(currentUsername, book.getId())
                 .addOnSuccessListener(requestId -> {
-                    NotificationSender.getInstance().request(book, currentUsername,
-                            res -> successCallback.run(),
-                            err -> {
-                                err.printStackTrace();
-                                failCallback.run();
-                            });
+                    if (book.getStatus() == BOOK_STATUS.AVAILABLE) {
+                        bookRepository.updateBookStatus(book, BOOK_STATUS.REQUESTED)
+                                .addOnSuccessListener(aVoid -> {
+                                    NotificationSender.getInstance().request(book, currentUsername,
+                                            res -> successCallback.run(),
+                                            err -> {
+                                                err.printStackTrace();
+                                                successCallback.run(); // success anyways as we don't want notifications break user flow
+                                            });
+                                })
+                                .addOnFailureListener(e -> failCallback.run());
+                    } else {
+                        successCallback.run();
+                    }
                 })
                 .addOnFailureListener(e -> failCallback.run());
     }
