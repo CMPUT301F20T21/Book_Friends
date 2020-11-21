@@ -51,7 +51,12 @@ public class BrowseDetailViewModel extends ViewModel {
                                 })
                                 .addOnFailureListener(e -> failCallback.run());
                     } else {
-                        successCallback.run();
+                        NotificationSender.getInstance().request(book, currentUsername,
+                                res -> successCallback.run(),
+                                err -> {
+                                    err.printStackTrace();
+                                    successCallback.run(); // success anyways as we don't want notifications break user flow
+                                });
                     }
                 })
                 .addOnFailureListener(e -> failCallback.run());
