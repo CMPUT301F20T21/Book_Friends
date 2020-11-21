@@ -7,6 +7,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class AuthRepositoryImpl implements AuthRepository {
     private FirebaseAuth mAuth;
@@ -47,7 +48,10 @@ public class AuthRepositoryImpl implements AuthRepository {
     }
 
     public void signOut() {
-        mAuth.signOut();
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(getCurrentUser().getUsername()).continueWith(Void -> {
+            mAuth.signOut();
+            return null;
+        });
     }
 
     public Task<Void> updateEmail(String email) {

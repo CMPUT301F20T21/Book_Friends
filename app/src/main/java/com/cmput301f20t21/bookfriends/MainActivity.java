@@ -1,10 +1,8 @@
 package com.cmput301f20t21.bookfriends;
 
-import android.content.Intent;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import com.cmput301f20t21.bookfriends.ui.login.LoginActivity;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -12,8 +10,13 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-public class MainActivity extends AppCompatActivity {
+import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
+import com.cmput301f20t21.bookfriends.utils.NotificationSender;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.messaging.FirebaseMessaging;
 
+
+public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +35,38 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-        // this intent should contain the user class that is used to log in?
-        // Intent userIntent = getIntent();
+        subscribeToNotifications(); // subscribe to incoming notifications
+        initNotificationSender(); // prepare util singleton for future notification sending
     }
+
+    private void subscribeToNotifications() {
+        final String username = AuthRepositoryImpl.getInstance().getCurrentUser().getUsername();
+        freshSubscribeToTopic(username);
+    }
+
+    private void initNotificationSender() {
+        NotificationSender.getInstance();
+    }
+
+    /**
+     * clean up all the previous subscription and subscribe to this particular topic only
+     *
+     * @param newTopic the topic to subscribe to.
+     */
+    private void freshSubscribeToTopic(String newTopic) {
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String oldTopic = sharedPref.getString(getString(R.string.saved_cloud_messaging_topic), null);
+        FirebaseMessaging.getInstance().subscribeToTopic(newTopic).continueWith(Void -> {
+            if (oldTopic != null && !oldTopic.equals(newTopic)) {
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(oldTopic).continueWith(Void1 -> {
+                    return null;
+                });
+            }
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(getString(R.string.saved_cloud_messaging_topic), newTopic);
+            editor.apply();
+            return null;
+        });
+    }
+
 }

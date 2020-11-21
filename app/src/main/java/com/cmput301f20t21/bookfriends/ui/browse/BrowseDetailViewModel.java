@@ -12,6 +12,9 @@ import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.api.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
+import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
+import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
+import com.cmput301f20t21.bookfriends.utils.NotificationSender;
 
 public class BrowseDetailViewModel extends ViewModel {
     private final BookRepository bookRepository;
@@ -38,10 +41,22 @@ public class BrowseDetailViewModel extends ViewModel {
                 .addOnSuccessListener(requestId -> {
                     if (book.getStatus() == BOOK_STATUS.AVAILABLE) {
                         bookRepository.updateBookStatus(book, BOOK_STATUS.REQUESTED)
-                                .addOnSuccessListener(aVoid -> successCallback.run())
+                                .addOnSuccessListener(aVoid -> {
+                                    NotificationSender.getInstance().request(book, currentUsername,
+                                            res -> successCallback.run(),
+                                            err -> {
+                                                err.printStackTrace();
+                                                successCallback.run(); // success anyways as we don't want notifications break user flow
+                                            });
+                                })
                                 .addOnFailureListener(e -> failCallback.run());
                     } else {
-                        successCallback.run();
+                        NotificationSender.getInstance().request(book, currentUsername,
+                                res -> successCallback.run(),
+                                err -> {
+                                    err.printStackTrace();
+                                    successCallback.run(); // success anyways as we don't want notifications break user flow
+                                });
                     }
                 })
                 .addOnFailureListener(e -> failCallback.run());
