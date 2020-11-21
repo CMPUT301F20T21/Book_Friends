@@ -84,15 +84,15 @@ public class BorrowedViewModel extends ViewModel {
         requestRepository.getRequestsByUsernameAndStatus(
                 username, Collections.singletonList(REQUEST_STATUS.BORROWED)
         ).addOnSuccessListener(requests -> {
-            List<String> requestedBookIds = requests
+            List<String> borrowedBookIds = requests
                     .stream()
                     .map(Request::getBookId)
                     .collect(Collectors.toList());
 
-            if (requestedBookIds.isEmpty()) {
+            if (borrowedBookIds.isEmpty()) {
                 return;
             }
-            bookRepository.batchGetBooks(requestedBookIds).addOnSuccessListener(borrowedBooks -> {
+            bookRepository.batchGetBooks(borrowedBookIds).addOnSuccessListener(borrowedBooks -> {
                 bookData.clear();
                 bookData.addAll(borrowedBooks);
                 books.setValue(bookData);
