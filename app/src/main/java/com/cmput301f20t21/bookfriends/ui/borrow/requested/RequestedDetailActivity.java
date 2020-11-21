@@ -14,6 +14,8 @@ public class RequestedDetailActivity extends BaseDetailActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         button.setText(R.string.wait_for_acceptance);
+        button.setBackgroundColor(getColor(R.color.gray));
+        button.setEnabled(false);
     }
 
     @Override

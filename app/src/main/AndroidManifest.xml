@@ -56,20 +56,20 @@
         </activity>
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.borrow.accepted.AcceptedDetailActivity"
-            android:label="@string/accepted_detail">
+            android:label="@string/detail">
         </activity>
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.browse.BrowseDetailActivity"
-            android:label="@string/browse_detail">
+            android:label="@string/detail">
         </activity>
 
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.borrow.requested.RequestedDetailActivity"
-            android:label="@string/requested_detail">
+            android:label="@string/detail">
         </activity>
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.library.borrowed.BorrowedDetailActivity"
-            android:label="@string/borrowed_detail">
+            android:label="@string/detail">
         </activity>
         <activity android:name=".ui.library.owned.RequestActivity"
             android:label="Requests">
