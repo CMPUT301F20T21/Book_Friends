@@ -55,6 +55,7 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
     private Context context;
     private MapView mapView;
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private LatLng meetingLocation;
 
     // constructor
     public MapDialog(Context context, RequestViewModel vm, int position) {
@@ -139,12 +140,12 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
                         myMap.clear();
                         // get the first address
                         Address address = addressList.get(0);
-                        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                        meetingLocation = new LatLng(address.getLatitude(), address.getLongitude());
                         // move camera to that address
-                        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
+                        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(meetingLocation, 15f));
 
                         MarkerOptions options = new MarkerOptions()
-                                .position(latLng)
+                                .position(meetingLocation)
                                 .title(address.getAddressLine(0));
                         myMap.addMarker(options);
                         // hide the keyboard after searching
@@ -168,10 +169,13 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
         confirmSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // accept the request only when user specifies the location of meeting
-                Toast.makeText(context, getString(R.string.accepted_request), Toast.LENGTH_SHORT).show();
-                vm.acceptRequest(position);
-                dialog.dismiss();
+                if (meetingLocation != null) {
+                    // accept the request only when user specifies the location of meeting
+                    Toast.makeText(context, getString(R.string.accepted_request), Toast.LENGTH_SHORT).show();
+                    vm.acceptRequest(position, meetingLocation);
+                    dialog.dismiss();
+                }
+                Toast.makeText(context, getString(R.string.pick_location), Toast.LENGTH_SHORT).show();
             }
         });
     }
