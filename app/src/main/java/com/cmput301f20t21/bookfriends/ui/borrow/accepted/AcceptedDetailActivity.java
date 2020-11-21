@@ -22,10 +22,6 @@ import com.cmput301f20t21.bookfriends.ui.scanner.ScannerBaseActivity;
 
 public class AcceptedDetailActivity extends BaseDetailActivity {
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        button.setText(R.string.scan_to_receive);
     public static final int GET_SCANNED_ISBN = 2001;
     private Button actionButton;
     private AcceptedDetailViewModel vm;
