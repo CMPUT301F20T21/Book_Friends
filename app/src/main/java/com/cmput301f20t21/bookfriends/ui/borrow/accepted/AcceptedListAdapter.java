@@ -48,14 +48,6 @@ public class AcceptedListAdapter extends BaseBookListAdapter {
             v.setOnClickListener(view -> itemClickListener.run(getAdapterPosition()));
         }
 
-        private void showPopup(View view) {
-            PopupMenu popup = new PopupMenu(view.getContext(), moreBtn);
-            MenuInflater inflater = popup.getMenuInflater();
-            inflater.inflate(R.menu.accepted_book_item_menu, popup.getMenu());
-            popup.setGravity(Gravity.END);
-            popup.show();
-        }
-
         @Override
         public void onBind(Book book) {
             super.onBind(book);
