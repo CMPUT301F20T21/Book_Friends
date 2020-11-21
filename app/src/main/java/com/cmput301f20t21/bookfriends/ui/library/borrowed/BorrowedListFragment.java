@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
+import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 
 import java.util.List;
@@ -22,8 +24,7 @@ import java.util.List;
 public class BorrowedListFragment extends Fragment {
     private BorrowedViewModel vm;
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
+    private BorrowedListAdapter adapter;
 
     @Nullable
     @Override
@@ -41,7 +42,7 @@ public class BorrowedListFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-        layoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
         // specify an adapter (see also next example)
@@ -55,6 +56,10 @@ public class BorrowedListFragment extends Fragment {
                 adapter.notifyItemChanged(pos);
             }
         });
+
+        vm.getErrorMessage().observe(getViewLifecycleOwner(), (BOOK_ERROR error) ->
+                Toast.makeText(getActivity(), getString(R.string.fail_to_get_books), Toast.LENGTH_SHORT).show()
+        );
     }
 
     private void openDetailActivity(Book book) {

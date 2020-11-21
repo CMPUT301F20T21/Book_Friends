@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class RequestRepositoryImpl implements RequestRepository {
-    private CollectionReference requestCollection;
+    private final CollectionReference requestCollection;
 
     private static final RequestRepository instance = new RequestRepositoryImpl();
 
@@ -64,11 +64,6 @@ public class RequestRepositoryImpl implements RequestRepository {
                     }
                     throw new UnexpectedException();
                 });
-    }
-
-    public Task<QuerySnapshot> getBorrowedRequestByUsername(String username) {
-        return requestCollection.whereEqualTo("requester", username)
-                .whereEqualTo("status", REQUEST_STATUS.BORROWED.toString()).get();
     }
 
     public Task<List<Request>> getRequestsByUsernameAndStatus(String username, List<REQUEST_STATUS> statusList) {
