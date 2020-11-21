@@ -15,6 +15,7 @@ import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 import com.cmput301f20t21.bookfriends.enums.SCAN_ERROR;
+
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 import com.cmput301f20t21.bookfriends.ui.library.owned.AcceptedOwnedDetailViewModel;
 import com.cmput301f20t21.bookfriends.ui.scanner.ScannerBaseActivity;
@@ -64,7 +65,7 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
         super.onStop();
         vm.unregisterSnapshotListener();
     }
-
+      
     private void openScanner(View view) {
         Intent intent = new Intent(this, ScannerBaseActivity.class);
         startActivityForResult(intent, GET_SCANNED_ISBN);
