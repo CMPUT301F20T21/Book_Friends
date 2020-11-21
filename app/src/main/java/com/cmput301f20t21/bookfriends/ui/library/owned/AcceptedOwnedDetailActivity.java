@@ -1,50 +1,37 @@
-package com.cmput301f20t21.bookfriends.ui.borrow.accepted;
+package com.cmput301f20t21.bookfriends.ui.library.owned;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.cmput301f20t21.bookfriends.R;
-import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 import com.cmput301f20t21.bookfriends.enums.SCAN_ERROR;
-
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
-import com.cmput301f20t21.bookfriends.ui.library.owned.AcceptedOwnedDetailViewModel;
 import com.cmput301f20t21.bookfriends.ui.scanner.ScannerBaseActivity;
 
-public class AcceptedDetailActivity extends BaseDetailActivity {
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        button.setText(R.string.scan_to_receive);
+public class AcceptedOwnedDetailActivity extends BaseDetailActivity {
     public static final int GET_SCANNED_ISBN = 2001;
     private Button actionButton;
-    private AcceptedDetailViewModel vm;
+    private AcceptedOwnedDetailViewModel vm;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        vm = new ViewModelProvider(this).get(AcceptedDetailViewModel.class);
+        vm = new ViewModelProvider(this).get(AcceptedOwnedDetailViewModel.class);
         actionButton = findViewById(R.id.detail_action_button);
 
         vm.getRequest(book).observe(this, request -> {
             if (request.getStatus().equals(REQUEST_STATUS.ACCEPTED)) {
-                actionButton.setText(getString(R.string.scan_wait_for_hand_over, book.getOwner()));
-                actionButton.setClickable(false);
-            } else if (request.getStatus().equals(REQUEST_STATUS.HANDING)) {
-                actionButton.setText(R.string.scan_receive);
+                actionButton.setText(R.string.scan_hand_over);
                 actionButton.setOnClickListener(this::openScanner);
-            } else if (request.getStatus().equals(REQUEST_STATUS.BORROWED)) {
-                actionButton.setText(getString(R.string.scan_receive_success, book.getTitle()));
+            } else if (request.getStatus().equals(REQUEST_STATUS.HANDING)) {
+                actionButton.setText(getString(R.string.scan_hand_over_success, request.getRequester()));
                 actionButton.setClickable(false);
             }
         });
@@ -58,18 +45,6 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
         });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        vm.registerSnapshotListener();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        vm.unregisterSnapshotListener();
-    }
-      
     private void openScanner(View view) {
         Intent intent = new Intent(this, ScannerBaseActivity.class);
         startActivityForResult(intent, GET_SCANNED_ISBN);
@@ -81,16 +56,8 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == GET_SCANNED_ISBN) {
                 String scannedIsbn = data.getStringExtra(ScannerBaseActivity.ISBN_KEY);
-                vm.handleScannedIsbn(book, scannedIsbn, this::onScannedSuccess);
+                vm.handleScannedIsbn(book.getIsbn(), scannedIsbn);
             }
         }
     }
-
-    private void onScannedSuccess(Book updatedBook) {
-        updateBook(updatedBook);
-    }
-
 }
-
-
-

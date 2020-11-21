@@ -10,9 +10,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.List;
 
 public interface RequestRepository {
-    Task<QuerySnapshot> getByBookId(String bookId);
+    DocumentReference getRefById(String requestId);
+    Task<QuerySnapshot> getOpenedRequestByBookId(String bookId);
+    Task<List<Request>> getRequestsByBookIdAndStatus(String bookId, List<REQUEST_STATUS> statusList);
+    Task<List<Request>> getRequestsByUsernameAndStatus(String username, List<REQUEST_STATUS> statusList);
     Task<QuerySnapshot> getBorrowedRequestByUsername(String username);
-    Task<List<Request>> getAllRequestsByUsername(String username, REQUEST_STATUS status);
     Task<DocumentReference> add(String bookId, String requesterId);
     Task<Void> accept(String id);
     Task<Void> deny(String id);
@@ -20,4 +22,5 @@ public interface RequestRepository {
     Request getRequestFromDocument(DocumentSnapshot documentSnapshot);
     String getRequesterFromDocument(DocumentSnapshot documentSnapshot);
     Task<String> sendRequest(String requester, String bookId);
+    Task<Request> updateRequestStatus(Request request, REQUEST_STATUS newStatus);
 }

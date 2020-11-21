@@ -9,15 +9,19 @@
 
 package com.cmput301f20t21.bookfriends.ui.library.owned;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.entities.Request;
+import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
+import com.cmput301f20t21.bookfriends.utils.NotificationSender;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
@@ -34,14 +38,14 @@ public class RequestViewModel extends ViewModel {
     private final ArrayList<Request> requestsData = requests.getValue();
 
     private final RequestRepository requestService = RequestRepositoryImpl.getInstance();
-    private final BookRepositoryImpl bookService = BookRepositoryImpl.getInstance();
+    private final BookRepositoryImpl bookRepository = BookRepositoryImpl.getInstance();
 
     /**
      * Function to get the book information from FireStore
      * @param bookId we will query the book information based on the bookID
      */
     private void fetchBook(String bookId) {
-        bookService.getBookById(bookId).addOnCompleteListener(task -> {
+        bookRepository.getBookById(bookId).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 book.setValue(document.toObject(Book.class));
@@ -54,7 +58,7 @@ public class RequestViewModel extends ViewModel {
      * @param bookId the book id to query for requesters
      */
     private void fetchRequests(String bookId) {
-        requestService.getByBookId(bookId).addOnSuccessListener(requesterDocumentsSnapShots -> {
+        requestService.getOpenedRequestByBookId(bookId).addOnSuccessListener(requesterDocumentsSnapShots -> {
            List<DocumentSnapshot> documents = requesterDocumentsSnapShots.getDocuments();
            requestsData.clear(); // we are sure to always refresh the requests list
            requestsData.addAll(IntStream.range(0, documents.size()).mapToObj(i -> {
@@ -96,6 +100,13 @@ public class RequestViewModel extends ViewModel {
         requestService.deny(request.getId()).addOnSuccessListener(aVoid -> {
             requestsData.remove(request);
             requests.setValue(requestsData);
+            if (requestsData.isEmpty()) {
+                Book bookData = book.getValue();
+                if (bookData != null) {
+                    bookRepository.updateBookStatus(bookData, BOOK_STATUS.AVAILABLE)
+                            .addOnSuccessListener(updatedBook -> book.setValue(updatedBook));
+                }
+            }
         });
     }
 
@@ -112,10 +123,22 @@ public class RequestViewModel extends ViewModel {
             for (int i = 0; i < requestsData.size(); i++) {
                 ids.add(requestsData.get(i).getId());
             }
+
+            NotificationSender.getInstance().accept(request, res -> {
+                Log.e("bfriends", "accept call response: " + res);
+            }, err -> {
+                err.printStackTrace();
+                Log.e("bfriends", "accept call failed: " + err.getLocalizedMessage());
+            });
             // clear the requests array anyways
             requestService.batchDeny(ids).addOnSuccessListener(aVoid1 -> {
                 requestsData.clear();
                 requests.setValue(requestsData);
+                Book bookData = book.getValue();
+                if (bookData != null) {
+                    bookRepository.updateBookStatus(bookData, BOOK_STATUS.ACCEPTED)
+                            .addOnSuccessListener(updatedBook -> book.setValue(updatedBook));
+                }
             }).addOnFailureListener(err -> {
                 err.printStackTrace();
                 requestsData.clear();

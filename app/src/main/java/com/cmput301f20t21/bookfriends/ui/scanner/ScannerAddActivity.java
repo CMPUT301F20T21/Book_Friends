@@ -1,12 +1,7 @@
 package com.cmput301f20t21.bookfriends.ui.scanner;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentContainerView;
 
@@ -20,31 +15,11 @@ public class ScannerAddActivity extends ScannerBaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // TODO we might use this fragment to display more book info
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_white_18);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         fragmentContainerView = findViewById(R.id.scanner_extra_fragment_container);
     }
 
     @Override
     protected void onBarcodeReceive(Barcode barcode) {
         super.onBarcodeReceive(barcode);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.scanner_add_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.scanner_menu_button) {
-            // pass the isbn value to whatever parent activity
-            setResult(Activity.RESULT_OK, new Intent().putExtra(ISBN_KEY, detectedBarcode.rawValue));
-            finish();
-        } else if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

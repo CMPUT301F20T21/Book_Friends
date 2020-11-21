@@ -2,9 +2,13 @@ package com.cmput301f20t21.bookfriends.ui.scanner;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.SparseArray;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -53,6 +57,9 @@ public class ScannerBaseActivity extends AppCompatActivity {
         surfaceView.setVisibility(View.INVISIBLE);
 
         initWithPermission();
+
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_white_18);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void setChildViews() {
@@ -185,5 +192,24 @@ public class ScannerBaseActivity extends AppCompatActivity {
                 Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.scanner_add_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.scanner_menu_button) {
+            // pass the isbn value to whatever parent activity
+            setResult(Activity.RESULT_OK, new Intent().putExtra(ISBN_KEY, detectedBarcode.rawValue));
+            finish();
+        } else if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
