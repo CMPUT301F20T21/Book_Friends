@@ -92,9 +92,9 @@ public class BorrowedViewModel extends ViewModel {
             if (requestedBookIds.isEmpty()) {
                 return;
             }
-            bookRepository.batchGetBooks(requestedBookIds).addOnSuccessListener(requestedBooks -> {
+            bookRepository.batchGetBooks(requestedBookIds).addOnSuccessListener(borrowedBooks -> {
                 bookData.clear();
-                bookData.addAll(requestedBooks);
+                bookData.addAll(borrowedBooks);
                 books.setValue(bookData);
             }).addOnFailureListener(error -> errorMessage.setValue(BOOK_ERROR.FAIL_TO_GET_BOOKS));
         }).addOnFailureListener(e -> errorMessage.setValue(BOOK_ERROR.FAIL_TO_GET_BOOKS));
