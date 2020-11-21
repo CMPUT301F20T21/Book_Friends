@@ -95,6 +95,11 @@
     <string name="delete_cover_image">Delete cover image</string>
     <string name="address_search">Enter Address</string>
     <string name="request_book_successful">Request successfully sent</string>
+    <string name="preference_file_key">com.cmput301f20t21.bookfriends.PREFERENCE_FILE_KEY</string>
+    <string name="saved_cloud_messaging_topic">com.cmput301f20t21.bookfriends</string>
+    <string name="notification_channel_name">Book Friends Notification Channel</string>
+    <string name="notification_channel_description">description</string>
+    <string name="notification_channel_id">BOOKFRIENDS_NOTIFICATION_CHANNEL_ID</string>
     <string name="accepted_request">Accepted Request</string>
     <string name="fail_to_get_location">Unable to get current location</string>
     <string name="scan_hand_over">Scan to hand over</string>
