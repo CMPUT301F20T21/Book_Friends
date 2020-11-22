@@ -24,14 +24,15 @@ public class BorrowedDetailActivity extends BaseDetailActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        button.setText(R.string.scan_to_return);
+
         vm = new ViewModelProvider(this).get(BorrowedDetailViewModel.class);
 
         vm.getRequest(book).observe(this, request -> {
             if (request.getStatus().equals(REQUEST_STATUS.BORROWED)) {
+                button.setText(R.string.scan_to_return);
                 button.setOnClickListener(this::openScanner);
             } else if (request.getStatus().equals(REQUEST_STATUS.RETURNING)) {
-                button.setText(getString(R.string.scan_to_return));
+                button.setText(getString(R.string.scan_hand_over_success, book.getOwner()));
                 button.setClickable(false);
 
             }
