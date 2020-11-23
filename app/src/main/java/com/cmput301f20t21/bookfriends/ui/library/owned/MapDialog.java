@@ -174,8 +174,9 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
                     Toast.makeText(context, getString(R.string.accepted_request), Toast.LENGTH_SHORT).show();
                     vm.acceptRequest(position, meetingLocation);
                     dialog.dismiss();
+                } else {
+                    Toast.makeText(context, getString(R.string.pick_location), Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(context, getString(R.string.pick_location), Toast.LENGTH_SHORT).show();
             }
         });
     }
