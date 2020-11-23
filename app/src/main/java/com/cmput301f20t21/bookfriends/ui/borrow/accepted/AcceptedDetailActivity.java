@@ -52,7 +52,7 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
             if (error.equals(SCAN_ERROR.INVALID_ISBN)) {
                 Toast.makeText(this, getString(R.string.scan_invalid_isbn_error), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "got error " + error.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,  getString(R.string.unexpected_error), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -67,7 +67,7 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
         ArrayList<DetailButtonModel> buttonModels = new ArrayList<>();
         buttonModels.add(
                 new DetailButtonModel(
-                        "View meetup location",
+                        getString(R.string.detail_button_meet_location_title),
                         "1234 111 St. NW, Edmonton, Alberta",
                         (view) -> {
                             // onclick
