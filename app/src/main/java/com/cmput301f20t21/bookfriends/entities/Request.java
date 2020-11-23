@@ -3,6 +3,7 @@ package com.cmput301f20t21.bookfriends.entities;
 import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.DocumentId;
+import com.google.firebase.firestore.GeoPoint;
 
 import java.util.Objects;
 
@@ -12,7 +13,7 @@ public class Request {
     private String requester;
     private String bookId;
     private REQUEST_STATUS status;
-    private LatLng meetingLocation;
+    private GeoPoint meetingLocation;
 
     // empty constructor to be use by Document.toObject()
     public Request() {
@@ -27,7 +28,7 @@ public class Request {
     }
 
     // constructor with a meeting location
-    public Request(String id, String requester, String bookId, REQUEST_STATUS status, LatLng location) {
+    public Request(String id, String requester, String bookId, REQUEST_STATUS status, GeoPoint location) {
         this.id = id;
         this.requester = requester;
         this.bookId = bookId;
@@ -51,7 +52,7 @@ public class Request {
         return status;
     }
 
-    public LatLng getMeetingLocation() {
+    public GeoPoint getMeetingLocation() {
         return meetingLocation;
     }
 
