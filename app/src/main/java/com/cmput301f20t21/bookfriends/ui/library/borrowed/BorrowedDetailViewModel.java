@@ -59,9 +59,9 @@ public class BorrowedDetailViewModel extends ViewModel {
 
     public void handleScannedIsbn(Book currentBook, String scannedIsbn, OnSuccessCallbackWithMessage<Book> successCallback) {
         if (currentBook.getIsbn().equals(scannedIsbn)) {
-            requestRepository.updateRequestStatus(request.getValue(), REQUEST_STATUS.ACCEPTED)
+            requestRepository.updateRequestStatus(request.getValue(), REQUEST_STATUS.BORROWED)
                     .addOnSuccessListener(updatedRequest -> {
-                        bookRepository.updateBookStatus(currentBook, BOOK_STATUS.ACCEPTED)
+                        bookRepository.updateBookStatus(currentBook, BOOK_STATUS.BORROWED)
                                 .addOnSuccessListener(updatedBook -> {
                                     request.setValue(updatedRequest);
                                     successCallback.run(updatedBook);
