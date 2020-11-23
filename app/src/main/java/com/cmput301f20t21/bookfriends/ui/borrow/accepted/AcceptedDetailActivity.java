@@ -1,8 +1,8 @@
 package com.cmput301f20t21.bookfriends.ui.borrow.accepted;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -57,19 +57,34 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
         });
     }
 
+    /**
+     * create all the accepted detail-specific buttons and define their onclick behaviours
+     * for how button models work in the buttons recycler, refer to components/detailButtons
+     *
+     * @return the list of button models
+     */
     private List<DetailButtonModel> getDetailButtonModels() {
         ArrayList<DetailButtonModel> buttonModels = new ArrayList<>();
         buttonModels.add(
                 new DetailButtonModel(
                         "View meetup location",
-                        "see where the owner wants to meet",
+                        "1234 111 St. NW, Edmonton, Alberta",
                         (view) -> {
-                            Log.e("bfriends", "pressed button");
-                        }
+                            // onclick
+                            new AlertDialog.Builder(AcceptedDetailActivity.this)
+                                    .setTitle("TODO")
+                                    .setNegativeButton(android.R.string.cancel, null)
+                                    .setIcon(android.R.drawable.ic_dialog_map)
+                                    .show();
+                        },
+                        null
                 ));
         return buttonModels;
     }
 
+    /**
+     * create and inflate and show the list of buttons
+     */
     private void inflateDetailButtons() {
         DetailButtonsFragment buttonsFragment = new DetailButtonsFragment(getDetailButtonModels());
         getSupportFragmentManager()

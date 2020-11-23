@@ -39,16 +39,25 @@ public class DetailButtonsAdapter extends RecyclerView.Adapter<DetailButtonsAdap
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView title;
         private final TextView body;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.detail_button_component_title);
             body = itemView.findViewById(R.id.detail_button_component_body);
         }
 
+        /**
+         * set the title and body from button model,
+         * add the onclick listener
+         * and finally call the optional afterBind hook provided by parent
+         *
+         * @param buttonModel the model to bind
+         */
         public void onBind(DetailButtonModel buttonModel) {
             title.setText(buttonModel.getTitle());
             body.setText(buttonModel.getBody());
             itemView.setOnClickListener(buttonModel.getOnClick()::run);
+            if (buttonModel.getAfterBind() != null) buttonModel.getAfterBind().run(itemView);
         }
     }
 }

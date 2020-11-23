@@ -15,7 +15,11 @@ import com.cmput301f20t21.bookfriends.R;
 
 import java.util.List;
 
+/**
+ * the list fragment that contains all the buttons inside the detail page
+ */
 public class DetailButtonsFragment extends Fragment {
+
     private final List<DetailButtonModel> buttonModels;
 
     public DetailButtonsFragment(@NonNull List<DetailButtonModel> buttonModels) {
@@ -36,7 +40,7 @@ public class DetailButtonsFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        RecyclerView.Adapter adapter = new DetailButtonsAdapter(buttonModels);
+        RecyclerView.Adapter<DetailButtonsAdapter.ViewHolder> adapter = new DetailButtonsAdapter(buttonModels);
         recyclerView.setAdapter(adapter);
     }
 }
