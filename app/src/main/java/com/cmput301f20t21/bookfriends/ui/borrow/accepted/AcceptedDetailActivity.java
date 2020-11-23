@@ -64,6 +64,11 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
         });
     }
 
+    /**
+     * parse the request geo location and returns a string of the address
+     * @param request the request.
+     * @return the address string
+     */
     private String getMeetingAddress(Request request) {
         if (request == null) {
             return "";
@@ -104,11 +109,8 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
                             getMeetingAddress(request),
                             (view) -> {
                                 // onclick
-                                new AlertDialog.Builder(AcceptedDetailActivity.this)
-                                        .setTitle("TODO")
-                                        .setNegativeButton(android.R.string.cancel, null)
-                                        .setIcon(android.R.drawable.ic_dialog_map)
-                                        .show();
+                                MeetLocationDialog meetLocationDialog = new MeetLocationDialog(request.getMeetingLocation());
+                                meetLocationDialog.show(getSupportFragmentManager(), "locationMap");
                             },
                             null
                     ));
@@ -118,6 +120,9 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
 
     /**
      * create and inflate and show the list of buttons
+     *
+     * we need request because buttons might change content based on request data.
+     * and the request comes from vm which means it changes on vm fetch completes
      */
     private void inflateDetailButtons(Request request) {
         DetailButtonsFragment buttonsFragment = new DetailButtonsFragment(getDetailButtonModels(request));
