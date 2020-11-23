@@ -8,18 +8,19 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 import com.cmput301f20t21.bookfriends.enums.SCAN_ERROR;
-
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
-import com.cmput301f20t21.bookfriends.ui.profile.ProfileSearchFragment;
+import com.cmput301f20t21.bookfriends.ui.component.detailButtons.DetailButtonModel;
+import com.cmput301f20t21.bookfriends.ui.component.detailButtons.DetailButtonsFragment;
 import com.cmput301f20t21.bookfriends.ui.scanner.ScannerBaseActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AcceptedDetailActivity extends BaseDetailActivity {
 
@@ -56,9 +57,21 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
         });
     }
 
+    private List<DetailButtonModel> getDetailButtonModels() {
+        ArrayList<DetailButtonModel> buttonModels = new ArrayList<>();
+        buttonModels.add(
+                new DetailButtonModel(
+                        "View meetup location",
+                        "see where the owner wants to meet",
+                        (view) -> {
+                            Log.e("bfriends", "pressed button");
+                        }
+                ));
+        return buttonModels;
+    }
+
     private void inflateDetailButtons() {
-        Log.e("bfriends", "inflating detail buttons");
-        ButtonsFragment buttonsFragment = new ButtonsFragment(vm);
+        DetailButtonsFragment buttonsFragment = new DetailButtonsFragment(getDetailButtonModels());
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.detail_buttons_container, buttonsFragment)
@@ -76,7 +89,7 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
         super.onStop();
         vm.unregisterSnapshotListener();
     }
-      
+
     private void openScanner(View view) {
         Intent intent = new Intent(this, ScannerBaseActivity.class);
         startActivityForResult(intent, GET_SCANNED_ISBN);

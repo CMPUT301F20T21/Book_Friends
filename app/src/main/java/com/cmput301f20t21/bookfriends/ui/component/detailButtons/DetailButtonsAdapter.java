@@ -1,4 +1,4 @@
-package com.cmput301f20t21.bookfriends.ui.borrow.accepted;
+package com.cmput301f20t21.bookfriends.ui.component.detailButtons;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,14 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
-import com.cmput301f20t21.bookfriends.ui.component.DetailButtonModel;
 
 import java.util.List;
 
-public class ButtonsAdapter extends RecyclerView.Adapter<ButtonsAdapter.ViewHolder> {
+public class DetailButtonsAdapter extends RecyclerView.Adapter<DetailButtonsAdapter.ViewHolder> {
     private final List<DetailButtonModel> buttonModels;
 
-    public ButtonsAdapter(List<DetailButtonModel> buttonModels) {
+    public DetailButtonsAdapter(List<DetailButtonModel> buttonModels) {
         this.buttonModels = buttonModels;
     }
 

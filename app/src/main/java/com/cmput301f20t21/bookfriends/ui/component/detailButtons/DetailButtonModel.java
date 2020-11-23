@@ -1,16 +1,9 @@
-package com.cmput301f20t21.bookfriends.ui.component;
+package com.cmput301f20t21.bookfriends.ui.component.detailButtons;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
-import com.cmput301f20t21.bookfriends.R;
-import com.cmput301f20t21.bookfriends.callbacks.OnDetailButtonClick;
 
 public class DetailButtonModel {
     private String title;
@@ -33,5 +26,9 @@ public class DetailButtonModel {
 
     public String getTitle() {
         return title;
+    }
+
+    public interface OnDetailButtonClick {
+        void run(View view);
     }
 }
