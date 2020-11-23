@@ -61,37 +61,32 @@
             android:name="com.cmput301f20t21.bookfriends.ui.login.CreateAccountActivity"
             android:windowSoftInputMode="adjustPan"
             android:parentActivityName="com.cmput301f20t21.bookfriends.ui.login.LoginActivity" >
-
         </activity>
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.borrow.accepted.AcceptedDetailActivity"
-            android:parentActivityName=".MainActivity"
-            android:label="@string/accepted_detail">
+            android:label="@string/detail">
         </activity>
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.browse.BrowseDetailActivity"
-            android:parentActivityName=".MainActivity"
-            android:label="@string/browse_detail">
+            android:label="@string/detail"
+            android:parentActivityName=".MainActivity">
         </activity>
-
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.borrow.requested.RequestedDetailActivity"
             android:parentActivityName=".MainActivity"
-            android:label="@string/requested_detail">
+            android:label="@string/detail">
         </activity>
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.library.owned.AcceptedOwnedDetailActivity"
-            android:label="@string/accepted_owned_detail">
+            android:label="@string/detail">
         </activity>
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.library.borrowed.BorrowedDetailActivity"
             android:parentActivityName=".MainActivity"
-            android:label="@string/borrowed_detail">
+            android:label="@string/detail">
         </activity>
         <activity android:name=".ui.library.owned.RequestActivity"
             android:label="Requests">
-
-
         </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"

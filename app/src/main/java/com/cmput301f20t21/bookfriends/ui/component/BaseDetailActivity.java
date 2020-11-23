@@ -3,6 +3,7 @@ package com.cmput301f20t21.bookfriends.ui.component;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,16 +16,14 @@ import com.cmput301f20t21.bookfriends.utils.ImagePainter;
 
 public class BaseDetailActivity extends AppCompatActivity {
     public static final String BOOK_ACTION_KEY = "com.cmput301f20t21.bookfriends.BOOK_ACTION";
-    public static final String BOOK_EDIT_KEY = "com.cmput301f20t21.bookfriends.BOOK_EDIT";
-    public static final String VIEW_REQUEST_KEY = "com.cmput301f20t21.bookfriends.VIEW_REQUEST";
     public static final String BOOK_DATA_KEY = "com.cmput301f20t21.bookfriends.BOOK_DATA";
 
     protected Book book;
+    protected Button button;
     private ImageView bookImage;
     private TextView title;
     private TextView isbn;
     private TextView author;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +35,7 @@ public class BaseDetailActivity extends AppCompatActivity {
         isbn = findViewById(R.id.detail_ISBN);
         title = findViewById(R.id.detail_title);
         author = findViewById(R.id.detail_author);
+        button = findViewById(R.id.detail_action_button);
 
         Intent getIntent = getIntent();
         book = getIntent.getParcelableExtra(BOOK_DATA_KEY);

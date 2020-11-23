@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,7 @@ import androidx.annotation.Nullable;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
+import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
@@ -23,6 +25,19 @@ public class OwnedDetailActivity extends BaseDetailActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        BOOK_STATUS status = book.getStatus();
+        if (status == BOOK_STATUS.AVAILABLE) {
+            button.setVisibility(View.INVISIBLE);
+        }
+        else if (status == BOOK_STATUS.REQUESTED) {
+            button.setText(R.string.click_to_see_requests);
+        }
+        else if (status == BOOK_STATUS.ACCEPTED) {
+            button.setText(R.string.scan_to_hand_over);
+        }
+        else if (status == BOOK_STATUS.BORROWED) {
+            button.setText(R.string.scan_to_receive);
+        }
     }
 
     private void openAddEditActivity(Book book) {

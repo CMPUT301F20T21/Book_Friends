@@ -1,13 +1,12 @@
 package com.cmput301f20t21.bookfriends.ui.borrow.accepted;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -16,8 +15,12 @@ import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 import com.cmput301f20t21.bookfriends.enums.SCAN_ERROR;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
-import com.cmput301f20t21.bookfriends.ui.library.owned.AcceptedOwnedDetailViewModel;
+import com.cmput301f20t21.bookfriends.ui.component.detailButtons.DetailButtonModel;
+import com.cmput301f20t21.bookfriends.ui.component.detailButtons.DetailButtonsFragment;
 import com.cmput301f20t21.bookfriends.ui.scanner.ScannerBaseActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AcceptedDetailActivity extends BaseDetailActivity {
 
@@ -31,6 +34,7 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
         vm = new ViewModelProvider(this).get(AcceptedDetailViewModel.class);
         actionButton = findViewById(R.id.detail_action_button);
 
+        inflateDetailButtons();
         vm.getRequest(book).observe(this, request -> {
             if (request.getStatus().equals(REQUEST_STATUS.ACCEPTED)) {
                 actionButton.setText(getString(R.string.scan_wait_for_hand_over, book.getOwner()));
@@ -48,9 +52,45 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
             if (error.equals(SCAN_ERROR.INVALID_ISBN)) {
                 Toast.makeText(this, getString(R.string.scan_invalid_isbn_error), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, getString(R.string.unexpected_error), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "got error " + error.toString(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    /**
+     * create all the accepted detail-specific buttons and define their onclick behaviours
+     * for how button models work in the buttons recycler, refer to components/detailButtons
+     *
+     * @return the list of button models
+     */
+    private List<DetailButtonModel> getDetailButtonModels() {
+        ArrayList<DetailButtonModel> buttonModels = new ArrayList<>();
+        buttonModels.add(
+                new DetailButtonModel(
+                        "View meetup location",
+                        "1234 111 St. NW, Edmonton, Alberta",
+                        (view) -> {
+                            // onclick
+                            new AlertDialog.Builder(AcceptedDetailActivity.this)
+                                    .setTitle("TODO")
+                                    .setNegativeButton(android.R.string.cancel, null)
+                                    .setIcon(android.R.drawable.ic_dialog_map)
+                                    .show();
+                        },
+                        null
+                ));
+        return buttonModels;
+    }
+
+    /**
+     * create and inflate and show the list of buttons
+     */
+    private void inflateDetailButtons() {
+        DetailButtonsFragment buttonsFragment = new DetailButtonsFragment(getDetailButtonModels());
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.detail_buttons_container, buttonsFragment)
+                .commit();
     }
 
     @Override
