@@ -2,13 +2,14 @@ package com.cmput301f20t21.bookfriends.ui.borrow.accepted;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.cmput301f20t21.bookfriends.R;
@@ -17,7 +18,7 @@ import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 import com.cmput301f20t21.bookfriends.enums.SCAN_ERROR;
 
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
-import com.cmput301f20t21.bookfriends.ui.library.owned.AcceptedOwnedDetailViewModel;
+import com.cmput301f20t21.bookfriends.ui.profile.ProfileSearchFragment;
 import com.cmput301f20t21.bookfriends.ui.scanner.ScannerBaseActivity;
 
 public class AcceptedDetailActivity extends BaseDetailActivity {
@@ -32,6 +33,7 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
         vm = new ViewModelProvider(this).get(AcceptedDetailViewModel.class);
         actionButton = findViewById(R.id.detail_action_button);
 
+        inflateDetailButtons();
         vm.getRequest(book).observe(this, request -> {
             if (request.getStatus().equals(REQUEST_STATUS.ACCEPTED)) {
                 actionButton.setText(getString(R.string.scan_wait_for_hand_over, book.getOwner()));
@@ -49,9 +51,18 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
             if (error.equals(SCAN_ERROR.INVALID_ISBN)) {
                 Toast.makeText(this, getString(R.string.scan_invalid_isbn_error), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, getString(R.string.unexpected_error), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "got error " + error.toString(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void inflateDetailButtons() {
+        Log.e("bfriends", "inflating detail buttons");
+        ButtonsFragment buttonsFragment = new ButtonsFragment(vm);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.detail_buttons_container, buttonsFragment)
+                .commit();
     }
 
     @Override
