@@ -194,6 +194,7 @@ public class OwnedListFragment extends Fragment {
             case ACCEPTED:
                 return AcceptedOwnedDetailActivity.class;
             case BORROWED:
+                return BorrowedOwnedDetailActivity.class;
             case REQUESTED:
                 return RequestedOwnedDetailActivity.class;
             case AVAILABLE:
