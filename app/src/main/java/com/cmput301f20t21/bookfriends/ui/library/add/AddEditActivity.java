@@ -30,7 +30,7 @@ import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.enums.SCAN_ERROR;
 import com.cmput301f20t21.bookfriends.services.GoogleBookService;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
-import com.cmput301f20t21.bookfriends.ui.scanner.ScannerAddActivity;
+import com.cmput301f20t21.bookfriends.ui.scanner.ScannerActivity;
 import com.cmput301f20t21.bookfriends.utils.ImagePainter;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -267,7 +267,7 @@ public class AddEditActivity extends AppCompatActivity {
     }
 
     private void openScanner() {
-        Intent intent = new Intent(this, ScannerAddActivity.class);
+        Intent intent = new Intent(this, ScannerActivity.class);
         startActivityForResult(intent, REQUEST_GET_SCANNED_ISBN);
     }
 
@@ -321,7 +321,7 @@ public class AddEditActivity extends AppCompatActivity {
                 vm.setLocalImageUri(bookImageUri);
             }
         } else if (resultCode == RESULT_OK && requestCode == REQUEST_GET_SCANNED_ISBN) {
-            String scannedIsbn = data.getStringExtra(ScannerAddActivity.ISBN_KEY);
+            String scannedIsbn = data.getStringExtra(ScannerActivity.ISBN_KEY);
             isbnEditText.setText(scannedIsbn); // this sets the vm.bookIsbn too!
             loadingOverlay.setVisibility(View.VISIBLE);
             GoogleBookService.getInstance()
