@@ -194,8 +194,9 @@ public class OwnedListFragment extends Fragment {
     private Class<? extends BaseDetailActivity> getDetailClass(BOOK_STATUS bookStatus) {
         switch (bookStatus) {
             case ACCEPTED:
-            case BORROWED:
                 return AcceptedOwnedDetailActivity.class;
+            case BORROWED:
+                return BorrowedOwnedDetailActivity.class;
             case REQUESTED:
             case AVAILABLE:
             default:
