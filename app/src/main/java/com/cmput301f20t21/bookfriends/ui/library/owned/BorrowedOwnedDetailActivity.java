@@ -27,7 +27,7 @@ public class BorrowedOwnedDetailActivity extends BaseDetailActivity {
         actionButton = findViewById(R.id.detail_action_button);
 
         vm.getRequest(book).observe(this, request -> {
-            if (request.getStatus().equals(REQUEST_STATUS.BORROWED)) {
+            if (request.getStatus().equals(REQUEST_STATUS.RETURNING)) {
                 actionButton.setText(R.string.scan_receive);
                 actionButton.setOnClickListener(this::openScanner);
             }
