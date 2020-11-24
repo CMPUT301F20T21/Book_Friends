@@ -57,7 +57,7 @@ public class AcceptedOwnedDetailViewModel extends ViewModel {
             } else if (request.getValue().getStatus().equals(REQUEST_STATUS.RETURNING)) {
                 requestRepository.updateRequestStatus(request.getValue(), REQUEST_STATUS.OPENED)
                         .addOnSuccessListener(updatedRequest -> {
-                            bookRepository.updateBookStatus(currentBook, BOOK_STATUS.BORROWED)
+                            bookRepository.updateBookStatus(currentBook, BOOK_STATUS.AVAILABLE)
                                     .addOnSuccessListener(updatedBook -> {
                                         request.setValue(updatedRequest);
                                     })
