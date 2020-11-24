@@ -8,8 +8,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -22,8 +24,11 @@ import androidx.lifecycle.ViewModelProvider;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.databinding.ActivityAddEditBinding;
 import com.cmput301f20t21.bookfriends.entities.Book;
+import com.cmput301f20t21.bookfriends.entities.GoogleBookData;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
+import com.cmput301f20t21.bookfriends.enums.SCAN_ERROR;
+import com.cmput301f20t21.bookfriends.services.GoogleBookService;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 import com.cmput301f20t21.bookfriends.ui.scanner.ScannerAddActivity;
 import com.cmput301f20t21.bookfriends.utils.ImagePainter;
@@ -40,9 +45,14 @@ public class AddEditActivity extends AppCompatActivity {
     private Button uploadImgButton;
     private ImageView bookImage;
     private TextInputLayout isbnLayout;
-    private EditText isbnEditText;
     private TextInputLayout titleLayout;
     private TextInputLayout authorLayout;
+
+    private EditText isbnEditText;
+    private EditText titleEditText;
+    private EditText authorEditText;
+
+    private FrameLayout loadingOverlay;
 
     private BOOK_ACTION action;
     private AddEditViewModel vm;
@@ -83,10 +93,13 @@ public class AddEditActivity extends AppCompatActivity {
         uploadImgButton = findViewById(R.id.upload_cover_button);
         bookImage = findViewById(R.id.book_image_view); // will be replaced with actual image
         isbnLayout = findViewById(R.id.ISBN_layout);
-        isbnEditText = findViewById(R.id.isbn_edit_text);
         titleLayout = findViewById(R.id.title_layout);
         authorLayout = findViewById(R.id.author_layout);
+        isbnEditText = isbnLayout.getEditText();
+        titleEditText = titleLayout.getEditText();
+        authorEditText = authorLayout.getEditText();
         scanButton = findViewById(R.id.scanner_button);
+        loadingOverlay = findViewById(R.id.autofill_loading_overlay);
     }
 
     /**
@@ -199,9 +212,9 @@ public class AddEditActivity extends AppCompatActivity {
      */
     private boolean validateFields() {
         Boolean isValid = true;
-        String isbn = isbnLayout.getEditText().getText().toString();
-        String title = titleLayout.getEditText().getText().toString();
-        String author = authorLayout.getEditText().getText().toString();
+        String isbn = isbnEditText.getText().toString();
+        String title = titleEditText.getText().toString();
+        String author = authorEditText.getText().toString();
 
         if (isbn.length() != 10 && isbn.length() != 13) {
             isbnLayout.setError(getString(R.string.isbn_invalid));
@@ -308,8 +321,36 @@ public class AddEditActivity extends AppCompatActivity {
                 vm.setLocalImageUri(bookImageUri);
             }
         } else if (resultCode == RESULT_OK && requestCode == REQUEST_GET_SCANNED_ISBN) {
-            isbnEditText.setText(data.getStringExtra(ScannerAddActivity.ISBN_KEY)); // this sets the vm.bookIsbn too!
+            String scannedIsbn = data.getStringExtra(ScannerAddActivity.ISBN_KEY);
+            isbnEditText.setText(scannedIsbn); // this sets the vm.bookIsbn too!
+            loadingOverlay.setVisibility(View.VISIBLE);
+            GoogleBookService.getInstance()
+                    .getBookInfoByIsbn(
+                            scannedIsbn,
+                            this::onFetchBookDataSuccess,
+                            this::onFetchBookDataFail);
         }
+    }
+
+    private void onFetchBookDataSuccess(GoogleBookData data) {
+        runOnUiThread(() -> {
+            loadingOverlay.setVisibility(View.GONE);
+            titleEditText.setText(data.getTitle());
+            authorEditText.setText(String.join(", ", data.getAuthors()));
+        });
+    }
+
+    private void onFetchBookDataFail(SCAN_ERROR error) {
+        String message;
+        if (error == SCAN_ERROR.INVALID_ISBN) {
+            message = getString(R.string.scan_autofill_invalid_isbn_error);
+        } else {
+            message = getString(R.string.unexpected_error);
+        }
+        runOnUiThread(() -> {
+            loadingOverlay.setVisibility(View.GONE);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        });
     }
 
 }

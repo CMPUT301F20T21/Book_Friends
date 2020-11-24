@@ -111,4 +111,5 @@
     <string name="scan_receive">Scan to receive</string>
     <string name="scan_receive_success">Successfully borrowed %s</string>
     <string name="pick_location">Please enter a location</string>
+    <string name="scan_autofill_invalid_isbn_error">No data available for the scanned ISBN</string>
 </resources>
