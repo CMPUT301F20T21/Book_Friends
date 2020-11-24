@@ -25,6 +25,7 @@ import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -82,7 +83,7 @@ public class BorrowedViewModel extends ViewModel {
         String username = authRepository.getCurrentUser().getUsername();
 
         requestRepository.getRequestsByUsernameAndStatus(
-                username, Collections.singletonList(REQUEST_STATUS.BORROWED)
+                username, Arrays.asList(REQUEST_STATUS.BORROWED, REQUEST_STATUS.RETURNING)
         ).addOnSuccessListener(requests -> {
             List<String> borrowedBookIds = requests
                     .stream()

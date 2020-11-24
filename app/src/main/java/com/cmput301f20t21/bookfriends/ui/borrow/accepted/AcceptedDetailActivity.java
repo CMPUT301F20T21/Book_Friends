@@ -59,7 +59,7 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
             if (error.equals(SCAN_ERROR.INVALID_ISBN)) {
                 Toast.makeText(this, getString(R.string.scan_invalid_isbn_error), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "got error " + error.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.unexpected_error), Toast.LENGTH_SHORT).show();
             }
         });
     }
