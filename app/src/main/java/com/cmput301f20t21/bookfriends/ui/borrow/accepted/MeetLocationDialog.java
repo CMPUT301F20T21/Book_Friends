@@ -18,7 +18,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.firestore.GeoPoint;
 
-public class MeetLocationDialog  extends DialogFragment implements OnMapReadyCallback {
+public class MeetLocationDialog extends DialogFragment implements OnMapReadyCallback {
     private GoogleMap map;
     private MapView mapView;
     private GeoPoint geoPoint;
@@ -33,14 +33,13 @@ public class MeetLocationDialog  extends DialogFragment implements OnMapReadyCal
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.setTitle("View Meet Location");
         dialog.setContentView(R.layout.map_dialog);
         dialog.findViewById(R.id.map_search_layout).setVisibility(View.GONE);
         dialog.findViewById(R.id.map_ic_gps).setVisibility(View.GONE);
         dialog.findViewById(R.id.map_search_confirm).setVisibility(View.GONE);
 
         cancelButton = dialog.findViewById(R.id.map_search_cancel);
-        cancelButton.setText("Back");
+        cancelButton.setText(R.string.meet_location_dialog_cancel);
         cancelButton.setOnClickListener(v -> dismiss());
 
         mapView = dialog.findViewById(R.id.map_view);

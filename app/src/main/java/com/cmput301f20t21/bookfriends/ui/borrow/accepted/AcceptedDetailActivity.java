@@ -1,6 +1,5 @@
 package com.cmput301f20t21.bookfriends.ui.borrow.accepted;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -66,6 +65,7 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
 
     /**
      * parse the request geo location and returns a string of the address
+     *
      * @param request the request.
      * @return the address string
      */
@@ -79,18 +79,18 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
         try {
             List<Address> addresses = geocoder.getFromLocation(geoPoint.getLatitude(), geoPoint.getLongitude(), 1);
             if (addresses == null) {
-                return "Oops, our geocoder failed to fetch the owner's preferred location";
+                return getString(R.string.geocoder_failure);
             }
             Address addr = addresses.get(0);
             // https://stackoverflow.com/a/19927013/7358099
             StringBuilder addressString = new StringBuilder("");
             for (int i = 0; i <= addr.getMaxAddressLineIndex(); i++) {
-                addressString.append(addr.getAddressLine(i)).append("\n");
+                addressString.append(addr.getAddressLine(i));
             }
             return addressString.toString();
         } catch (IOException e) {
             e.printStackTrace();
-            return "Oops, we could not fetch the address.";
+            return getString(R.string.get_meeting_address_failure);
         }
     }
 
@@ -105,7 +105,7 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
         if (request.getMeetingLocation() != null) {
             buttonModels.add(
                     new DetailButtonModel(
-                            "View meetup location",
+                            getString(R.string.detail_button_meetup_title),
                             getMeetingAddress(request),
                             (view) -> {
                                 // onclick
@@ -120,7 +120,7 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
 
     /**
      * create and inflate and show the list of buttons
-     *
+     * <p>
      * we need request because buttons might change content based on request data.
      * and the request comes from vm which means it changes on vm fetch completes
      */
