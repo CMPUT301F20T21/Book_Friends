@@ -34,6 +34,10 @@ public class AcceptedOwnedDetailActivity extends BaseDetailActivity {
                 actionButton.setText(getString(R.string.scan_hand_over_success, request.getRequester()));
                 actionButton.setClickable(false);
             }
+            else if (request.getStatus().equals(REQUEST_STATUS.BORROWED)) {
+                actionButton.setText(R.string.scan_receive);
+                actionButton.setOnClickListener(this::openScanner);
+            }
         });
 
         vm.getErrorMessage().observe(this, error -> {
@@ -56,7 +60,7 @@ public class AcceptedOwnedDetailActivity extends BaseDetailActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == GET_SCANNED_ISBN) {
                 String scannedIsbn = data.getStringExtra(ScannerBaseActivity.ISBN_KEY);
-                vm.handleScannedIsbn(book.getIsbn(), scannedIsbn);
+                vm.handleScannedIsbn(book, book.getIsbn(), scannedIsbn);
             }
         }
     }
