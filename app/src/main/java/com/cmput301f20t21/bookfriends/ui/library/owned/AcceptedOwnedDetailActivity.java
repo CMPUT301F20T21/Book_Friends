@@ -17,22 +17,20 @@ import com.cmput301f20t21.bookfriends.ui.scanner.ScannerBaseActivity;
 
 public class AcceptedOwnedDetailActivity extends BaseDetailActivity {
     public static final int GET_SCANNED_ISBN = 2001;
-    private Button actionButton;
     private AcceptedOwnedDetailViewModel vm;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         vm = new ViewModelProvider(this).get(AcceptedOwnedDetailViewModel.class);
-        actionButton = findViewById(R.id.detail_action_button);
 
         vm.getRequest(book).observe(this, request -> {
             if (request.getStatus().equals(REQUEST_STATUS.ACCEPTED)) {
-                actionButton.setText(R.string.scan_hand_over);
-                actionButton.setOnClickListener(this::openScanner);
+                button.setText(R.string.scan_hand_over);
+                button.setOnClickListener(this::openScanner);
             } else if (request.getStatus().equals(REQUEST_STATUS.HANDING)) {
-                actionButton.setText(getString(R.string.scan_hand_over_success, request.getRequester()));
-                actionButton.setClickable(false);
+                button.setText(getString(R.string.scan_hand_over_success, request.getRequester()));
+                button.setClickable(false);
             }
         });
 
