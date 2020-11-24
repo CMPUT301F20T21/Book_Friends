@@ -9,7 +9,7 @@
     <string name="string_borrowed">Borrowed</string>
     <string name="title_borrow">Borrow</string>
     <string name="title_browse">Browse</string>
-    <string name="title_scanner">Scan to Add</string>
+    <string name="title_scanner">Scan</string>
     <string name="title_scanner_add">Scan to Add</string>
     <string name="title_profile">Me</string>
     <string name="title_notifications">Notifications</string>
@@ -111,4 +111,5 @@
     <string name="scan_receive">Scan to receive</string>
     <string name="scan_receive_success">Successfully borrowed %s</string>
     <string name="detail_button_meet_location_title">View meetup location</string>
+    <string name="pick_location">Please enter a location</string>
 </resources>
