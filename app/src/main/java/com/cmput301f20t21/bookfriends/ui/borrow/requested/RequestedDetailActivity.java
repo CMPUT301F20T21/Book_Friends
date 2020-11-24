@@ -17,12 +17,6 @@ public class RequestedDetailActivity extends BaseDetailActivity {
         button.setBackgroundColor(getColor(R.color.gray));
         button.setEnabled(false);
     }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        super.onOptionsItemSelected(item);
-        return true;
-    }
 }
 
 

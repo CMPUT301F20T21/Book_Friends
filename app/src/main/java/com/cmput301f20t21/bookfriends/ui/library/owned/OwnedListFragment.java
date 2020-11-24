@@ -29,13 +29,11 @@ import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
-import com.cmput301f20t21.bookfriends.ui.borrow.accepted.AcceptedDetailActivity;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 import com.cmput301f20t21.bookfriends.ui.library.add.AddEditActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
-import java.lang.reflect.AnnotatedElement;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -197,9 +195,11 @@ public class OwnedListFragment extends Fragment {
                 return AcceptedOwnedDetailActivity.class;
             case BORROWED:
             case REQUESTED:
+                return RequestedOwnedDetailActivity.class;
             case AVAILABLE:
+                return AvailableOwnedDetailActivity.class;
             default:
-                return OwnedDetailActivity.class;
+                return BaseDetailActivity.class;
         }
     }
 

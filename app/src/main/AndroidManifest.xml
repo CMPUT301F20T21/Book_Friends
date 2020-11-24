@@ -53,9 +53,13 @@
         <activity android:name=".ui.library.add.AddEditActivity"
             android:label="@string/add_edit">
         </activity>
-        <activity android:name=".ui.library.owned.OwnedDetailActivity"
+        <activity android:name=".ui.library.owned.AvailableOwnedDetailActivity"
             android:parentActivityName=".MainActivity"
-            android:label="@string/view">
+            android:label="@string/detail">
+        </activity>
+        <activity android:name=".ui.library.owned.RequestedOwnedDetailActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="@string/detail">
         </activity>
         <activity
             android:name="com.cmput301f20t21.bookfriends.ui.login.CreateAccountActivity"
