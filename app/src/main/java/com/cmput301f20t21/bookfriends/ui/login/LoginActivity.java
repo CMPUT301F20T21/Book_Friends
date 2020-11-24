@@ -26,6 +26,8 @@ import com.cmput301f20t21.bookfriends.enums.LOGIN_ERROR;
 import com.cmput301f20t21.bookfriends.ui.component.ProgressButton;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.Objects;
+
 /**
  * Activity that will display the login page and handle user inputs
  */
@@ -34,7 +36,6 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputLayout passwordLayout;
     private EditText usernameField;
     private EditText passwordField;
-    private View loginButton;
     private ProgressButton progressButton;
     private LoginViewModel model;
 
@@ -48,17 +49,16 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // TODO: Check if the user is already logged in, redirect to mainActivity if true
         model = new ViewModelProvider(this).get(LoginViewModel.class);
 
-        this.getSupportActionBar().hide();
+        Objects.requireNonNull(this.getSupportActionBar()).hide();
         // hides the status bar, deprecated in API 30
         View decorView = this.getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
 
         usernameLayout = findViewById(R.id.login_username_layout);
-        usernameField = usernameLayout.getEditText();
+        usernameField = Objects.requireNonNull(usernameLayout.getEditText());
         usernameField.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
             public void afterTextChanged(Editable usernameString) {
@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         passwordLayout = findViewById(R.id.login_password_layout);
-        passwordField = passwordLayout.getEditText();
+        passwordField = Objects.requireNonNull(passwordLayout.getEditText());
         passwordField.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
             public void afterTextChanged(Editable passwordString) {
@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        loginButton = findViewById(R.id.login_btn);
+        View loginButton = findViewById(R.id.login_btn);
         progressButton = new ProgressButton(
                 this, loginButton,
                 getString(R.string.string_login),

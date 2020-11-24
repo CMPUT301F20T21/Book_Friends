@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -21,6 +22,11 @@ import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.enums.SIGNUP_ERROR;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.Objects;
+
+/**
+ * Activity that allows user to create a new account
+ */
 public class CreateAccountActivity extends AppCompatActivity {
     private TextInputLayout usernameLayout;
     private TextInputLayout passwordLayout;
@@ -28,7 +34,6 @@ public class CreateAccountActivity extends AppCompatActivity {
     private TextInputLayout emailLayout;
     private EditText usernameField;
     private EditText passwordField;
-    private EditText confirmField;
     private EditText emailField;
 
     private CreateAccountViewModel model;
@@ -41,7 +46,7 @@ public class CreateAccountActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
-        this.getSupportActionBar().hide();
+        Objects.requireNonNull(this.getSupportActionBar()).hide();
         // hides the status bar, deprecated in API 30
         View decorView = this.getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
@@ -50,7 +55,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         model = new ViewModelProvider(this).get(CreateAccountViewModel.class);
 
         usernameLayout = findViewById(R.id.signup_username_layout);
-        usernameField = usernameLayout.getEditText();
+        usernameField = Objects.requireNonNull(usernameLayout.getEditText());
         usernameField.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
             public void afterTextChanged(Editable usernameString) {
@@ -60,7 +65,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         });
 
         passwordLayout = findViewById(R.id.signup_password_layout);
-        passwordField = passwordLayout.getEditText();
+        passwordField = Objects.requireNonNull(passwordLayout.getEditText());
         passwordField.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
             public void afterTextChanged(Editable passwordString) {
@@ -70,7 +75,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         });
 
         confirmLayout = findViewById(R.id.confirm_password_layout);
-        confirmField = confirmLayout.getEditText();
+        EditText confirmField = Objects.requireNonNull(confirmLayout.getEditText());
         confirmField.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
             public void afterTextChanged(Editable confirmString) {
@@ -80,7 +85,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         });
 
         emailLayout = findViewById(R.id.email_layout);
-        emailField = emailLayout.getEditText();
+        emailField = Objects.requireNonNull(emailLayout.getEditText());
         emailField.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
             public void afterTextChanged(Editable emailString) {
@@ -141,8 +146,8 @@ public class CreateAccountActivity extends AppCompatActivity {
             String email = emailField.getText().toString();
             String password = passwordField.getText().toString();
             model.handleSignUp(username, email, password,
-                    () -> onSignUpSuccess(),
-                    (SIGNUP_ERROR error) -> onSignUpFail(error)
+                    this::onSignUpSuccess,
+                    this::onSignUpFail
             );
         }
   }
@@ -171,7 +176,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                 return;
 
             default:
-                return;
+                Toast.makeText(this, getString(R.string.unexpected_error), Toast.LENGTH_SHORT).show();
         }
     }
 }
