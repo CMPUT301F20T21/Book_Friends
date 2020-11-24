@@ -1,9 +1,5 @@
 package com.cmput301f20t21.bookfriends.ui.profile;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -12,13 +8,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.User;
-import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
-import com.cmput301f20t21.bookfriends.ui.library.LibraryFragment;
 
 public class ProfileViewUserActivity extends AppCompatActivity {
-    static final String UID_KEY = "UID_KEY";
+    public static final String USERNAME_KEY = "com.cmput301f20t21.bookfriends.USERNAME_KEY";
     ProfileViewModel vm;
     private User user;
 
@@ -36,10 +34,10 @@ public class ProfileViewUserActivity extends AppCompatActivity {
         setFieldViews();
 
         Intent intent = getIntent();
-        String uid = intent.getStringExtra(UID_KEY);
+        String username = intent.getStringExtra(USERNAME_KEY);
 
-        if (uid != null) {
-            vm.getUserByUid(uid, user -> {
+        if (username != null) {
+            vm.getUserByUsername(username, user -> {
                 this.user = user;
                 bindUser(user);
             }, () -> {});
