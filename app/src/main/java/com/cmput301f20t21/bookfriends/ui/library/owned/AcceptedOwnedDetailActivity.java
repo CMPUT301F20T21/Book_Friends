@@ -42,7 +42,6 @@ public class AcceptedOwnedDetailActivity extends BaseDetailActivity {
             }
         });
 
-        ownerDetail.setVisibility(View.GONE);
     }
 
     private void openScanner(View view) {

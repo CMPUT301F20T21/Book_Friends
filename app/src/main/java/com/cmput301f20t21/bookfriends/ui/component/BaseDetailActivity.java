@@ -13,9 +13,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
+import com.cmput301f20t21.bookfriends.ui.component.detailButtons.DetailButtonModel;
+import com.cmput301f20t21.bookfriends.ui.component.detailButtons.DetailButtonsFragment;
 import com.cmput301f20t21.bookfriends.ui.profile.ProfileViewUserActivity;
 import com.cmput301f20t21.bookfriends.utils.ImagePainter;
-import com.google.android.material.card.MaterialCardView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BaseDetailActivity extends AppCompatActivity {
     public static final String BOOK_ACTION_KEY = "com.cmput301f20t21.bookfriends.BOOK_ACTION";
@@ -23,7 +27,6 @@ public class BaseDetailActivity extends AppCompatActivity {
 
     protected Book book;
     protected Button button;
-    protected MaterialCardView ownerDetail;
     private ImageView bookImage;
     private TextView title;
     private TextView isbn;
@@ -40,13 +43,10 @@ public class BaseDetailActivity extends AppCompatActivity {
         title = findViewById(R.id.detail_title);
         author = findViewById(R.id.detail_author);
         button = findViewById(R.id.detail_action_button);
-        ownerDetail = findViewById(R.id.owner_detail_button);
 
         Intent getIntent = getIntent();
         book = getIntent.getParcelableExtra(BOOK_DATA_KEY);
         setDetails();
-
-        ownerDetail.setOnClickListener(this::onViewOwnerProfile);
     }
 
     public void updateBook(Book updateBook) {
@@ -75,5 +75,28 @@ public class BaseDetailActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public List<DetailButtonModel> getDetailButtonModels() {
+        ArrayList<DetailButtonModel> buttonModels = new ArrayList<>();
+        buttonModels.add(
+                new DetailButtonModel(
+                        getString(R.string.view_owner_profile),
+                        book.getOwner(),
+                        this::onViewOwnerProfile,
+                        null
+                ));
+        return buttonModels;
+    }
+
+    /**
+     * create and inflate and show the list of buttons
+     */
+    public void inflateDetailButtons() {
+        DetailButtonsFragment buttonsFragment = new DetailButtonsFragment(getDetailButtonModels());
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.detail_buttons_container, buttonsFragment)
+                .commit();
     }
 }

@@ -45,6 +45,8 @@ public class BorrowedDetailActivity extends BaseDetailActivity {
                 Toast.makeText(this, getString(R.string.unexpected_error), Toast.LENGTH_SHORT).show();
             }
         });
+
+        super.inflateDetailButtons();
     }
 
     @Override
