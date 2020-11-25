@@ -38,11 +38,14 @@ public class RequestedOwnedDetailActivity extends BaseDetailActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == BOOK_ACTION.VIEW_REQUESTS.getCode()) {
                 Book book = data.getParcelableExtra(BaseDetailActivity.BOOK_DATA_KEY);
-                if (book.getStatus() != BOOK_STATUS.REQUESTED) {
-                    Intent resultIntent = new Intent();
-                    resultIntent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, book);
-                    setResult(RESULT_OK, resultIntent);
+                if (book.getStatus() == BOOK_STATUS.ACCEPTED) { // if book is accepted, open accepted detail activity
                     finish();
+
+                    Intent intent = new Intent(this, AcceptedOwnedDetailActivity.class);
+                    intent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, book);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                    overridePendingTransition(0, 0);
+                    startActivity(intent);
                 }
             }
         }

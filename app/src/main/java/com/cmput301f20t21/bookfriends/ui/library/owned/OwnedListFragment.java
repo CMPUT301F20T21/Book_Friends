@@ -11,6 +11,7 @@ package com.cmput301f20t21.bookfriends.ui.library.owned;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -164,12 +165,6 @@ public class OwnedListFragment extends Fragment {
                 Book book = data.getParcelableExtra(AddEditActivity.NEW_BOOK_INTENT_KEY);
                 vm.addBook(book);
                 Toast.makeText(getActivity(), getString(R.string.add_book_successful), Toast.LENGTH_SHORT).show();
-            } else if (requestCode == BOOK_ACTION.VIEW.getCode()) {
-                Book book = data.getParcelableExtra(BaseDetailActivity.BOOK_DATA_KEY);
-                if (book != null && book.getStatus() != BOOK_STATUS.REQUESTED) {
-                    getActivity().overridePendingTransition(0,0);
-                    openDetailActivity(book);
-                }
             } else {
                 Book oldBook = data.getParcelableExtra(AddEditActivity.OLD_BOOK_INTENT_KEY);
                 Book updatedBook = data.getParcelableExtra(AddEditActivity.UPDATED_BOOK_INTENT_KEY);
