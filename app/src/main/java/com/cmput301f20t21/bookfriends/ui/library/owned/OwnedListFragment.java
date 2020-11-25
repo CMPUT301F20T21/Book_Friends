@@ -167,6 +167,7 @@ public class OwnedListFragment extends Fragment {
             } else if (requestCode == BOOK_ACTION.VIEW.getCode()) {
                 Book book = data.getParcelableExtra(BaseDetailActivity.BOOK_DATA_KEY);
                 if (book != null && book.getStatus() != BOOK_STATUS.REQUESTED) {
+                    getActivity().overridePendingTransition(0,0);
                     openDetailActivity(book);
                 }
             } else {
