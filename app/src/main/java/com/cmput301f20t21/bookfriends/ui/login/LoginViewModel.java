@@ -24,6 +24,8 @@ import com.cmput301f20t21.bookfriends.repositories.api.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.UserRepository;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.Objects;
+
 /**
  * A view model for the LoginActivity, handles validation and authentication
  */
@@ -44,11 +46,12 @@ public class LoginViewModel extends ViewModel {
 
     /**
      * Check whether the provided layout's text field is empty
+     *
      * @param layout the layout to validate
      * @return true if the text field is empty
      */
     public boolean isEmpty(TextInputLayout layout) {
-        EditText inputField = layout.getEditText();
+        EditText inputField = Objects.requireNonNull(layout.getEditText());
         String userInput = inputField.getText().toString();
         return userInput.isEmpty();
     }
@@ -57,6 +60,7 @@ public class LoginViewModel extends ViewModel {
      * handles the login request initiated by the user
      * this function will grab the email from the username provided
      * along with the password provided to authenticate using Firebase Auth
+     *
      * @param username username that the user provided
      * @param password password that the user provided
      * @param successCallback callback function called when user successfully login

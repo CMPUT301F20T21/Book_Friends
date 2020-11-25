@@ -5,12 +5,22 @@
     android:layout_height="match_parent"
     >
 
-
     <include layout="@layout/component_book_details"
+        android:id="@+id/component_book_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/detail_buttons_container"
+        app:layout_constraintTop_toBottomOf="@+id/component_book_details"
+        app:layout_constraintBottom_toTopOf="@id/detail_action_button"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginHorizontal="24dp"
         />
 
     <Button
