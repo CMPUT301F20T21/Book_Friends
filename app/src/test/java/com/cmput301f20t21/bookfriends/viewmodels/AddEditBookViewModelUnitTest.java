@@ -84,7 +84,7 @@ public class AddEditBookViewModelUnitTest {
         FakeSuccessTask<Book> fakeEditBookTask = new FakeSuccessTask<>(oldBook);
         FakeSuccessTask<Void> fakeDeleteImageTask = new FakeSuccessTask<>((Void) null);
 
-        when(mockBookRepository.editBook(oldBook, "newIsbn", "newTitle", "newAuthor", "newDescription", null, false)).thenReturn(fakeEditBookTask);
+        when(mockBookRepository.editBook(oldBook, "newIsbn", "newTitle", "newAuthor", "newDescription", null)).thenReturn(fakeEditBookTask);
 
         model.bindBook(oldBook);
         model.bookIsbn.setValue("newIsbn");
@@ -95,7 +95,7 @@ public class AddEditBookViewModelUnitTest {
 
         model.handleEditBook(mockSuccessCallback, mockFailCallback);
 
-        verify(mockBookRepository, times(1)).editBook(oldBook, "newIsbn", "newTitle", "newAuthor", "newDescription", null, false);
+        verify(mockBookRepository, times(1)).editBook(oldBook, "newIsbn", "newTitle", "newAuthor", "newDescription", null);
         verify(mockSuccessCallback, times(1)).run(new Book("oldId", "oldIsbn", "oldTitle", "oldAuthor", "oldDescription", "oldOwner",  BOOK_STATUS.AVAILABLE));
     }
 }
