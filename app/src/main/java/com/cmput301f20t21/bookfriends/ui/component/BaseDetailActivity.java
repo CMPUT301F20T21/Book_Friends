@@ -77,7 +77,7 @@ public class BaseDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public List<DetailButtonModel> getDetailButtonModels() {
+    protected List<DetailButtonModel> getDetailButtonModels() {
         ArrayList<DetailButtonModel> buttonModels = new ArrayList<>();
         buttonModels.add(
                 new DetailButtonModel(
@@ -92,7 +92,7 @@ public class BaseDetailActivity extends AppCompatActivity {
     /**
      * create and inflate and show the list of buttons
      */
-    public void inflateDetailButtons() {
+    protected void inflateDetailButtons() {
         DetailButtonsFragment buttonsFragment = new DetailButtonsFragment(getDetailButtonModels());
         getSupportFragmentManager()
                 .beginTransaction()

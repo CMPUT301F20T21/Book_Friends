@@ -102,7 +102,7 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
      * @return the list of button models
      */
     @Override
-    public List<DetailButtonModel> getDetailButtonModels() {
+    protected List<DetailButtonModel> getDetailButtonModels() {
         List<DetailButtonModel> buttonModels = super.getDetailButtonModels();
         if (request.getMeetingLocation() != null) {
             buttonModels.add(
@@ -127,7 +127,7 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
      * and the request comes from vm which means it changes on vm fetch completes
      */
     @Override
-    public void inflateDetailButtons() {
+    protected void inflateDetailButtons() {
         DetailButtonsFragment buttonsFragment = new DetailButtonsFragment(getDetailButtonModels());
         getSupportFragmentManager()
                 .beginTransaction()
