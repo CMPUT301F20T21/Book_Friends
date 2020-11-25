@@ -41,6 +41,7 @@ public class AddEditViewModel extends ViewModel {
     private final MutableLiveData<Uri> localImageUri = new MutableLiveData<>();
     // the book we are editing
     private Book oldBook;
+    private String currentUsername;
 
     /** the boolean indicating whether we should remove the image on save
      * Also represents if there is a cover image displayed.
@@ -49,6 +50,7 @@ public class AddEditViewModel extends ViewModel {
      * if the book has a remote cover image
      */
     private boolean hasImage = false;
+    private boolean hasNewImage = false;
 
     // production
     public AddEditViewModel() {
@@ -59,6 +61,8 @@ public class AddEditViewModel extends ViewModel {
     public AddEditViewModel(AuthRepository authRepository, BookRepository bookRepository) {
         this.authRepository = authRepository;
         this.bookRepository = bookRepository;
+
+        currentUsername = authRepository.getCurrentUser().getUsername();
     }
 
     // let the activity to bind received book data into the view model
@@ -82,6 +86,7 @@ public class AddEditViewModel extends ViewModel {
     public void setLocalImageUri(@Nullable Uri uri) {
         localImageUri.setValue(uri);
         setHasImage(uri != null); // if the local uri is null, it means users deleted image
+        hasNewImage = true;
     }
 
     // exposed for Glide callback to tell if remote image is available on first load
@@ -110,12 +115,21 @@ public class AddEditViewModel extends ViewModel {
         final String description = bookDescription.getValue();
         final Uri imageUri = localImageUri.getValue();
 
-        String owner = authRepository.getCurrentUser().getUsername();
-        bookRepository.add(isbn, title, author, description, owner, imageUri).addOnSuccessListener(
-                successCallback::run
-        ).addOnFailureListener(e -> {
-            failCallback.run(BOOK_ERROR.FAIL_TO_ADD_BOOK);
-        });
+        if (imageUri != null) {
+            bookRepository.addImage(currentUsername, imageUri).addOnSuccessListener(imageUrl -> {
+                bookRepository.add(isbn, title, author, description, currentUsername, imageUrl).addOnSuccessListener(
+                        successCallback::run
+                ).addOnFailureListener(e -> {
+                    failCallback.run(BOOK_ERROR.FAIL_TO_ADD_BOOK);
+                });
+            });
+        } else {
+            bookRepository.add(isbn, title, author, description, currentUsername, null).addOnSuccessListener(
+                    successCallback::run
+            ).addOnFailureListener(e -> {
+                failCallback.run(BOOK_ERROR.FAIL_TO_ADD_BOOK);
+            });
+        }
     }
 
     /**
@@ -132,13 +146,34 @@ public class AddEditViewModel extends ViewModel {
         final String title = bookTitle.getValue();
         final String author = bookAuthor.getValue();
         final String description = bookDescription.getValue();
-        final Uri newUriFile = localImageUri.getValue();
-        final Boolean shouldDeleteImage = !hasImage;
+        final Uri imageUri = localImageUri.getValue();
 
-        bookRepository.editBook(oldBook, isbn, title, author, description, newUriFile, shouldDeleteImage).addOnSuccessListener(
+        // 3 image cases:
+        // 1. Update local image with a new image
+        // 2. Update local image with no image (book previously have image, but we removed it)
+        // 3. Did not touch image, keep old image
+        if (hasNewImage) {
+            if (imageUri != null) {     // if we have new image, we upload it to database then edit book
+                bookRepository.addImage(currentUsername, imageUri).addOnSuccessListener(imageUrl -> {
+                    bookRepository.editBook(oldBook, isbn, title, author, description, imageUrl).addOnSuccessListener(
+                            successCallback::run
+                    ).addOnFailureListener(e -> {
+                        failCallback.run(BOOK_ERROR.FAIL_TO_EDIT_BOOK);
+                    });
+                });
+            } else {    // if we removed the book image, we update the book with no image url
+                bookRepository.editBook(oldBook, isbn, title, author, description, null).addOnSuccessListener(
+                        successCallback::run
+                ).addOnFailureListener(e -> {
+                    failCallback.run(BOOK_ERROR.FAIL_TO_EDIT_BOOK);
+                });
+            }
+        } else {        // if we didn't update the book image, we use the old book image url
+            bookRepository.editBook(oldBook, isbn, title, author, description, oldBook.getImageUrl()).addOnSuccessListener(
                     successCallback::run
-        ).addOnFailureListener(e -> {
-            failCallback.run(BOOK_ERROR.FAIL_TO_EDIT_BOOK);
-        });
+            ).addOnFailureListener(e -> {
+                failCallback.run(BOOK_ERROR.FAIL_TO_EDIT_BOOK);
+            });
+        }
     }
 }

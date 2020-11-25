@@ -11,18 +11,14 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.List;
 
 public interface BookRepository {
-    Task<Book> add(String isbn, String title, String author, String description, String owner, Uri imageUriFile);
-    Task<String> addImage(String bookId, Uri imageUri);
-    Task<Book> editBook(Book oldBook, String isbn, String title, String author, String description, Uri imageUriFile, Boolean shouldDeleteImage);
+    Task<Book> add(String isbn, String title, String author, String description, String owner, String imageUrl);
+    Task<Book> editBook(Book oldBook, String isbn, String title, String author, String description, String imageUrl);
+    Task<String> addImage(String username, Uri imageUri);
     Task<Void> delete(String id);
     Task<Void> deleteImage(String imageName);
-    Book getBookFromDocument(DocumentSnapshot document);
-    Task<Uri> getImage(String imageName);
-    Task<QuerySnapshot> getBooksOfOwnerId(String userName);
-    Task<QuerySnapshot> getBookOfBorrowerId(String uid);
-    Task<DocumentSnapshot> getBookById(String bookId);
+    Task<List<Book>> getBooksOfOwnerId(String userName);
+    Task<Book> getBookById(String bookId);
     Task<List<Book>> batchGetBooks( List<String> bookIds);
-    Task<QuerySnapshot> getAvailableBooks();
     Task<List<Book>> getAvailableBooksForUser(String username);
     Task<QuerySnapshot> getDocumentBy(String isbn, String title, String author);
     Task<Book> updateBookStatus(Book book, BOOK_STATUS newStatus);

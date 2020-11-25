@@ -81,11 +81,6 @@ public class Book implements Parcelable {
         return status;
     }
 
-    public String getCoverImageName() {
-        return getId() + "cover";
-    }
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

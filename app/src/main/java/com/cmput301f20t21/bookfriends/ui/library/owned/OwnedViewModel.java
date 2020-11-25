@@ -122,7 +122,7 @@ public class OwnedViewModel extends ViewModel {
         bookRepository.delete(book.getId())
                 .addOnSuccessListener(
                         res -> {
-                            bookRepository.deleteImage(book.getCoverImageName());
+                            bookRepository.deleteImage(book.getImageUrl());
                             bookData.remove(book);
                             books.setValue(bookData);
                         })
@@ -171,17 +171,8 @@ public class OwnedViewModel extends ViewModel {
         bookRepository.getBooksOfOwnerId(currentUsername)
                 .addOnSuccessListener(
                         result -> {
-                            if (result == null) { // should never happen
-                                errorMessageObserver.setValue(BOOK_ERROR.FAIL_TO_GET_BOOKS);
-                                return;
-                            }
-                            List<DocumentSnapshot> documents = result.getDocuments();
                             bookData.clear();
-                            bookData.addAll(
-                                    documents.stream()
-                                            .map(document -> document.toObject(Book.class))
-                                            .collect(Collectors.toList())
-                            );
+                            bookData.addAll(result);
                             books.setValue(bookData);
                         })
                 .addOnFailureListener(e -> errorMessageObserver.setValue(BOOK_ERROR.FAIL_TO_GET_BOOKS));
