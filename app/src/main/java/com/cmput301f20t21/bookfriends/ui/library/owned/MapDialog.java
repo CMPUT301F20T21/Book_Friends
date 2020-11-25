@@ -35,7 +35,6 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.CancellationTokenSource;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -109,7 +108,7 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
         mapView.onResume();
         mapView.getMapAsync(this);
 
-        gpsButton = (ImageView) dialog.findViewById(R.id.ic_gps);
+        gpsButton = (ImageView) dialog.findViewById(R.id.map_ic_gps);
         gpsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,7 +116,7 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
             }
         });
 
-        searchText = (EditText) dialog.findViewById(R.id.input_search);
+        searchText = (EditText) dialog.findViewById(R.id.map_search_input);
         searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
@@ -157,7 +156,7 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
             }
         });
 
-        cancelSearchButton = dialog.findViewById(R.id.cancel_search);
+        cancelSearchButton = dialog.findViewById(R.id.map_search_cancel);
         cancelSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -165,7 +164,7 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
             }
         });
 
-        confirmSearchButton = (Button) dialog.findViewById(R.id.confirm_search);
+        confirmSearchButton = (Button) dialog.findViewById(R.id.map_search_confirm);
         confirmSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
