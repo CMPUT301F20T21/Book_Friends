@@ -13,24 +13,30 @@ import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 import com.cmput301f20t21.bookfriends.enums.SCAN_ERROR;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
-import com.cmput301f20t21.bookfriends.ui.scanner.ScannerActivity;
+import com.cmput301f20t21.bookfriends.ui.scanner.ScannerBaseActivity;
 
-public class AcceptedOwnedDetailActivity extends BaseDetailActivity {
+public class BorrowedOwnedDetailActivity extends BaseDetailActivity {
     public static final int GET_SCANNED_ISBN = 2001;
-    private AcceptedOwnedDetailViewModel vm;
+    private Button actionButton;
+    private BorrowedOwnedDetailViewModel vm;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        vm = new ViewModelProvider(this).get(AcceptedOwnedDetailViewModel.class);
+        vm = new ViewModelProvider(this).get(BorrowedOwnedDetailViewModel.class);
+        actionButton = findViewById(R.id.detail_action_button);
 
         vm.getRequest(book).observe(this, request -> {
-            if (request.getStatus().equals(REQUEST_STATUS.ACCEPTED)) {
-                button.setText(R.string.scan_hand_over);
-                button.setOnClickListener(this::openScanner);
-            } else if (request.getStatus().equals(REQUEST_STATUS.HANDING)) {
-                button.setText(getString(R.string.scan_hand_over_success, request.getRequester()));
-                button.setClickable(false);
+            if (request.getStatus().equals(REQUEST_STATUS.RETURNING)) {
+                actionButton.setText(R.string.scan_receive);
+                actionButton.setOnClickListener(this::openScanner);
+            }
+            else if (request.getStatus().equals(REQUEST_STATUS.BORROWED)) {
+                actionButton.setVisibility(View.GONE);
+            }
+            else if (request.getStatus().equals(REQUEST_STATUS.CLOSED)) {
+                actionButton.setText(getString(R.string.owner_receive_success, book.getTitle()));
+                actionButton.setClickable(false);
             }
         });
 
@@ -44,7 +50,7 @@ public class AcceptedOwnedDetailActivity extends BaseDetailActivity {
     }
 
     private void openScanner(View view) {
-        Intent intent = new Intent(this, ScannerActivity.class);
+        Intent intent = new Intent(this, ScannerBaseActivity.class);
         startActivityForResult(intent, GET_SCANNED_ISBN);
     }
 
@@ -53,8 +59,8 @@ public class AcceptedOwnedDetailActivity extends BaseDetailActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == GET_SCANNED_ISBN) {
-                String scannedIsbn = data.getStringExtra(ScannerActivity.ISBN_KEY);
-                vm.handleScannedIsbn(book.getIsbn(), scannedIsbn);
+                String scannedIsbn = data.getStringExtra(ScannerBaseActivity.ISBN_KEY);
+                vm.handleScannedIsbn(book, book.getIsbn(), scannedIsbn);
             }
         }
     }

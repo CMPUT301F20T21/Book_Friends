@@ -11,6 +11,7 @@ package com.cmput301f20t21.bookfriends.ui.library.owned;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,13 +30,11 @@ import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
-import com.cmput301f20t21.bookfriends.ui.borrow.accepted.AcceptedDetailActivity;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 import com.cmput301f20t21.bookfriends.ui.library.add.AddEditActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
-import java.lang.reflect.AnnotatedElement;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -116,7 +115,7 @@ public class OwnedListFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new OwnedListAdapter(vm.getBooks().getValue(), this::onItemClick, this::onDeleteBook, this::onViewRequests);
+        adapter = new OwnedListAdapter(vm.getBooks().getValue(), this::onItemClick, this::onDeleteBook);
         recyclerView.setAdapter(adapter);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -196,10 +195,13 @@ public class OwnedListFragment extends Fragment {
             case ACCEPTED:
                 return AcceptedOwnedDetailActivity.class;
             case BORROWED:
+                return BorrowedOwnedDetailActivity.class;
             case REQUESTED:
+                return RequestedOwnedDetailActivity.class;
             case AVAILABLE:
+                return AvailableOwnedDetailActivity.class;
             default:
-                return OwnedDetailActivity.class;
+                return BaseDetailActivity.class;
         }
     }
 
@@ -220,17 +222,6 @@ public class OwnedListFragment extends Fragment {
      */
     public void onDeleteBook(Book book) {
         vm.deleteBook(book);
-    }
-
-    /**
-     * when user click on view requests of a book
-     * go to request activity
-     * @param bookId is passed to that activity to retrieving information from FireStore
-     */
-    private void onViewRequests(String bookId) {
-        Intent intent = new Intent(this.getActivity(), RequestActivity.class);
-        intent.putExtra(VIEW_REQUEST_KEY, bookId);
-        startActivity(intent);
     }
 
     private void onFilter(View view) {

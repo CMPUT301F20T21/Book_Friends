@@ -20,20 +20,18 @@ import java.util.List;
 public class OwnedListAdapter extends BaseBookListAdapter {
     private OnDeleteListener deleteListener;
     private OnItemClickListener itemClickListener;
-    private OnViewRequestsListener viewRequestsListener;
 
-    public OwnedListAdapter(List<Book> books, OnItemClickListener itemClickListener, OnDeleteListener deleteListener, OnViewRequestsListener viewRequestsListener) {
+    public OwnedListAdapter(List<Book> books, OnItemClickListener itemClickListener, OnDeleteListener deleteListener) {
         super(books);
         this.itemClickListener = itemClickListener;
         this.deleteListener = deleteListener;
-        this.viewRequestsListener = viewRequestsListener;
     }
 
     @NonNull
     @Override
     public OwnedListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_list, parent, false);
-        return new OwnedListAdapter.ViewHolder(itemView, itemClickListener, deleteListener, viewRequestsListener);
+        return new OwnedListAdapter.ViewHolder(itemView, itemClickListener, deleteListener);
     }
     public interface OnViewRequestsListener {
         void run(String bookId);
@@ -50,15 +48,13 @@ public class OwnedListAdapter extends BaseBookListAdapter {
     public static class ViewHolder extends BaseBookListAdapter.ViewHolder {
         final ImageButton moreBtn;
         final OnDeleteListener deleteListener;
-        final OnViewRequestsListener viewRequestsListener;
 
-        public ViewHolder(View v, OnItemClickListener itemClickListener, OnDeleteListener deleteListener, OnViewRequestsListener viewRequestsListener) {
+        public ViewHolder(View v, OnItemClickListener itemClickListener, OnDeleteListener deleteListener) {
             super(v);
             moreBtn = v.findViewById(R.id.item_book_more_btn);
             moreBtn.setOnClickListener(this::showPopup);
             v.setOnClickListener(view -> itemClickListener.run(getAdapterPosition()));
             this.deleteListener = deleteListener;
-            this.viewRequestsListener = viewRequestsListener;
         }
 
         private void showPopup(View view) {
@@ -74,9 +70,6 @@ public class OwnedListAdapter extends BaseBookListAdapter {
             int itemId = menuItem.getItemId();
             if (itemId == R.id.library_owned_book_menu_delete) {
                 deleteListener.run(book);
-                return true;
-            } else if (itemId == R.id.library_owned_book_menu_view_requests) {
-                viewRequestsListener.run(book.getId());
                 return true;
             } else {
                 return false;

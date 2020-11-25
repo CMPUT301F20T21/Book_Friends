@@ -12,36 +12,22 @@ import androidx.annotation.Nullable;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
-import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
-import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 import com.cmput301f20t21.bookfriends.ui.library.add.AddEditActivity;
 
-public class OwnedDetailActivity extends BaseDetailActivity {
+public class AvailableOwnedDetailActivity extends BaseDetailActivity {
 
     private Book oldBook;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BOOK_STATUS status = book.getStatus();
-        if (status == BOOK_STATUS.AVAILABLE) {
-            button.setVisibility(View.INVISIBLE);
-        }
-        else if (status == BOOK_STATUS.REQUESTED) {
-            button.setText(R.string.click_to_see_requests);
-        }
-        else if (status == BOOK_STATUS.ACCEPTED) {
-            button.setText(R.string.scan_to_hand_over);
-        }
-        else if (status == BOOK_STATUS.BORROWED) {
-            button.setText(R.string.scan_to_receive);
-        }
+        button.setVisibility(View.INVISIBLE);
     }
 
     private void openAddEditActivity(Book book) {
-        Intent intent = new Intent(OwnedDetailActivity.this, AddEditActivity.class);
+        Intent intent = new Intent(AvailableOwnedDetailActivity.this, AddEditActivity.class);
         intent.putExtra(BaseDetailActivity.BOOK_ACTION_KEY, BOOK_ACTION.EDIT);
         intent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, book);
         startActivityForResult(intent, BOOK_ACTION.EDIT.getCode());
@@ -68,12 +54,8 @@ public class OwnedDetailActivity extends BaseDetailActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (book.getStatus() == BOOK_STATUS.AVAILABLE) {
             getMenuInflater().inflate(R.menu.top_detail_menu, menu);
             return true;
-        } else {
-            return false;
-        }
     }
 
     @Override
