@@ -114,7 +114,7 @@ public class OwnedListFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new OwnedListAdapter(vm.getBooks().getValue(), this::onItemClick, this::onDeleteBook, this::onViewRequests);
+        adapter = new OwnedListAdapter(vm.getBooks().getValue(), this::onItemClick, this::onDeleteBook);
         recyclerView.setAdapter(adapter);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -164,6 +164,11 @@ public class OwnedListFragment extends Fragment {
                 Book book = data.getParcelableExtra(AddEditActivity.NEW_BOOK_INTENT_KEY);
                 vm.addBook(book);
                 Toast.makeText(getActivity(), getString(R.string.add_book_successful), Toast.LENGTH_SHORT).show();
+            } else if (requestCode == BOOK_ACTION.VIEW.getCode()) {
+                Book book = data.getParcelableExtra(BaseDetailActivity.BOOK_DATA_KEY);
+                if (book != null && book.getStatus() != BOOK_STATUS.REQUESTED) {
+                    openDetailActivity(book);
+                }
             } else {
                 Book oldBook = data.getParcelableExtra(AddEditActivity.OLD_BOOK_INTENT_KEY);
                 Book updatedBook = data.getParcelableExtra(AddEditActivity.UPDATED_BOOK_INTENT_KEY);
@@ -220,17 +225,6 @@ public class OwnedListFragment extends Fragment {
      */
     public void onDeleteBook(Book book) {
         vm.deleteBook(book);
-    }
-
-    /**
-     * when user click on view requests of a book
-     * go to request activity
-     * @param bookId is passed to that activity to retrieving information from FireStore
-     */
-    private void onViewRequests(String bookId) {
-        Intent intent = new Intent(this.getActivity(), RequestActivity.class);
-        intent.putExtra(VIEW_REQUEST_KEY, bookId);
-        startActivity(intent);
     }
 
     private void onFilter(View view) {

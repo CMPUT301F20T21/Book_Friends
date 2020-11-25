@@ -18,7 +18,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f20t21.bookfriends.R;
+import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.entities.Request;
+import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 import com.cmput301f20t21.bookfriends.utils.ImagePainter;
 
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ public class RequestActivity extends AppCompatActivity {
     private TextView isbnTextView;
     private TextView bookStatus;
     private ImageView bookImage;
+    private Book book;
 
     private RequestViewModel vm;
 
@@ -55,6 +58,7 @@ public class RequestActivity extends AppCompatActivity {
         String bookId = getIntent().getStringExtra(OwnedListFragment.VIEW_REQUEST_KEY);
         // since the data is mutable live, set the observer so the content will change accordingly
         vm.getBook(bookId).observe(this, book -> {
+            this.book = book;
             titleTextView.setText(book.getTitle());
             authorTextView.setText(book.getAuthor());
             isbnTextView.setText(book.getIsbn());
@@ -102,6 +106,9 @@ public class RequestActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, book);
+            setResult(RESULT_OK, resultIntent);
             finish();
             return true;
         }
