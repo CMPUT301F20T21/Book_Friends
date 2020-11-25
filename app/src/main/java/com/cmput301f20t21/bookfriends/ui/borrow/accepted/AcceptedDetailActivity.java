@@ -17,9 +17,9 @@ import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 import com.cmput301f20t21.bookfriends.enums.SCAN_ERROR;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
+import com.cmput301f20t21.bookfriends.ui.scanner.ScannerActivity;
 import com.cmput301f20t21.bookfriends.ui.component.detailButtons.DetailButtonModel;
 import com.cmput301f20t21.bookfriends.ui.component.detailButtons.DetailButtonsFragment;
-import com.cmput301f20t21.bookfriends.ui.scanner.ScannerBaseActivity;
 import com.google.firebase.firestore.GeoPoint;
 
 import java.io.IOException;
@@ -145,7 +145,7 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
     }
 
     private void openScanner(View view) {
-        Intent intent = new Intent(this, ScannerBaseActivity.class);
+        Intent intent = new Intent(this, ScannerActivity.class);
         startActivityForResult(intent, GET_SCANNED_ISBN);
     }
 
@@ -154,7 +154,7 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == GET_SCANNED_ISBN) {
-                String scannedIsbn = data.getStringExtra(ScannerBaseActivity.ISBN_KEY);
+                String scannedIsbn = data.getStringExtra(ScannerActivity.ISBN_KEY);
                 vm.handleScannedIsbn(book, scannedIsbn, this::onScannedSuccess);
             }
         }
