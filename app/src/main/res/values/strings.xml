@@ -109,4 +109,5 @@
     <string name="scan_receive">Scan to receive</string>
     <string name="scan_receive_success">Successfully borrowed %s</string>
     <string name="owner_receive_success">Successfully got back %s</string>
+    <string name="borrowed_owned_detail">The Book Detail (Borrowed Owned)</string>
 </resources>
