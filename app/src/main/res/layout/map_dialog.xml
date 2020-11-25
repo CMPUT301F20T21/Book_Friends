@@ -2,11 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/search_map_layout"
+        android:id="@+id/map_search_layout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="10dp"
@@ -20,11 +21,11 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <EditText
-            android:id="@+id/input_search"
+            android:id="@+id/map_search_input"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/ic_magnify"
+            android:layout_toRightOf="@+id/map_ic_magnify"
             android:background="@null"
             android:hint="@string/address_search"
             android:textColor="@color/black"
@@ -33,7 +34,7 @@
             android:inputType="text"/>
 
         <ImageView
-            android:id="@+id/ic_magnify"
+            android:id="@+id/map_ic_magnify"
             android:layout_width="15dp"
             android:layout_height="15dp"
             android:layout_centerVertical="true"
@@ -43,7 +44,7 @@
     </RelativeLayout>
 
     <ImageView
-        android:id="@+id/ic_gps"
+        android:id="@+id/map_ic_gps"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:elevation="10dp"
@@ -51,43 +52,47 @@
         android:layout_marginEnd="10dp"
         android:src="@drawable/ic_baseline_gps_fixed_24"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_map_layout" />
+        app:layout_constraintTop_toBottomOf="@id/map_search_layout" />
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/map_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/bottom_layout">
+        app:layout_constraintBottom_toTopOf="@id/map_buttons_layout">
 
     </com.google.android.gms.maps.MapView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bottom_layout"
+        android:id="@+id/map_buttons_layout"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_height="wrap_content"
+        android:paddingVertical="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/cancel_search"
+            android:id="@+id/map_search_cancel"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginEnd="20dp"
             android:text="@string/cancel"
-            app:layout_constraintEnd_toStartOf="@+id/confirm_search" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/map_search_confirm"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/confirm_search"
+            android:id="@+id/map_search_confirm"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/edit_confirm"
+            android:layout_marginStart="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/map_search_cancel"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

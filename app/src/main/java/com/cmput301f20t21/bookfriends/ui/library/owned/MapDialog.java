@@ -35,7 +35,6 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.CancellationTokenSource;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,6 +54,7 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
     private Context context;
     private MapView mapView;
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private LatLng meetingLocation;
 
     // constructor
     public MapDialog(Context context, RequestViewModel vm, int position) {
@@ -108,7 +108,7 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
         mapView.onResume();
         mapView.getMapAsync(this);
 
-        gpsButton = (ImageView) dialog.findViewById(R.id.ic_gps);
+        gpsButton = (ImageView) dialog.findViewById(R.id.map_ic_gps);
         gpsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,7 +116,7 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
             }
         });
 
-        searchText = (EditText) dialog.findViewById(R.id.input_search);
+        searchText = (EditText) dialog.findViewById(R.id.map_search_input);
         searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
@@ -139,12 +139,12 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
                         myMap.clear();
                         // get the first address
                         Address address = addressList.get(0);
-                        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                        meetingLocation = new LatLng(address.getLatitude(), address.getLongitude());
                         // move camera to that address
-                        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
+                        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(meetingLocation, 15f));
 
                         MarkerOptions options = new MarkerOptions()
-                                .position(latLng)
+                                .position(meetingLocation)
                                 .title(address.getAddressLine(0));
                         myMap.addMarker(options);
                         // hide the keyboard after searching
@@ -156,7 +156,7 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
             }
         });
 
-        cancelSearchButton = dialog.findViewById(R.id.cancel_search);
+        cancelSearchButton = dialog.findViewById(R.id.map_search_cancel);
         cancelSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -164,14 +164,18 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
             }
         });
 
-        confirmSearchButton = (Button) dialog.findViewById(R.id.confirm_search);
+        confirmSearchButton = (Button) dialog.findViewById(R.id.map_search_confirm);
         confirmSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // accept the request only when user specifies the location of meeting
-                Toast.makeText(context, getString(R.string.accepted_request), Toast.LENGTH_SHORT).show();
-                vm.acceptRequest(position);
-                dialog.dismiss();
+                if (meetingLocation != null) {
+                    // accept the request only when user specifies the location of meeting
+                    Toast.makeText(context, getString(R.string.accepted_request), Toast.LENGTH_SHORT).show();
+                    vm.acceptRequest(position, meetingLocation);
+                    dialog.dismiss();
+                } else {
+                    Toast.makeText(context, getString(R.string.pick_location), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -232,5 +236,23 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
         myMap.setMyLocationEnabled(true);
         myMap.getUiSettings().setMyLocationButtonEnabled(false);
 
+        myMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                myMap.clear();
+                Geocoder geocoder = new Geocoder(getDialog().getContext());
+                List<Address> addressList = new ArrayList<>();
+                try {
+                    addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Address address = addressList.get(0);
+                MarkerOptions options = new MarkerOptions().position(latLng);
+                meetingLocation = latLng;
+                searchText.setText(address.getAddressLine(0));
+                myMap.addMarker(options);
+            }
+        });
     }
 }

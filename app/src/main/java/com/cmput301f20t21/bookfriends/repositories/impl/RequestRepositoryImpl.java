@@ -11,6 +11,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class RequestRepositoryImpl implements RequestRepository {
-    private CollectionReference requestCollection;
+    private final CollectionReference requestCollection;
 
     private static final RequestRepository instance = new RequestRepositoryImpl();
 
@@ -64,11 +65,6 @@ public class RequestRepositoryImpl implements RequestRepository {
                     }
                     throw new UnexpectedException();
                 });
-    }
-
-    public Task<QuerySnapshot> getBorrowedRequestByUsername(String username) {
-        return requestCollection.whereEqualTo("requester", username)
-                .whereEqualTo("status", REQUEST_STATUS.BORROWED.toString()).get();
     }
 
     public Task<List<Request>> getRequestsByUsernameAndStatus(String username, List<REQUEST_STATUS> statusList) {
@@ -173,5 +169,9 @@ public class RequestRepositoryImpl implements RequestRepository {
                     }
                     throw new UnexpectedException();
                 });
+    }
+
+    public Task<Void> addMeetingLocation (String id, GeoPoint geoPoint) {
+            return requestCollection.document(id).update("meetingLocation", geoPoint);
     }
 }

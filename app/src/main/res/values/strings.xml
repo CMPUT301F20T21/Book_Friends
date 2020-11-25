@@ -9,7 +9,7 @@
     <string name="string_borrowed">Borrowed</string>
     <string name="title_borrow">Borrow</string>
     <string name="title_browse">Browse</string>
-    <string name="title_scanner">Scan to Add</string>
+    <string name="title_scanner">Scan</string>
     <string name="title_scanner_add">Scan to Add</string>
     <string name="title_profile">Me</string>
     <string name="title_notifications">Notifications</string>
@@ -84,17 +84,19 @@
     <string name="edit_detail">Edit</string>
     <string name="view_request">View All Requests</string>
     <string name="view">View</string>
-    <string name="accepted_detail">The Book Detail (Accepted)</string>
-    <string name="browse_detail">The Book Detail (Available)</string>
-    <string name="requested_detail">The Book Detail (Requested)</string>
-    <string name="accepted_owned_detail">The Book Detail (Accepted Owned)</string>
-    <string name="borrowed_detail">View A Borrowed Book</string>
+    <string name="detail"> Detail </string>
     <string name="author">Author: %s</string>
     <string name="upload_new_image">Upload a new image</string>
     <string name="replace_with_new_image">Replace with a new image</string>
     <string name="delete_cover_image">Delete cover image</string>
     <string name="address_search">Enter Address</string>
     <string name="request_book_successful">Request successfully sent</string>
+    <string name="scan_to_receive">scan to receive</string>
+    <string name="wait_for_acceptance">waiting for acceptance</string>
+    <string name="click_to_request">click to request</string>
+    <string name="scan_to_return">scan to return </string>
+    <string name="click_to_see_requests">click to see requests</string>
+    <string name="scan_to_hand_over">scan to hand over</string>
     <string name="preference_file_key">com.cmput301f20t21.bookfriends.PREFERENCE_FILE_KEY</string>
     <string name="saved_cloud_messaging_topic">com.cmput301f20t21.bookfriends</string>
     <string name="notification_channel_name">Book Friends Notification Channel</string>
@@ -110,4 +112,10 @@
     <string name="scan_receive_success">Successfully borrowed %s</string>
     <string name="owner_receive_success">Successfully got back %s</string>
     <string name="borrowed_owned_detail">The Book Detail (Borrowed Owned)</string>
+    <string name="detail_button_meet_location_title">View meetup location</string>
+    <string name="pick_location">Please enter a location</string>
+    <string name="geocoder_failure">Oops, our geocoder failed to fetch the owner\'s preferred location</string>
+    <string name="get_meeting_address_failure">Oops, we could not fetch the address.</string>
+    <string name="detail_button_meetup_title">View meetup location</string>
+    <string name="meet_location_dialog_cancel">Back</string>
 </resources>

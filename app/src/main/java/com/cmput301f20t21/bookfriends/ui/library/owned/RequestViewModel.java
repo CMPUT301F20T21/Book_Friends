@@ -21,8 +21,10 @@ import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
+import com.google.android.gms.maps.model.LatLng;
 import com.cmput301f20t21.bookfriends.utils.NotificationSender;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,8 +116,9 @@ public class RequestViewModel extends ViewModel {
      * When the requester is accepted, update the status of this requester to ACCEPTED
      * @param position the position of the request to accept
      */
-    public void acceptRequest(Integer position) {
+    public void acceptRequest(Integer position, LatLng meetingLocation) {
         Request request = requestsData.get(position);
+        GeoPoint geoPoint = new GeoPoint(meetingLocation.latitude, meetingLocation.longitude);
         requestService.accept(request.getId()).addOnSuccessListener(aVoid -> {
             requestsData.remove(request);
             // deny all other requests
@@ -143,6 +146,11 @@ public class RequestViewModel extends ViewModel {
                 err.printStackTrace();
                 requestsData.clear();
                 requests.setValue(requestsData);
+            });
+
+            // write location to firebase
+            requestService.addMeetingLocation(request.getId(), geoPoint).addOnSuccessListener(aVoid2 ->{
+                //TODO: Not sure what to code here as the location is updated in Firebase
             });
         });
     }

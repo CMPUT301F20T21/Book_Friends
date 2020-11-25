@@ -14,28 +14,44 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.cmput301f20t21.bookfriends.entities.Book;
+import com.cmput301f20t21.bookfriends.entities.Request;
+import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
+import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
+import com.cmput301f20t21.bookfriends.repositories.api.AuthRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.BookRepository;
+import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
 import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
-import com.cmput301f20t21.bookfriends.repositories.api.AuthRepository;
-import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The ViewModel for BorrowedListFragment
  */
 public class BorrowedViewModel extends ViewModel {
-    private RequestRepository requestRepository = RequestRepositoryImpl.getInstance();
-    private BookRepositoryImpl bookRepository = BookRepositoryImpl.getInstance();
-    private AuthRepository authRepository = AuthRepositoryImpl.getInstance();
+    private final RequestRepository requestRepository;
+    private final BookRepository bookRepository;
+    private final AuthRepository authRepository;
 
-    private MutableLiveData<List<Book>> books = new MutableLiveData<>(new ArrayList<Book>());
-    private List<Book> bookData = books.getValue();
-    private MutableLiveData<Integer> updatedPosition;
+    private final MutableLiveData<List<Book>> books = new MutableLiveData<>(new ArrayList<>());
+    private final List<Book> bookData = books.getValue();
+    private final MutableLiveData<BOOK_ERROR> errorMessage = new MutableLiveData<>();
+    private final MutableLiveData<Integer> updatedPosition = new MutableLiveData<>(0);
 
     public BorrowedViewModel() {
+        this(RequestRepositoryImpl.getInstance(), BookRepositoryImpl.getInstance(), AuthRepositoryImpl.getInstance());
+    }
+
+    public BorrowedViewModel(RequestRepository requestRepository, BookRepository bookRepository, AuthRepository authRepository) {
+        this.requestRepository = requestRepository;
+        this.bookRepository = bookRepository;
+        this.authRepository = authRepository;
+
         fetchBooks();
     }
 
@@ -52,42 +68,36 @@ public class BorrowedViewModel extends ViewModel {
      * @return the updated position
      */
     public LiveData<Integer> getUpdatedPosition() {
-        if (updatedPosition == null) {
-            updatedPosition = new MutableLiveData<>(0);
-        }
         return updatedPosition;
     }
+
+    public LiveData<BOOK_ERROR> getErrorMessage() {
+        return errorMessage;
+    }
+
     public Book getBookByIndex(Integer index) {
         return bookData.get(index);
     }
+
     private void fetchBooks() {
         String username = authRepository.getCurrentUser().getUsername();
 
-        requestRepository.getBorrowedRequestByUsername(username).addOnSuccessListener(requestDocumentSnapshots -> {
-            // TODO: uncomment when request is implemented
-//            List<String> bookIds = requestDocumentSnapshots.getDocuments().stream()
-//                    .map(documentSnapshot -> documentSnapshot.get("bookId").toString())
-//                    .collect(Collectors.toList());
+        requestRepository.getRequestsByUsernameAndStatus(
+                username, Arrays.asList(REQUEST_STATUS.BORROWED, REQUEST_STATUS.RETURNING)
+        ).addOnSuccessListener(requests -> {
+            List<String> borrowedBookIds = requests
+                    .stream()
+                    .map(Request::getBookId)
+                    .collect(Collectors.toList());
 
-            // mock book id
-            // TODO: remove this when request is implemented
-            List<String> bookIds = new ArrayList<>();
-            bookIds.add("RmJi5i1sav1B4fKQcNHP");
-            bookIds.add("asmw39EGwG2MDDPokcd7");
-            bookIds.add("x1z6o0qZbcgGBFezURsS");
-            bookIds.add("kEkNn53bBoANMSyPjJDZ");
-
-            if (bookIds.isEmpty()) {
+            if (borrowedBookIds.isEmpty()) {
                 return;
             }
-
-            bookRepository.batchGetBooks(bookIds).addOnSuccessListener(borrowedBooks -> {
+            bookRepository.batchGetBooks(borrowedBookIds).addOnSuccessListener(borrowedBooks -> {
                 bookData.clear();
                 bookData.addAll(borrowedBooks);
                 books.setValue(bookData);
-            }).addOnFailureListener(e -> {
-                // TODO: handle failure here
-            });
-        });
+            }).addOnFailureListener(error -> errorMessage.setValue(BOOK_ERROR.FAIL_TO_GET_BOOKS));
+        }).addOnFailureListener(e -> errorMessage.setValue(BOOK_ERROR.FAIL_TO_GET_BOOKS));
     }
 }
