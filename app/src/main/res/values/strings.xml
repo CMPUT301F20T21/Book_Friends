@@ -112,5 +112,8 @@
     <string name="scan_receive_success">Successfully borrowed %s</string>
     <string name="detail_button_meet_location_title">View meetup location</string>
     <string name="pick_location">Please enter a location</string>
-    <string name="view_owner_profile">View Owner Profile</string>
+    <string name="geocoder_failure">Oops, our geocoder failed to fetch the owner\'s preferred location</string>
+    <string name="get_meeting_address_failure">Oops, we could not fetch the address.</string>
+    <string name="detail_button_meetup_title">View meetup location</string>
+    <string name="meet_location_dialog_cancel">Back</string>
 </resources>
