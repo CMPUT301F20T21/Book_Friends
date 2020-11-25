@@ -31,6 +31,13 @@ public class BorrowedOwnedDetailActivity extends BaseDetailActivity {
                 actionButton.setText(R.string.scan_receive);
                 actionButton.setOnClickListener(this::openScanner);
             }
+            else if (request.getStatus().equals(REQUEST_STATUS.BORROWED)) {
+                actionButton.setVisibility(View.GONE);
+            }
+            else if (request.getStatus().equals(REQUEST_STATUS.CLOSED)) {
+                actionButton.setText(getString(R.string.owner_receive_success, book.getTitle()));
+                actionButton.setClickable(false);
+            }
         });
 
         vm.getErrorMessage().observe(this, error -> {

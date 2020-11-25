@@ -85,6 +85,10 @@
             android:label="@string/detail">
         </activity>
         <activity
+            android:name="com.cmput301f20t21.bookfriends.ui.library.owned.BorrowedOwnedDetailActivity"
+            android:label="@string/borrowed_owned_detail">
+        </activity>
+        <activity
             android:name="com.cmput301f20t21.bookfriends.ui.library.borrowed.BorrowedDetailActivity"
             android:parentActivityName=".MainActivity"
             android:label="@string/detail">

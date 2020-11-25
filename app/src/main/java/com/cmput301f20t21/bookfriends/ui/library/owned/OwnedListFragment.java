@@ -11,6 +11,7 @@ package com.cmput301f20t21.bookfriends.ui.library.owned;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,7 +115,7 @@ public class OwnedListFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new OwnedListAdapter(vm.getBooks().getValue(), this::onItemClick, this::onDeleteBook, this::onViewRequests);
+        adapter = new OwnedListAdapter(vm.getBooks().getValue(), this::onItemClick, this::onDeleteBook);
         recyclerView.setAdapter(adapter);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -221,17 +222,6 @@ public class OwnedListFragment extends Fragment {
      */
     public void onDeleteBook(Book book) {
         vm.deleteBook(book);
-    }
-
-    /**
-     * when user click on view requests of a book
-     * go to request activity
-     * @param bookId is passed to that activity to retrieving information from FireStore
-     */
-    private void onViewRequests(String bookId) {
-        Intent intent = new Intent(this.getActivity(), RequestActivity.class);
-        intent.putExtra(VIEW_REQUEST_KEY, bookId);
-        startActivity(intent);
     }
 
     private void onFilter(View view) {
