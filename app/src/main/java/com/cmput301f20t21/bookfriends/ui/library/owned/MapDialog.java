@@ -237,5 +237,23 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
         myMap.setMyLocationEnabled(true);
         myMap.getUiSettings().setMyLocationButtonEnabled(false);
 
+        myMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                myMap.clear();
+                Geocoder geocoder = new Geocoder(getDialog().getContext());
+                List<Address> addressList = new ArrayList<>();
+                try {
+                    addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Address address = addressList.get(0);
+                MarkerOptions options = new MarkerOptions().position(latLng);
+                meetingLocation = latLng;
+                searchText.setText(address.getAddressLine(0));
+                myMap.addMarker(options);
+            }
+        });
     }
 }
