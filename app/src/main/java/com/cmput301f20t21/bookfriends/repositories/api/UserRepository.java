@@ -12,5 +12,5 @@ public interface UserRepository {
     Task<User> getByUsername(String username);
     Task<User> getByUid(String uid);
     Task<List<User>> getByUsernameStartWith(String username);
-    Task<Void> updateUserEmail(String email);
+    Task<Void> updateUserEmail(User user, String email);
 }

@@ -17,6 +17,8 @@ import com.cmput301f20t21.bookfriends.callbacks.OnFailCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallback;
 import com.cmput301f20t21.bookfriends.enums.SIGNUP_ERROR;
 import com.cmput301f20t21.bookfriends.exceptions.UsernameNotExistException;
+import com.cmput301f20t21.bookfriends.repositories.factories.AuthRepositoryFactory;
+import com.cmput301f20t21.bookfriends.repositories.factories.UserRepositoryFactory;
 import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.impl.UserRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.api.AuthRepository;
@@ -36,7 +38,7 @@ public class CreateAccountViewModel extends ViewModel {
 
     // production
     public CreateAccountViewModel() {
-        this(AuthRepositoryImpl.getInstance(), UserRepositoryImpl.getInstance());
+        this(AuthRepositoryFactory.getRepository(), UserRepositoryFactory.getRepository());
     }
 
     // test

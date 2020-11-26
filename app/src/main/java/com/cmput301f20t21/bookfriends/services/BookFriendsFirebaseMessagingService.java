@@ -14,6 +14,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
+import com.cmput301f20t21.bookfriends.repositories.factories.BookRepositoryFactory;
 import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
 import com.cmput301f20t21.bookfriends.ui.borrow.accepted.AcceptedDetailActivity;
 import com.cmput301f20t21.bookfriends.ui.borrow.requested.RequestedDetailActivity;
@@ -86,7 +87,7 @@ public class BookFriendsFirebaseMessagingService extends FirebaseMessagingServic
 
         if (data.get("type").equals("request")) {
             Intent resultIntent = new Intent(this, RequestedDetailActivity.class);
-            return BookRepositoryImpl.getInstance().getBookById(data.get("bookId")).continueWith(task -> {
+            return BookRepositoryFactory.getRepository().getBookById(data.get("bookId")).continueWith(task -> {
                 if (task.isSuccessful()) {
                     resultIntent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, task.getResult());
                     TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
@@ -100,7 +101,7 @@ public class BookFriendsFirebaseMessagingService extends FirebaseMessagingServic
 
         if (data.get("type").equals("accept")) {
             Intent resultIntent = new Intent(this, AcceptedDetailActivity.class);
-            return BookRepositoryImpl.getInstance().getBookById(data.get("bookId")).continueWith(task -> {
+            return BookRepositoryFactory.getRepository().getBookById(data.get("bookId")).continueWith(task -> {
                 if (task.isSuccessful()) {
                     resultIntent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, task.getResult());
                     TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);

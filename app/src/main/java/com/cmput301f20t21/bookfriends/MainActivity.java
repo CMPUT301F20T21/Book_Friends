@@ -10,6 +10,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.cmput301f20t21.bookfriends.repositories.factories.AuthRepositoryFactory;
 import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
 import com.cmput301f20t21.bookfriends.utils.NotificationSender;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void subscribeToNotifications() {
-        final String username = AuthRepositoryImpl.getInstance().getCurrentUser().getUsername();
+        final String username = AuthRepositoryFactory.getRepository().getCurrentUser().getUsername();
         freshSubscribeToTopic(username);
     }
 

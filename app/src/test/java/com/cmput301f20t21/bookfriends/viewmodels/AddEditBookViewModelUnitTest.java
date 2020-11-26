@@ -35,7 +35,6 @@ public class AddEditBookViewModelUnitTest {
     @Mock
     FakeAuthRepository mockAuthRepository;
 
-    @Mock
     FakeBookRepository mockBookRepository;
 
     @Mock
@@ -48,31 +47,19 @@ public class AddEditBookViewModelUnitTest {
     public void setup() {
         user = new User("uid", "username", "email");
         when(mockAuthRepository.getCurrentUser()).thenReturn(user);
+        mockBookRepository = new FakeBookRepository();
     }
 
 
     @Test
     public void addBookSuccess() {
         AddEditViewModel model = new AddEditViewModel(mockAuthRepository, mockBookRepository);
-
-        String id = "id";
-        String isbn = "isbn";
-        String title = "title";
-        String author = "author";
-        String description = "description";
-        String owner = user.getUsername();
-
-        Book bookAdded = new Book(id, isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE);
-        FakeSuccessTask<Book> fakeAddBookTask = new FakeSuccessTask<>(bookAdded);
-
-        when(mockBookRepository.add(isbn, title, author, description, owner, null)).thenReturn(fakeAddBookTask);
-
         model.bookIsbn.setValue("isbn");
         model.bookTitle.setValue("title");
         model.bookAuthor.setValue("author");
         model.bookDescription.setValue("description");
         model.handleAddBook(mockSuccessCallback, mockFailCallback);
-        verify(mockSuccessCallback, times(1)).run(bookAdded);
+        verify(mockSuccessCallback, times(1)).run(mockBookRepository.getByIndex(0));
 
     }
 

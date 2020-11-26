@@ -15,6 +15,7 @@ import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 import com.cmput301f20t21.bookfriends.enums.SCAN_ERROR;
 import com.cmput301f20t21.bookfriends.repositories.api.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
+import com.cmput301f20t21.bookfriends.repositories.factories.BookRepositoryFactory;
 import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
 import com.google.firebase.firestore.DocumentReference;
@@ -35,7 +36,7 @@ public class AcceptedDetailViewModel extends ViewModel {
     private ListenerRegistration listenerRegistration;
 
     public AcceptedDetailViewModel() {
-        this(RequestRepositoryImpl.getInstance(), BookRepositoryImpl.getInstance());
+        this(RequestRepositoryImpl.getInstance(), BookRepositoryFactory.getRepository());
     }
 
     public AcceptedDetailViewModel(RequestRepository requestRepository, BookRepository bookRepository) {

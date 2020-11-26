@@ -90,10 +90,9 @@ public class UserRepositoryImpl implements UserRepository {
                 });
     }
 
-    public Task<Void> updateUserEmail(String email) {
-        User firebaseUser = AuthRepositoryImpl.getInstance().getCurrentUser();
-        if (firebaseUser != null) {
-            String userId = firebaseUser.getUid();
+    public Task<Void> updateUserEmail(User user, String email) {
+        if (user != null) {
+            String userId = user.getUid();
             return userCollection.document(userId).update("email", email);
         }
         return null;

@@ -19,6 +19,8 @@ import androidx.lifecycle.ViewModel;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
+import com.cmput301f20t21.bookfriends.repositories.factories.AuthRepositoryFactory;
+import com.cmput301f20t21.bookfriends.repositories.factories.BookRepositoryFactory;
 import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.api.AuthRepository;
@@ -45,7 +47,7 @@ public class OwnedViewModel extends ViewModel {
     private MutableLiveData<BOOK_ERROR> errorMessageObserver = new MutableLiveData<>();
 
     public OwnedViewModel() {
-        this(AuthRepositoryImpl.getInstance(), BookRepositoryImpl.getInstance());
+        this(AuthRepositoryFactory.getRepository(), BookRepositoryFactory.getRepository());
     }
 
     public OwnedViewModel(AuthRepository authRepository, BookRepository bookRepository) {

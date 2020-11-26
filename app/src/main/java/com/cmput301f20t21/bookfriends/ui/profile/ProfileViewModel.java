@@ -19,6 +19,9 @@ import androidx.lifecycle.ViewModel;
 import com.cmput301f20t21.bookfriends.callbacks.OnFailCallback;
 import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.entities.User;
+import com.cmput301f20t21.bookfriends.repositories.api.AuthRepository;
+import com.cmput301f20t21.bookfriends.repositories.factories.AuthRepositoryFactory;
+import com.cmput301f20t21.bookfriends.repositories.factories.UserRepositoryFactory;
 import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.impl.UserRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.api.UserRepository;
@@ -31,14 +34,16 @@ import java.util.ArrayList;
  */
 public class ProfileViewModel extends ViewModel {
     private final UserRepository userRepository;
+    private final AuthRepository authRepository;
     private final MutableLiveData<ArrayList<User>> searchedUsers = new MutableLiveData<>(new ArrayList<>());
 
     public ProfileViewModel() {
-        this(UserRepositoryImpl.getInstance());
+        this(UserRepositoryFactory.getRepository(), AuthRepositoryFactory.getRepository());
     }
 
-    public ProfileViewModel(UserRepository userRepository) {
+    public ProfileViewModel(UserRepository userRepository, AuthRepository authRepository) {
         this.userRepository = userRepository;
+        this.authRepository = authRepository;
     }
 
     /**
@@ -79,7 +84,7 @@ public class ProfileViewModel extends ViewModel {
      */
     public void updateCurrentUserEmail(String inputEmail, String TAG){
         //update email authentication
-        Task<Void> updateEmail = AuthRepositoryImpl.getInstance().updateEmail(inputEmail);
+        Task<Void> updateEmail = authRepository.updateEmail(inputEmail);
         updateEmail.addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 // TODO: change one of the update function to have async callback with a success message
@@ -95,7 +100,7 @@ public class ProfileViewModel extends ViewModel {
      */
     public void updateFirestoreUserEmail(String inputEmail, String TAG){
         //update "email" field
-        Task<Void> updateUser = userRepository.updateUserEmail(inputEmail);
+        Task<Void> updateUser = userRepository.updateUserEmail(authRepository.getCurrentUser(), inputEmail);
         updateUser.addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 // TODO: change one of the update function to have async callback with a success message

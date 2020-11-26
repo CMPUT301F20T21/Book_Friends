@@ -18,6 +18,8 @@ import androidx.lifecycle.ViewModel;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
+import com.cmput301f20t21.bookfriends.repositories.api.BookRepository;
+import com.cmput301f20t21.bookfriends.repositories.factories.BookRepositoryFactory;
 import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
@@ -39,8 +41,17 @@ public class RequestViewModel extends ViewModel {
     private final MutableLiveData<ArrayList<Request>> requests = new MutableLiveData<>(new ArrayList<>());
     private final ArrayList<Request> requestsData = requests.getValue();
 
-    private final RequestRepository requestService = RequestRepositoryImpl.getInstance();
-    private final BookRepositoryImpl bookRepository = BookRepositoryImpl.getInstance();
+    private final RequestRepository requestRepository;
+    private final BookRepository bookRepository;
+
+    public RequestViewModel() {
+        this(RequestRepositoryImpl.getInstance(), BookRepositoryFactory.getRepository());
+    }
+
+    public RequestViewModel(RequestRepository requestRepository, BookRepository bookRepository) {
+        this.requestRepository = requestRepository;
+        this.bookRepository = bookRepository;
+    }
 
     /**
      * Function to get the book information from FireStore
@@ -57,12 +68,12 @@ public class RequestViewModel extends ViewModel {
      * @param bookId the book id to query for requesters
      */
     private void fetchRequests(String bookId) {
-        requestService.getOpenedRequestByBookId(bookId).addOnSuccessListener(requesterDocumentsSnapShots -> {
+        requestRepository.getOpenedRequestByBookId(bookId).addOnSuccessListener(requesterDocumentsSnapShots -> {
            List<DocumentSnapshot> documents = requesterDocumentsSnapShots.getDocuments();
            requestsData.clear(); // we are sure to always refresh the requests list
            requestsData.addAll(IntStream.range(0, documents.size()).mapToObj(i -> {
                DocumentSnapshot document = documents.get(i);
-               return requestService.getRequestFromDocument(document);
+               return requestRepository.getRequestFromDocument(document);
            }).collect(Collectors.toList()));
            requests.setValue(requestsData);
         });
@@ -96,7 +107,7 @@ public class RequestViewModel extends ViewModel {
      */
     public void removeRequest(Integer position) {
         Request request = requestsData.get(position);
-        requestService.deny(request.getId()).addOnSuccessListener(aVoid -> {
+        requestRepository.deny(request.getId()).addOnSuccessListener(aVoid -> {
             requestsData.remove(request);
             requests.setValue(requestsData);
             if (requestsData.isEmpty()) {
@@ -116,7 +127,7 @@ public class RequestViewModel extends ViewModel {
     public void acceptRequest(Integer position, LatLng meetingLocation) {
         Request request = requestsData.get(position);
         GeoPoint geoPoint = new GeoPoint(meetingLocation.latitude, meetingLocation.longitude);
-        requestService.accept(request.getId()).addOnSuccessListener(aVoid -> {
+        requestRepository.accept(request.getId()).addOnSuccessListener(aVoid -> {
             requestsData.remove(request);
             // deny all other requests
             List<String> ids = new ArrayList<>();
@@ -131,7 +142,7 @@ public class RequestViewModel extends ViewModel {
                 Log.e("bfriends", "accept call failed: " + err.getLocalizedMessage());
             });
             // clear the requests array anyways
-            requestService.batchDeny(ids).addOnSuccessListener(aVoid1 -> {
+            requestRepository.batchDeny(ids).addOnSuccessListener(aVoid1 -> {
                 requestsData.clear();
                 requests.setValue(requestsData);
                 Book bookData = book.getValue();
@@ -146,7 +157,7 @@ public class RequestViewModel extends ViewModel {
             });
 
             // write location to firebase
-            requestService.addMeetingLocation(request.getId(), geoPoint).addOnSuccessListener(aVoid2 ->{
+            requestRepository.addMeetingLocation(request.getId(), geoPoint).addOnSuccessListener(aVoid2 ->{
                 //TODO: Not sure what to code here as the location is updated in Firebase
             });
         });
