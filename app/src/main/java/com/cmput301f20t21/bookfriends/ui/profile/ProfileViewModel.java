@@ -67,12 +67,12 @@ public class ProfileViewModel extends ViewModel {
 
     /**
      *
-     * @param uid the user id
+     * @param username the user's username
      * @param onSuccess async callback that is called upon successfully completing all operations
      * @param onFail async callback that is called if any operation failed
      */
-    public void getUserByUid(String uid, OnSuccessCallbackWithMessage<User> onSuccess, OnFailCallback onFail) {
-        userRepository.getByUid(uid)
+    public void getUserByUsername(String username, OnSuccessCallbackWithMessage<User> onSuccess, OnFailCallback onFail) {
+        userRepository.getByUsername(username)
                 .addOnSuccessListener(onSuccess::run)
                 .addOnFailureListener(e -> onFail.run());
     }

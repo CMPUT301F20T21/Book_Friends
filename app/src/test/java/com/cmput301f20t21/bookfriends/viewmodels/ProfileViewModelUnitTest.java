@@ -108,19 +108,20 @@ public class ProfileViewModelUnitTest {
     }
 
     /**
-     * The getUserById should succeed given a user is returned by repo
+     * The getUsername should succeed given a user is returned by repo
      */
     @Test
-    public void getUserByUidSuccess() {
+    public void getUserByUsernameSuccess() {
         ProfileViewModel vm = new ProfileViewModel(mockUserRepository, mockAuthRepository);
         String uid = "testUid";
-        User user = new User(uid, "testusername", "testemail");
+        String username = "testusername";
+        User user = new User(uid, username, "testemail");
 
         // the task returned by the repo containing the fake data
         FakeSuccessTask<User> fakeTask = new FakeSuccessTask<>(user);
-        when(mockUserRepository.getByUid(uid)).thenReturn(fakeTask);
+        when(mockUserRepository.getByUsername(username)).thenReturn(fakeTask);
 
-        vm.getUserByUid(uid, fakeSuccessUserCallback, fakeFailUserCallback);
+        vm.getUserByUsername(username, fakeSuccessUserCallback, fakeFailUserCallback);
 
         verify(fakeSuccessUserCallback, times(1)).run(user);
         verifyNoMoreInteractions(fakeFailUserCallback);
@@ -128,18 +129,18 @@ public class ProfileViewModelUnitTest {
     }
 
     /**
-     * The getUserById should fail given that the repo threw an exception
+     * The getUserByUsername should fail given that the repo threw an exception
      */
     @Test
-    public void getUserByUidFailure() {
+    public void getUserByUsernameFailure() {
         ProfileViewModel vm = new ProfileViewModel(mockUserRepository, mockAuthRepository);
-        String uid = "testUid";
+        String username = "testusername";
 
         // the task returned by the repo containing the fake data
         FakeFailTask<User> fakeTask = new FakeFailTask<>(new UserNotExistException());
-        when(mockUserRepository.getByUid(uid)).thenReturn(fakeTask);
+        when(mockUserRepository.getByUsername(username)).thenReturn(fakeTask);
 
-        vm.getUserByUid(uid, fakeSuccessUserCallback, fakeFailUserCallback);
+        vm.getUserByUsername(username, fakeSuccessUserCallback, fakeFailUserCallback);
 
         verify(fakeFailUserCallback, times(1)).run();
         verifyNoMoreInteractions(fakeFailUserCallback);

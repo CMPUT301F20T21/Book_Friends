@@ -31,7 +31,7 @@ import java.io.IOException;
 /**
  * the base Activity to be extended by any that needs the scanning functionality
  */
-public class ScannerBaseActivity extends AppCompatActivity {
+public class ScannerActivity extends AppCompatActivity {
     public static final String ISBN_KEY = "com.cmput301f20t21.bookfriends.ISBN_KEY";
 
     final static int REQUEST_CAMERA_PERMISSION = 100;

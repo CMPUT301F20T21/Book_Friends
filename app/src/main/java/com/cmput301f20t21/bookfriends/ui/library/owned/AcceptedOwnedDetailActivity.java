@@ -13,7 +13,7 @@ import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 import com.cmput301f20t21.bookfriends.enums.SCAN_ERROR;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
-import com.cmput301f20t21.bookfriends.ui.scanner.ScannerBaseActivity;
+import com.cmput301f20t21.bookfriends.ui.scanner.ScannerActivity;
 
 public class AcceptedOwnedDetailActivity extends BaseDetailActivity {
     public static final int GET_SCANNED_ISBN = 2001;
@@ -41,10 +41,11 @@ public class AcceptedOwnedDetailActivity extends BaseDetailActivity {
                 Toast.makeText(this, getString(R.string.unexpected_error), Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 
     private void openScanner(View view) {
-        Intent intent = new Intent(this, ScannerBaseActivity.class);
+        Intent intent = new Intent(this, ScannerActivity.class);
         startActivityForResult(intent, GET_SCANNED_ISBN);
     }
 
@@ -53,7 +54,7 @@ public class AcceptedOwnedDetailActivity extends BaseDetailActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == GET_SCANNED_ISBN) {
-                String scannedIsbn = data.getStringExtra(ScannerBaseActivity.ISBN_KEY);
+                String scannedIsbn = data.getStringExtra(ScannerActivity.ISBN_KEY);
                 vm.handleScannedIsbn(book.getIsbn(), scannedIsbn);
             }
         }

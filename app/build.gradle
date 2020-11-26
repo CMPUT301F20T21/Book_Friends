@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "com.cmput301f20t21.bookfriends"
-        minSdkVersion 24
+        minSdkVersion 26
         targetSdkVersion 29
         multiDexEnabled true
         versionCode 1
@@ -81,4 +81,6 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     implementation "androidx.cardview:cardview:1.0.0"
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
+
+    implementation 'com.google.code.gson:gson:2.8.6'
 }
