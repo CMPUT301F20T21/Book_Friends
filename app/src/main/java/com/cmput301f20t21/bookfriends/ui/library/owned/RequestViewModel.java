@@ -47,11 +47,8 @@ public class RequestViewModel extends ViewModel {
      * @param bookId we will query the book information based on the bookID
      */
     private void fetchBook(String bookId) {
-        bookRepository.getBookById(bookId).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                book.setValue(document.toObject(Book.class));
-            }
+        bookRepository.getBookById(bookId).addOnSuccessListener(b -> {
+            book.setValue(b);
         });
     }
 

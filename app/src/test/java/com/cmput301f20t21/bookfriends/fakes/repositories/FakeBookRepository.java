@@ -13,7 +13,7 @@ import java.util.List;
 
 public class FakeBookRepository implements BookRepository {
     @Override
-    public Task<Book> add(String isbn, String title, String author, String description, String owner, Uri imageUriFile) {
+    public Task<Book> add(String isbn, String title, String author, String description, String owner, String imageUrl) {
         return null;
     }
 
@@ -23,7 +23,7 @@ public class FakeBookRepository implements BookRepository {
     }
 
     @Override
-    public Task<Book> editBook(Book oldBook, String isbn, String title, String author, String description, Uri imageUriFile, Boolean shouldDeleteImage) {
+    public Task<Book> editBook(Book oldBook, String isbn, String title, String author, String description, String imageUrl) {
         return null;
     }
 
@@ -38,37 +38,17 @@ public class FakeBookRepository implements BookRepository {
     }
 
     @Override
-    public Book getBookFromDocument(DocumentSnapshot document) {
+    public Task<List<Book>> getBooksOfOwnerId(String userName) {
         return null;
     }
 
     @Override
-    public Task<Uri> getImage(String imageName) {
-        return null;
-    }
-
-    @Override
-    public Task<QuerySnapshot> getBooksOfOwnerId(String userName) {
-        return null;
-    }
-
-    @Override
-    public Task<QuerySnapshot> getBookOfBorrowerId(String uid) {
-        return null;
-    }
-
-    @Override
-    public Task<DocumentSnapshot> getBookById(String bookId) {
+    public Task<Book> getBookById(String bookId) {
         return null;
     }
 
     @Override
     public Task<List<Book>> batchGetBooks(List<String> bookIds) {
-        return null;
-    }
-
-    @Override
-    public Task<QuerySnapshot> getAvailableBooks() {
         return null;
     }
 

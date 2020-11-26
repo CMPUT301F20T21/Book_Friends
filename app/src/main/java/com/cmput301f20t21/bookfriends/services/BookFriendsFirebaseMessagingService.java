@@ -88,8 +88,7 @@ public class BookFriendsFirebaseMessagingService extends FirebaseMessagingServic
             Intent resultIntent = new Intent(this, RequestedDetailActivity.class);
             return BookRepositoryImpl.getInstance().getBookById(data.get("bookId")).continueWith(task -> {
                 if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    resultIntent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, document.toObject(Book.class));
+                    resultIntent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, task.getResult());
                     TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                     stackBuilder.addNextIntentWithParentStack(resultIntent);
                     // Get the PendingIntent containing the entire back stack
@@ -103,8 +102,7 @@ public class BookFriendsFirebaseMessagingService extends FirebaseMessagingServic
             Intent resultIntent = new Intent(this, AcceptedDetailActivity.class);
             return BookRepositoryImpl.getInstance().getBookById(data.get("bookId")).continueWith(task -> {
                 if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    resultIntent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, document.toObject(Book.class));
+                    resultIntent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, task.getResult());
                     TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                     stackBuilder.addNextIntentWithParentStack(resultIntent);
                     // Get the PendingIntent containing the entire back stack

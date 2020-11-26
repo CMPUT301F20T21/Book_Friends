@@ -1,6 +1,7 @@
 package com.cmput301f20t21.bookfriends.repositories.impl;
 
 import android.net.Uri;
+import android.util.Log;
 
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
@@ -17,6 +18,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class BookRepositoryImpl implements BookRepository {
@@ -41,10 +43,10 @@ public class BookRepositoryImpl implements BookRepository {
      * @param author
      * @param description
      * @param owner
-     * @param imageUriFile
+     * @param imageUrl
      * @return
      */
-    public Task<Book> add(String isbn, String title, String author, String description, String owner, Uri imageUriFile) {
+    public Task<Book> add(String isbn, String title, String author, String description, String owner, String imageUrl) {
         HashMap<String, Object> data = new HashMap<>();
         data.put("isbn", isbn);
         data.put("title", title);
@@ -54,28 +56,13 @@ public class BookRepositoryImpl implements BookRepository {
         // when a book is first added, the status will always be "AVAILABLE"
         data.put("status", BOOK_STATUS.AVAILABLE.toString());
 
-        if (imageUriFile != null) {
-            return bookCollection.add(data).continueWithTask(task -> {
-                if (task.isSuccessful()) {
-                    String newBookId = task.getResult().getId();
-                    return addImage(newBookId + "cover", imageUriFile).continueWithTask(addImageTask -> {
-                        if (addImageTask.isSuccessful()) {
-                            return bookCollection.document(task.getResult().getId()).update("imageUrl", addImageTask.getResult()).continueWith(updateBookTask -> {
-                                if (updateBookTask.isSuccessful()) {
-                                    return new Book(newBookId, isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE, addImageTask.getResult());
-                                }
-                                throw new Exception("add Book failed: updating book with new image download uri failed, everything else worked");
-                            });
-                        }
-                        throw new Exception("add Book failed: upload image failed, add image task is not successful");
-                    });
-                }
-                throw new Exception("add Book failed: failed to add new book data to collection");
-            });
+        if (imageUrl != null) {
+            data.put("imageUrl", imageUrl);
         }
+
         return bookCollection.add(data).continueWith(task -> {
             if (task.isSuccessful()) {
-                return new Book(task.getResult().getId(), isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE, null);
+                return new Book(task.getResult().getId(), isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE, imageUrl);
             }
             throw new Exception();
         });
@@ -84,12 +71,13 @@ public class BookRepositoryImpl implements BookRepository {
     /**
      * add image to firebase storage and return the downloadable url
      *
-     * @param imageName the image name key
+     * @param username the image name key
      * @param imageUri  the uri FILE to upload
      * @return Task returning the String of the downloadable url
      */
-    public Task<String> addImage(String imageName, Uri imageUri) {
-        StorageReference fileReference = imageStorageReference.child(imageName);
+    public Task<String> addImage(String username, Uri imageUri) {
+        String uniqueID = UUID.randomUUID().toString();
+        StorageReference fileReference = imageStorageReference.child(username+uniqueID);
         return fileReference.putFile(imageUri).continueWithTask(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult() != null) {
@@ -114,95 +102,74 @@ public class BookRepositoryImpl implements BookRepository {
      * @param title
      * @param author
      * @param description
-     * @param imageUriFile
+     * @param imageUrl
      * @return
      */
-    public Task<Book> editBook(Book oldBook, String isbn, String title, String author, String description, Uri imageUriFile, Boolean shouldDeleteImage) {
+    public Task<Book> editBook(Book oldBook, String isbn, String title, String author, String description, String imageUrl) {
         HashMap<String, Object> data = new HashMap<>();
         String id = oldBook.getId();
         data.put("isbn", isbn);
         data.put("title", title);
         data.put("author", author);
         data.put("description", description);
+        data.put("imageUrl", imageUrl);
 
-        // just so we don't have the old book unexpectedly changed (especially the imageUri)
-        Book newBook = new Book(id, isbn, title, author, description, oldBook.getOwner(), oldBook.getStatus(), oldBook.getImageUrl());
-        if (imageUriFile != null) {
-            // need to upload a new image for this book
-            return bookCollection.document(id).update(data).continueWithTask(updateTask -> {
-                if (updateTask.isSuccessful()) {
-                    return addImage(id + "cover", imageUriFile).continueWithTask(imageTask -> bookCollection.document(id).update("imageUrl", imageTask.getResult()).continueWith(updateBookTask -> {
-                        if (updateBookTask.isSuccessful()) {
-                            // set the updated download link
-                            newBook.setImageUrl(imageTask.getResult());
-                            return newBook;
-                        }
-                        throw new Exception("edit Book failed: updating book with new image download uri failed, everything else worked");
-                    }));
-                }
-                throw new Exception("edit Book failed: failed to update with data");
-            });
-        } else {
-            // there's no local image file, simply update other data
-            return bookCollection.document(id).update(data).continueWithTask(updateTask -> {
-                if (updateTask.isSuccessful()) {
-                    if (shouldDeleteImage) {
-                        // delete image
-                        return bookCollection.document(id).update("imageUrl", null).continueWith(updateBookTask -> {
-                            if (updateBookTask.isSuccessful()) {
-                                // set the updated download link
-                                newBook.setImageUrl(null); // remove image only if 1. there's no local new image file 2. oldBook does not have a image url
-                                return newBook;
-                            }
-                            throw new Exception("edit Book failed: updating book with new image download uri failed, everything else worked");
-                        });
-                    } else {
-                        // just return the updated book
-                        return bookCollection.get().continueWith(noop -> newBook);
-                    }
-                }
-                throw new Exception("edit Book failed: failed to update with data");
-            });
-        }
-
+        return bookCollection.document(id).update(data).continueWith(updateTask -> {
+            if (updateTask.isSuccessful()) {
+                return new Book(id, isbn, title, author, description, oldBook.getOwner(), oldBook.getStatus(), imageUrl);
+            }
+            throw new Exception("edit Book failed: failed to update with data");
+        });
     }
 
     public Task<Void> delete(String id) {
         return bookCollection.document(id).delete();
     }
 
-    public Task<Void> deleteImage(String imageName) {
-        StorageReference fileReference = imageStorageReference.child(imageName);
+    public Task<Void> deleteImage(String url) {
+        String path = getPathStorageFromUrl(url);
+        StorageReference fileReference = imageStorageReference.child(path);
         return fileReference.delete();
     }
 
-    public Book getBookFromDocument(DocumentSnapshot document) {
-        String id = document.getId();
-        String isbn = (String) document.get("isbn");
-        String title = (String) document.get("title");
-        String author = (String) document.get("author");
-        String description = (String) document.get("description");
-        String owner = (String) document.get("owner");
-        String status = (String) document.get("status");
-        return new Book(id, isbn, title, author, description, owner, BOOK_STATUS.valueOf(status));
+    private String getPathStorageFromUrl(String url) {
+        String baseUrl = "https://firebasestorage.googleapis.com/v0/b/cmput301bookfriends.appspot.com/o/";
+        String imagePath = url.replace(baseUrl, "");
+        int indexOfEndPath = imagePath.indexOf("?");
+        imagePath = imagePath.substring(0,indexOfEndPath);
+        imagePath = imagePath.replace("%2F","/");
+        return imagePath;
     }
 
-    public Task<Uri> getImage(String imageName) {
-        StorageReference pathReference = imageStorageReference.child(imageName);
-        return pathReference.getDownloadUrl();
+    public Task<List<Book>> getBooksOfOwnerId(String username) {
+        return bookCollection.whereEqualTo("owner", username).get().continueWith(task -> {
+            if (task.isSuccessful()) {
+                try {
+                    List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                    return documents.stream()
+                            .map(document -> document.toObject(Book.class))
+                            .collect(Collectors.toList());
+                } catch (Exception e) {
+                    Log.d("BOOK_ERROR", e.getMessage());
+                    throw new UnexpectedException();
+                }
+            }
+            throw new UnexpectedException();
+        });
     }
 
-    public Task<QuerySnapshot> getBooksOfOwnerId(String username) {
-        return bookCollection.whereEqualTo("owner", username).get();
-    }
-
-    public Task<QuerySnapshot> getBookOfBorrowerId(String uid) {
-        // TODO placeholder here
-        return bookCollection.whereEqualTo("owner", uid).get();
-    }
-
-    public Task<DocumentSnapshot> getBookById(String bookId) {
-        return bookCollection.document(bookId).get();
+    public Task<Book> getBookById(String bookId) {
+        return bookCollection.document(bookId).get().continueWith(task -> {
+            if (task.isSuccessful()) {
+                try {
+                    return task.getResult().toObject(Book.class);
+                } catch (Exception e) {
+                    Log.d("BOOK_ERROR", e.getMessage());
+                    throw new UnexpectedException();
+                }
+            }
+            throw new UnexpectedException();
+        });
     }
 
     public Task<List<Book>> batchGetBooks(List<String> bookIds) {
@@ -232,13 +199,6 @@ public class BookRepositoryImpl implements BookRepository {
                     }
                     throw new UnexpectedException();
                 });
-    }
-
-    // get all the books, will be used in browse
-    public Task<QuerySnapshot> getAvailableBooks() {
-        return bookCollection
-                .whereEqualTo("status", BOOK_STATUS.AVAILABLE.toString())
-                .whereEqualTo("status", BOOK_STATUS.REQUESTED.toString()).get();
     }
 
     public Task<QuerySnapshot> getDocumentBy(String isbn, String title, String author) {
