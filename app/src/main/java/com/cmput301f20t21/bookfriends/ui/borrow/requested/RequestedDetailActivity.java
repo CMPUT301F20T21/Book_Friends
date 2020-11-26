@@ -16,6 +16,7 @@ public class RequestedDetailActivity extends BaseDetailActivity {
         button.setText(R.string.wait_for_acceptance);
         button.setBackgroundColor(getColor(R.color.gray));
         button.setEnabled(false);
+        super.inflateDetailButtons();
     }
 }
 

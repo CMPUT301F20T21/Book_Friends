@@ -23,13 +23,13 @@ import com.cmput301f20t21.bookfriends.ui.component.detailButtons.DetailButtonsFr
 import com.google.firebase.firestore.GeoPoint;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class AcceptedDetailActivity extends BaseDetailActivity {
 
     public static final int GET_SCANNED_ISBN = 2001;
     private Button actionButton;
+    private Request request;
     private AcceptedDetailViewModel vm;
 
     @Override
@@ -39,6 +39,7 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
         actionButton = findViewById(R.id.detail_action_button);
 
         vm.getRequest(book).observe(this, request -> {
+            this.request = request;
             if (request.getStatus().equals(REQUEST_STATUS.ACCEPTED)) {
                 actionButton.setText(getString(R.string.scan_wait_for_hand_over, book.getOwner()));
                 actionButton.setClickable(false);
@@ -51,7 +52,7 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
             }
 
             // inflate the buttons again when the request refreshes
-            inflateDetailButtons(request);
+            inflateDetailButtons();
         });
 
         vm.getErrorMessage().observe(this, error -> {
@@ -100,8 +101,9 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
      *
      * @return the list of button models
      */
-    private List<DetailButtonModel> getDetailButtonModels(Request request) {
-        ArrayList<DetailButtonModel> buttonModels = new ArrayList<>();
+    @Override
+    protected List<DetailButtonModel> getDetailButtonModels() {
+        List<DetailButtonModel> buttonModels = super.getDetailButtonModels();
         if (request.getMeetingLocation() != null) {
             buttonModels.add(
                     new DetailButtonModel(
@@ -124,8 +126,9 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
      * we need request because buttons might change content based on request data.
      * and the request comes from vm which means it changes on vm fetch completes
      */
-    private void inflateDetailButtons(Request request) {
-        DetailButtonsFragment buttonsFragment = new DetailButtonsFragment(getDetailButtonModels(request));
+    @Override
+    protected void inflateDetailButtons() {
+        DetailButtonsFragment buttonsFragment = new DetailButtonsFragment(getDetailButtonModels());
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.detail_buttons_container, buttonsFragment)

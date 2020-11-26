@@ -51,7 +51,7 @@ public class SearchedUserListAdapter extends RecyclerView.Adapter<SearchedUserLi
             this.usernameView = v.findViewById(R.id.searched_user_username);
             v.setOnClickListener(itemView -> {
                 Intent intent = new Intent(context, ProfileViewUserActivity.class);
-                intent.putExtra(ProfileViewUserActivity.UID_KEY, user.getUid());
+                intent.putExtra(ProfileViewUserActivity.USERNAME_KEY, user.getUsername());
                 context.startActivity(intent);
             });
         }

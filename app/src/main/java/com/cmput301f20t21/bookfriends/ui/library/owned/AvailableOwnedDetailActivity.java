@@ -23,7 +23,7 @@ public class AvailableOwnedDetailActivity extends BaseDetailActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        button.setVisibility(View.INVISIBLE);
+        button.setVisibility(View.GONE);
     }
 
     private void openAddEditActivity(Book book) {

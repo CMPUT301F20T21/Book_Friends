@@ -47,6 +47,7 @@ public class BorrowedOwnedDetailActivity extends BaseDetailActivity {
                 Toast.makeText(this, getString(R.string.unexpected_error), Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 
     private void openScanner(View view) {
