@@ -41,17 +41,15 @@ public class BookRepositoryImpl implements BookRepository {
      * @param isbn
      * @param title
      * @param author
-     * @param description
      * @param owner
      * @param imageUrl
      * @return
      */
-    public Task<Book> add(String isbn, String title, String author, String description, String owner, String imageUrl) {
+    public Task<Book> add(String isbn, String title, String author, String owner, String imageUrl) {
         HashMap<String, Object> data = new HashMap<>();
         data.put("isbn", isbn);
         data.put("title", title);
         data.put("author", author);
-        data.put("description", description);
         data.put("owner", owner);
         // when a book is first added, the status will always be "AVAILABLE"
         data.put("status", BOOK_STATUS.AVAILABLE.toString());
@@ -62,7 +60,7 @@ public class BookRepositoryImpl implements BookRepository {
 
         return bookCollection.add(data).continueWith(task -> {
             if (task.isSuccessful()) {
-                return new Book(task.getResult().getId(), isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE, imageUrl);
+                return new Book(task.getResult().getId(), isbn, title, author, owner, BOOK_STATUS.AVAILABLE, imageUrl);
             }
             throw new Exception();
         });
@@ -101,22 +99,20 @@ public class BookRepositoryImpl implements BookRepository {
      * @param isbn
      * @param title
      * @param author
-     * @param description
      * @param imageUrl
      * @return
      */
-    public Task<Book> editBook(Book oldBook, String isbn, String title, String author, String description, String imageUrl) {
+    public Task<Book> editBook(Book oldBook, String isbn, String title, String author, String imageUrl) {
         HashMap<String, Object> data = new HashMap<>();
         String id = oldBook.getId();
         data.put("isbn", isbn);
         data.put("title", title);
         data.put("author", author);
-        data.put("description", description);
         data.put("imageUrl", imageUrl);
 
         return bookCollection.document(id).update(data).continueWith(updateTask -> {
             if (updateTask.isSuccessful()) {
-                return new Book(id, isbn, title, author, description, oldBook.getOwner(), oldBook.getStatus(), imageUrl);
+                return new Book(id, isbn, title, author, oldBook.getOwner(), oldBook.getStatus(), imageUrl);
             }
             throw new Exception("edit Book failed: failed to update with data");
         });
@@ -216,7 +212,6 @@ public class BookRepositoryImpl implements BookRepository {
                                 book.getIsbn(),
                                 book.getTitle(),
                                 book.getAuthor(),
-                                book.getDescription(),
                                 book.getOwner(),
                                 newStatus,
                                 book.getImageUrl()

@@ -14,7 +14,6 @@ public class Book implements Parcelable {
     private String isbn;
     private String title;
     private String author;
-    private String description;
     private String owner; // the owner's username
     private BOOK_STATUS status;
     private String imageUrl; // the downloadable, public url of the cover image
@@ -23,23 +22,21 @@ public class Book implements Parcelable {
     public Book() {
     }
 
-    public Book(String id, String isbn, String title, String author, String description, String owner, BOOK_STATUS status) {
+    public Book(String id, String isbn, String title, String author, String owner, BOOK_STATUS status) {
         this.id = id;
         this.isbn = isbn;
         this.title = title;
         this.author = author;
-        this.description = description;
         this.owner = owner;
         this.status = status;
         this.imageUrl = null;
     }
 
-    public Book(String id, String isbn, String title, String author, String description, String owner, BOOK_STATUS status, String imageUrl) {
+    public Book(String id, String isbn, String title, String author, String owner, BOOK_STATUS status, String imageUrl) {
         this.id = id;
         this.isbn = isbn;
         this.title = title;
         this.author = author;
-        this.description = description;
         this.owner = owner;
         this.status = status;
         this.imageUrl = imageUrl;
@@ -69,10 +66,6 @@ public class Book implements Parcelable {
         return author;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     public String getOwner() {
         return owner;
     }
@@ -90,7 +83,6 @@ public class Book implements Parcelable {
                 isbn.equals(book.isbn) &&
                 title.equals(book.title) &&
                 author.equals(book.author) &&
-                Objects.equals(description, book.description) &&
                 owner.equals(book.owner) &&
                 (
                         (imageUrl != null && imageUrl.equals(book.imageUrl))  || (imageUrl == null && book.imageUrl == null)
@@ -100,7 +92,7 @@ public class Book implements Parcelable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, isbn, title, author, description, owner, status, imageUrl);
+        return Objects.hash(id, isbn, title, author, owner, status, imageUrl);
     }
 
     // Implement parcelable boilerplate
@@ -115,7 +107,6 @@ public class Book implements Parcelable {
         dest.writeString(isbn);
         dest.writeString(title);
         dest.writeString(author);
-        dest.writeString(description);
         dest.writeString(owner);
         dest.writeString(status.toString());
         dest.writeString(imageUrl);
@@ -136,7 +127,6 @@ public class Book implements Parcelable {
         isbn = in.readString();
         title = in.readString();
         author = in.readString();
-        description = in.readString();
         owner = in.readString();
         status = BOOK_STATUS.valueOf(in.readString());
         imageUrl = in.readString();

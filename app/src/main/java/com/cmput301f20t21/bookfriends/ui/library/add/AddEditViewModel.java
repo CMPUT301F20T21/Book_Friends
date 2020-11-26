@@ -36,7 +36,6 @@ public class AddEditViewModel extends ViewModel {
     public final MutableLiveData<String> bookIsbn = new MutableLiveData<>();
     public final MutableLiveData<String> bookTitle = new MutableLiveData<>();
     public final MutableLiveData<String> bookAuthor = new MutableLiveData<>();
-    public final MutableLiveData<String> bookDescription = new MutableLiveData<>();
     private final AuthRepository authRepository;
     private final BookRepository bookRepository;
     // the local, updated image uri that might update after first remote image fetch
@@ -72,7 +71,6 @@ public class AddEditViewModel extends ViewModel {
         bookIsbn.setValue(book.getIsbn());
         bookTitle.setValue(book.getTitle());
         bookAuthor.setValue(book.getAuthor());
-        bookDescription.setValue(book.getDescription());
         this.oldBook = book;
         if (book.getImageUrl() != null) setHasImage(true);
     }
@@ -114,19 +112,18 @@ public class AddEditViewModel extends ViewModel {
         final String isbn = bookIsbn.getValue();
         final String title = bookTitle.getValue();
         final String author = bookAuthor.getValue();
-        final String description = bookDescription.getValue();
         final Uri imageUri = localImageUri.getValue();
 
         if (imageUri != null) {
             bookRepository.addImage(currentUsername, imageUri).addOnSuccessListener(imageUrl -> {
-                bookRepository.add(isbn, title, author, description, currentUsername, imageUrl).addOnSuccessListener(
+                bookRepository.add(isbn, title, author, currentUsername, imageUrl).addOnSuccessListener(
                         successCallback::run
                 ).addOnFailureListener(e -> {
                     failCallback.run(BOOK_ERROR.FAIL_TO_ADD_BOOK);
                 });
             });
         } else {
-            bookRepository.add(isbn, title, author, description, currentUsername, null).addOnSuccessListener(
+            bookRepository.add(isbn, title, author, currentUsername, null).addOnSuccessListener(
                     successCallback::run
             ).addOnFailureListener(e -> {
                 failCallback.run(BOOK_ERROR.FAIL_TO_ADD_BOOK);
@@ -147,7 +144,6 @@ public class AddEditViewModel extends ViewModel {
         final String isbn = bookIsbn.getValue();
         final String title = bookTitle.getValue();
         final String author = bookAuthor.getValue();
-        final String description = bookDescription.getValue();
         final Uri imageUri = localImageUri.getValue();
 
         // 3 image cases:
@@ -157,21 +153,21 @@ public class AddEditViewModel extends ViewModel {
         if (hasNewImage) {
             if (imageUri != null) {     // if we have new image, we upload it to database then edit book
                 bookRepository.addImage(currentUsername, imageUri).addOnSuccessListener(imageUrl -> {
-                    bookRepository.editBook(oldBook, isbn, title, author, description, imageUrl).addOnSuccessListener(
+                    bookRepository.editBook(oldBook, isbn, title, author, imageUrl).addOnSuccessListener(
                             successCallback::run
                     ).addOnFailureListener(e -> {
                         failCallback.run(BOOK_ERROR.FAIL_TO_EDIT_BOOK);
                     });
                 });
             } else {    // if we removed the book image, we update the book with no image url
-                bookRepository.editBook(oldBook, isbn, title, author, description, null).addOnSuccessListener(
+                bookRepository.editBook(oldBook, isbn, title, author, null).addOnSuccessListener(
                         successCallback::run
                 ).addOnFailureListener(e -> {
                     failCallback.run(BOOK_ERROR.FAIL_TO_EDIT_BOOK);
                 });
             }
         } else {        // if we didn't update the book image, we use the old book image url
-            bookRepository.editBook(oldBook, isbn, title, author, description, oldBook.getImageUrl()).addOnSuccessListener(
+            bookRepository.editBook(oldBook, isbn, title, author, oldBook.getImageUrl()).addOnSuccessListener(
                     successCallback::run
             ).addOnFailureListener(e -> {
                 failCallback.run(BOOK_ERROR.FAIL_TO_EDIT_BOOK);
