@@ -18,6 +18,8 @@ import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallback;
 import com.cmput301f20t21.bookfriends.enums.LOGIN_ERROR;
 import com.cmput301f20t21.bookfriends.exceptions.InvalidLoginCredentialsException;
 import com.cmput301f20t21.bookfriends.exceptions.UsernameNotExistException;
+import com.cmput301f20t21.bookfriends.repositories.factories.AuthRepositoryFactory;
+import com.cmput301f20t21.bookfriends.repositories.factories.UserRepositoryFactory;
 import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.impl.UserRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.api.AuthRepository;
@@ -35,7 +37,7 @@ public class LoginViewModel extends ViewModel {
 
     // production
     public LoginViewModel() {
-        this(AuthRepositoryImpl.getInstance(), UserRepositoryImpl.getInstance());
+        this(AuthRepositoryFactory.getRepository(), UserRepositoryFactory.getRepository());
     }
 
     // test - allow us to inject repository dependency in test

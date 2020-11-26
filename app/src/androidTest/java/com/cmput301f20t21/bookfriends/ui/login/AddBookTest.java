@@ -4,19 +4,13 @@ package com.cmput301f20t21.bookfriends.ui.login;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
-import androidx.test.runner.AndroidJUnit4;
 
 import com.cmput301f20t21.bookfriends.R;
-import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
-import com.google.firebase.firestore.DocumentSnapshot;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.List;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -30,10 +24,8 @@ import static org.hamcrest.Matchers.allOf;
 
 
 @LargeTest
-@RunWith(AndroidJUnit4.class)
+@RunWith(CustomTestRunner.class)
 public class AddBookTest {
-
-    BookRepositoryImpl bookRepository = BookRepositoryImpl.getInstance();
     @Rule
     public ActivityScenarioRule<LoginActivity> mActivityTestRule = new ActivityScenarioRule<>(LoginActivity.class);
 
@@ -101,19 +93,5 @@ public class AddBookTest {
 
         ViewInteraction saveButton = onView(allOf(withId(R.id.save_button), isDisplayed()));
         saveButton.perform(click());
-    }
-
-    @After
-    public void tearDown() throws InterruptedException {
-        // TODO: delete the book
-        bookRepository.getDocumentBy("123456789",
-                "Test title",
-                "Test author").addOnSuccessListener(queryDocumentSnapshots -> {
-            List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
-            for (int i = 0; i < documents.size(); i++) {
-                DocumentSnapshot document = documents.get(i);
-                bookRepository.delete(document.getId());
-            }
-        });
     }
 }

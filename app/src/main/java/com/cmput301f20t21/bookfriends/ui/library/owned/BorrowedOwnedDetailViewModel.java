@@ -11,6 +11,7 @@ import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 import com.cmput301f20t21.bookfriends.enums.SCAN_ERROR;
 import com.cmput301f20t21.bookfriends.repositories.api.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
+import com.cmput301f20t21.bookfriends.repositories.factories.BookRepositoryFactory;
 import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
 
@@ -24,7 +25,7 @@ public class BorrowedOwnedDetailViewModel extends ViewModel {
     private final MutableLiveData<SCAN_ERROR> errorMessage = new MutableLiveData<>();
 
     public BorrowedOwnedDetailViewModel() {
-        this(RequestRepositoryImpl.getInstance(), BookRepositoryImpl.getInstance());
+        this(RequestRepositoryImpl.getInstance(), BookRepositoryFactory.getRepository());
     }
 
     public BorrowedOwnedDetailViewModel(RequestRepository requestRepository, BookRepository bookRepository) {

@@ -10,7 +10,6 @@ import com.cmput301f20t21.bookfriends.fakes.callbacks.FakeFailCallbackWithMessag
 import com.cmput301f20t21.bookfriends.fakes.callbacks.FakeSuccessCallbackWithMessage;
 import com.cmput301f20t21.bookfriends.fakes.repositories.FakeAuthRepository;
 import com.cmput301f20t21.bookfriends.fakes.repositories.FakeBookRepository;
-import com.cmput301f20t21.bookfriends.fakes.tasks.FakeSuccessTask;
 import com.cmput301f20t21.bookfriends.ui.library.add.AddEditViewModel;
 
 import org.junit.Before;
@@ -23,7 +22,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AddEditBookViewModelUnitTest {
@@ -32,11 +30,9 @@ public class AddEditBookViewModelUnitTest {
     @Rule
     public TestRule rule = new InstantTaskExecutorRule();
 
-    @Mock
-    FakeAuthRepository mockAuthRepository;
+    FakeAuthRepository fakeAuthRepository;
 
-    @Mock
-    FakeBookRepository mockBookRepository;
+    FakeBookRepository fakeBookRepository;
 
     @Mock
     FakeSuccessCallbackWithMessage<Book> mockSuccessCallback;
@@ -47,55 +43,39 @@ public class AddEditBookViewModelUnitTest {
     @Before
     public void setup() {
         user = new User("uid", "username", "email");
-        when(mockAuthRepository.getCurrentUser()).thenReturn(user);
+        fakeAuthRepository = new FakeAuthRepository();
+        fakeBookRepository = new FakeBookRepository();
+        fakeAuthRepository.createUserAuth("email", "password");
+        fakeAuthRepository.signIn("username", "email", "password");
     }
 
 
     @Test
     public void addBookSuccess() {
-        AddEditViewModel model = new AddEditViewModel(mockAuthRepository, mockBookRepository);
-
-        String id = "id";
-        String isbn = "isbn";
-        String title = "title";
-        String author = "author";
-        String description = "description";
-        String owner = user.getUsername();
-
-        Book bookAdded = new Book(id, isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE);
-        FakeSuccessTask<Book> fakeAddBookTask = new FakeSuccessTask<>(bookAdded);
-
-        when(mockBookRepository.add(isbn, title, author, description, owner, null)).thenReturn(fakeAddBookTask);
-
+        AddEditViewModel model = new AddEditViewModel(fakeAuthRepository, fakeBookRepository);
         model.bookIsbn.setValue("isbn");
         model.bookTitle.setValue("title");
         model.bookAuthor.setValue("author");
         model.bookDescription.setValue("description");
         model.handleAddBook(mockSuccessCallback, mockFailCallback);
-        verify(mockSuccessCallback, times(1)).run(bookAdded);
+        verify(mockSuccessCallback, times(1)).run(fakeBookRepository.getByIndex(0));
 
     }
 
     @Test
     public void editBookSuccess() {
-        AddEditViewModel model = new AddEditViewModel(mockAuthRepository, mockBookRepository);
-        Book oldBook = new Book("oldId", "oldIsbn", "oldTitle", "oldAuthor", "oldDescription", "oldOwner",  BOOK_STATUS.AVAILABLE);
-
-        FakeSuccessTask<Book> fakeEditBookTask = new FakeSuccessTask<>(oldBook);
-        FakeSuccessTask<Void> fakeDeleteImageTask = new FakeSuccessTask<>((Void) null);
-
-        when(mockBookRepository.editBook(oldBook, "newIsbn", "newTitle", "newAuthor", "newDescription", null)).thenReturn(fakeEditBookTask);
-
+        AddEditViewModel model = new AddEditViewModel(fakeAuthRepository, fakeBookRepository);
+        fakeBookRepository.add("oldIsbn", "oldTitle", "oldAuthor", "oldDescription", "oldOwner", null);
+        Book oldBook = fakeBookRepository.getByIndex(0);
         model.bindBook(oldBook);
         model.bookIsbn.setValue("newIsbn");
         model.bookTitle.setValue("newTitle");
         model.bookAuthor.setValue("newAuthor");
         model.bookDescription.setValue("newDescription");
-        model.setHasImage(true);
+        model.setHasImage(false);
 
         model.handleEditBook(mockSuccessCallback, mockFailCallback);
-
-        verify(mockBookRepository, times(1)).editBook(oldBook, "newIsbn", "newTitle", "newAuthor", "newDescription", null);
-        verify(mockSuccessCallback, times(1)).run(new Book("oldId", "oldIsbn", "oldTitle", "oldAuthor", "oldDescription", "oldOwner",  BOOK_STATUS.AVAILABLE));
+        Book newBook = new Book(oldBook.getId(), "newIsbn", "newTitle", "newAuthor", "newDescription", "oldOwner",  BOOK_STATUS.AVAILABLE);
+        verify(mockSuccessCallback, times(1)).run(newBook);
     }
 }

@@ -20,6 +20,8 @@ import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 import com.cmput301f20t21.bookfriends.repositories.api.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
+import com.cmput301f20t21.bookfriends.repositories.factories.AuthRepositoryFactory;
+import com.cmput301f20t21.bookfriends.repositories.factories.BookRepositoryFactory;
 import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
@@ -44,7 +46,7 @@ public class BorrowedViewModel extends ViewModel {
     private final MutableLiveData<Integer> updatedPosition = new MutableLiveData<>(0);
 
     public BorrowedViewModel() {
-        this(RequestRepositoryImpl.getInstance(), BookRepositoryImpl.getInstance(), AuthRepositoryImpl.getInstance());
+        this(RequestRepositoryImpl.getInstance(), BookRepositoryFactory.getRepository(), AuthRepositoryFactory.getRepository());
     }
 
     public BorrowedViewModel(RequestRepository requestRepository, BookRepository bookRepository, AuthRepository authRepository) {

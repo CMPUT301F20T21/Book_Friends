@@ -8,6 +8,8 @@ import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
+import com.cmput301f20t21.bookfriends.repositories.factories.AuthRepositoryFactory;
+import com.cmput301f20t21.bookfriends.repositories.factories.BookRepositoryFactory;
 import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
@@ -32,7 +34,7 @@ public class RequestedViewModel extends ViewModel {
 
     // production
     public RequestedViewModel() {
-        this(AuthRepositoryImpl.getInstance(), BookRepositoryImpl.getInstance(), RequestRepositoryImpl.getInstance());
+        this(AuthRepositoryFactory.getRepository(), BookRepositoryFactory.getRepository(), RequestRepositoryImpl.getInstance());
     }
 
     // test

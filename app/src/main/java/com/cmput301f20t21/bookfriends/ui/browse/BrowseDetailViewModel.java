@@ -7,6 +7,8 @@ import com.cmput301f20t21.bookfriends.callbacks.OnSuccessCallback;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.repositories.api.BookRepository;
+import com.cmput301f20t21.bookfriends.repositories.factories.AuthRepositoryFactory;
+import com.cmput301f20t21.bookfriends.repositories.factories.BookRepositoryFactory;
 import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
@@ -22,7 +24,7 @@ public class BrowseDetailViewModel extends ViewModel {
     private final String currentUsername;
 
     public BrowseDetailViewModel() {
-        this(AuthRepositoryImpl.getInstance(), RequestRepositoryImpl.getInstance(), BookRepositoryImpl.getInstance());
+        this(AuthRepositoryFactory.getRepository(), RequestRepositoryImpl.getInstance(), BookRepositoryFactory.getRepository());
     }
 
     public BrowseDetailViewModel(
