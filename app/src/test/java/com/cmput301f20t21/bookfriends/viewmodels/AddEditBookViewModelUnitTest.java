@@ -56,7 +56,6 @@ public class AddEditBookViewModelUnitTest {
         model.bookIsbn.setValue("isbn");
         model.bookTitle.setValue("title");
         model.bookAuthor.setValue("author");
-        model.bookDescription.setValue("description");
         model.handleAddBook(mockSuccessCallback, mockFailCallback);
         verify(mockSuccessCallback, times(1)).run(fakeBookRepository.getByIndex(0));
 
@@ -65,17 +64,16 @@ public class AddEditBookViewModelUnitTest {
     @Test
     public void editBookSuccess() {
         AddEditViewModel model = new AddEditViewModel(fakeAuthRepository, fakeBookRepository);
-        fakeBookRepository.add("oldIsbn", "oldTitle", "oldAuthor", "oldDescription", "oldOwner", null);
+        fakeBookRepository.add("oldIsbn", "oldTitle", "oldAuthor", "", "oldOwner", null);
         Book oldBook = fakeBookRepository.getByIndex(0);
         model.bindBook(oldBook);
         model.bookIsbn.setValue("newIsbn");
         model.bookTitle.setValue("newTitle");
         model.bookAuthor.setValue("newAuthor");
-        model.bookDescription.setValue("newDescription");
         model.setHasImage(false);
 
         model.handleEditBook(mockSuccessCallback, mockFailCallback);
-        Book newBook = new Book(oldBook.getId(), "newIsbn", "newTitle", "newAuthor", "newDescription", "oldOwner",  BOOK_STATUS.AVAILABLE);
+        Book newBook = new Book(oldBook.getId(), "newIsbn", "newTitle", "newAuthor", "", "oldOwner",  BOOK_STATUS.AVAILABLE);
         verify(mockSuccessCallback, times(1)).run(newBook);
     }
 }
