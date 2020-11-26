@@ -77,19 +77,10 @@ public class AddBookTest {
     }
 
     @Test
-    public void testDescription() throws InterruptedException {
-        ViewInteraction descriptionEditText = onView(
-                allOf(withId(R.id.description_field), isDisplayed()));
-        descriptionEditText.perform(replaceText("Test description... Random Stuff"), closeSoftKeyboard());
-        descriptionEditText.check(matches(withText("Test description... Random Stuff")));
-    }
-
-    @Test
     public void testAddBook() throws  InterruptedException {
         testISBN();
         testTitle();
         testAuthor();
-        testDescription();
 
         ViewInteraction saveButton = onView(allOf(withId(R.id.save_button), isDisplayed()));
         saveButton.perform(click());
