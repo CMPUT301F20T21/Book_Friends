@@ -21,8 +21,8 @@ public class FakeBookRepository implements BookRepository {
     }
 
     @Override
-    public Task<Book> add(String isbn, String title, String author, String description, String owner, String imageUrl) {
-        Book book = new Book(UUID.randomUUID().toString(), isbn, title, author, description, owner, BOOK_STATUS.AVAILABLE);
+    public Task<Book> add(String isbn, String title, String author, String owner, String imageUrl) {
+        Book book = new Book(UUID.randomUUID().toString(), isbn, title, author, owner, BOOK_STATUS.AVAILABLE);
         books.add(book);
         return new FakeSuccessTask(book);
     }
@@ -33,10 +33,10 @@ public class FakeBookRepository implements BookRepository {
     }
 
     @Override
-    public Task<Book> editBook(Book oldBook, String isbn, String title, String author, String description, String imageUrl) {
+    public Task<Book> editBook(Book oldBook, String isbn, String title, String author, String imageUrl) {
         int i = books.indexOf(oldBook);
         if (i != -1) {
-            Book newBook = new Book(oldBook.getId(), isbn, title, author, description, oldBook.getOwner(), oldBook.getStatus(), imageUrl);
+            Book newBook = new Book(oldBook.getId(), isbn, title, author, oldBook.getOwner(), oldBook.getStatus(), imageUrl);
             books.set(i, newBook);
             return new FakeSuccessTask(newBook);
         }
@@ -116,7 +116,6 @@ public class FakeBookRepository implements BookRepository {
                     book.getIsbn(),
                     book.getTitle(),
                     book.getAuthor(),
-                    book.getDescription(),
                     book.getOwner(),
                     newStatus,
                     book.getImageUrl());
