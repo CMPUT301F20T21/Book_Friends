@@ -7,6 +7,7 @@ import com.cmput301f20t21.bookfriends.entities.User;
 import com.cmput301f20t21.bookfriends.exceptions.UserNotExistException;
 import com.cmput301f20t21.bookfriends.fakes.callbacks.FakeFailCallback;
 import com.cmput301f20t21.bookfriends.fakes.callbacks.FakeSuccessCallbackWithMessage;
+import com.cmput301f20t21.bookfriends.fakes.repositories.FakeAuthRepository;
 import com.cmput301f20t21.bookfriends.fakes.repositories.FakeUserRepository;
 import com.cmput301f20t21.bookfriends.fakes.tasks.FakeFailTask;
 import com.cmput301f20t21.bookfriends.fakes.tasks.FakeSuccessTask;
@@ -37,6 +38,8 @@ public class ProfileViewModelUnitTest {
     public TestRule rule = new InstantTaskExecutorRule();
     @Mock
     FakeUserRepository mockUserRepository;
+    @Mock
+    FakeAuthRepository mockAuthRepository;
     // mock the observer. we want it to receive changes and we want to know what change it got
     @Mock
     Observer<ArrayList<User>> usersObserver;
@@ -54,7 +57,7 @@ public class ProfileViewModelUnitTest {
      */
     @Test
     public void searchSuccess_noResultsOnEmptyInput() {
-        ProfileViewModel vm = new ProfileViewModel(mockUserRepository);
+        ProfileViewModel vm = new ProfileViewModel(mockUserRepository, mockAuthRepository);
 
         // start the mock observer
         vm.getSearchedUsers().observeForever(usersObserver);
@@ -80,7 +83,7 @@ public class ProfileViewModelUnitTest {
      */
     @Test
     public void searchSuccess_multipleResults() {
-        ProfileViewModel vm = new ProfileViewModel(mockUserRepository);
+        ProfileViewModel vm = new ProfileViewModel(mockUserRepository, mockAuthRepository);
 
         // start the mock observer
         vm.getSearchedUsers().observeForever(usersObserver);
@@ -109,7 +112,7 @@ public class ProfileViewModelUnitTest {
      */
     @Test
     public void getUserByUidSuccess() {
-        ProfileViewModel vm = new ProfileViewModel(mockUserRepository);
+        ProfileViewModel vm = new ProfileViewModel(mockUserRepository, mockAuthRepository);
         String uid = "testUid";
         User user = new User(uid, "testusername", "testemail");
 
@@ -129,7 +132,7 @@ public class ProfileViewModelUnitTest {
      */
     @Test
     public void getUserByUidFailure() {
-        ProfileViewModel vm = new ProfileViewModel(mockUserRepository);
+        ProfileViewModel vm = new ProfileViewModel(mockUserRepository, mockAuthRepository);
         String uid = "testUid";
 
         // the task returned by the repo containing the fake data
