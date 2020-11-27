@@ -29,7 +29,7 @@ import com.cmput301f20t21.bookfriends.repositories.api.BookRepository;
 import javax.annotation.Nullable;
 
 /**
- * The ViewModel for AddEditActivity
+ * The ViewModel for {@link AddEditActivity}
  */
 public class AddEditViewModel extends ViewModel {
     // data-binding attributes, two way bound with the xml
@@ -42,7 +42,7 @@ public class AddEditViewModel extends ViewModel {
     private final MutableLiveData<Uri> localImageUri = new MutableLiveData<>();
     // the book we are editing
     private Book oldBook;
-    private String currentUsername;
+    private final String currentUsername;
 
     /** the boolean indicating whether we should remove the image on save
      * Also represents if there is a cover image displayed.

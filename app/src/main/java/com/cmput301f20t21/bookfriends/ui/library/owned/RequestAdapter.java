@@ -1,3 +1,12 @@
+/*
+ * RequestAdapter.java
+ * Version: 1.0
+ * Date: November 4, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.ui.library.owned;
 
 import android.view.LayoutInflater;
@@ -14,8 +23,11 @@ import com.cmput301f20t21.bookfriends.entities.Request;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter for the RecyclerView in RequestActivity
+ */
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHolder> {
-    private ArrayList<Request> requestItems;
+    private final ArrayList<Request> requestItems;
     private OnItemClickListener listener;
     public interface OnItemClickListener{
         void onRejectClick(int position);
@@ -67,8 +79,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_request, parent, false);
 
-        ViewHolder r = new ViewHolder(v, listener);
-        return r;
+        return new ViewHolder(v, listener);
     }
 
     @Override

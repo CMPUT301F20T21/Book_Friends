@@ -1,3 +1,12 @@
+/*
+ * AddEditActivity.java
+ * Version: 1.0
+ * Date: October 20, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.ui.library.add;
 
 import android.Manifest;
@@ -34,6 +43,9 @@ import com.cmput301f20t21.bookfriends.ui.scanner.ScannerActivity;
 import com.cmput301f20t21.bookfriends.utils.ImagePainter;
 import com.google.android.material.textfield.TextInputLayout;
 
+/**
+ * Activity for handling adding or editing a book
+ */
 public class AddEditActivity extends AppCompatActivity {
     public static final String NEW_BOOK_INTENT_KEY = "com.cmput301f20t21.bookfriends.NEW_BOOK";
     public static final String OLD_BOOK_INTENT_KEY = "com.cmput301f20t21.bookfriends.OLD_BOOK";
@@ -213,7 +225,7 @@ public class AddEditActivity extends AppCompatActivity {
      * @return boolean indicating whether all fields are valid
      */
     private boolean validateFields() {
-        Boolean isValid = true;
+        boolean isValid = true;
         String isbn = isbnEditText.getText().toString();
         String title = titleEditText.getText().toString();
         String author = authorEditText.getText().toString();
@@ -285,9 +297,9 @@ public class AddEditActivity extends AppCompatActivity {
     /**
      * handle result of runtime permission
      *
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
+     * @param requestCode the request code for asking permissions
+     * @param permissions the requested permissions
+     * @param grantResults the grant results for the corresponding permissions
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -307,9 +319,9 @@ public class AddEditActivity extends AppCompatActivity {
     /**
      * set the cover image after selecting an image from gallery
      *
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     * @param requestCode the request code that starts the activity
+     * @param resultCode the result code sent from the activity
+     * @param data the intent data that contains the image selected
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

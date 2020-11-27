@@ -17,6 +17,7 @@ import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
+import com.cmput301f20t21.bookfriends.enums.SCAN_ERROR;
 import com.cmput301f20t21.bookfriends.repositories.api.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
@@ -73,6 +74,10 @@ public class BorrowedViewModel extends ViewModel {
         return updatedPosition;
     }
 
+    /**
+     * get the error message
+     * @return a {@link MutableLiveData} that contains {@link BOOK_ERROR} error message
+     */
     public LiveData<BOOK_ERROR> getErrorMessage() {
         return errorMessage;
     }

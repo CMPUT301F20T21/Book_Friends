@@ -39,12 +39,15 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
+/**
+ * Fragment to display a list of owner books
+ */
 public class OwnedListFragment extends Fragment {
     public static final String VIEW_REQUEST_KEY = "com.cmput301f20t21.bookfriends.VIEW_REQUEST";
 
     private OwnedViewModel vm;
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+    private OwnedListAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private FloatingActionButton filterButton;
     private FloatingActionButton addBookButton;

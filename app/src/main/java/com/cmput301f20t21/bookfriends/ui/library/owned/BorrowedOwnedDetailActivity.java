@@ -1,3 +1,12 @@
+/*
+ * BorrowedOwnedDetailActivity.java
+ * Version: 1.0
+ * Date: November 20, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.ui.library.owned;
 
 import android.content.Intent;
@@ -10,16 +19,24 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.cmput301f20t21.bookfriends.R;
+import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 import com.cmput301f20t21.bookfriends.enums.SCAN_ERROR;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 import com.cmput301f20t21.bookfriends.ui.scanner.ScannerActivity;
 
+/**
+ * Detail Activity for owner books with "BORROWED" {@link BOOK_STATUS}
+ */
 public class BorrowedOwnedDetailActivity extends BaseDetailActivity {
     public static final int GET_SCANNED_ISBN = 2001;
     private Button actionButton;
     private BorrowedOwnedDetailViewModel vm;
 
+    /**
+     * Called when creating the activity view
+     * @param savedInstanceState the saved objects, should contain nothing for this activity
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,11 +69,23 @@ public class BorrowedOwnedDetailActivity extends BaseDetailActivity {
 
     }
 
+    /**
+     * onClickListener for the "Scan to Receive" button
+     * called when owner wants to receive back a borrowed book
+     * opens ScannerActivity
+     * @param view the "Scan to Receive" button view
+     */
     private void openScanner(View view) {
         Intent intent = new Intent(this, ScannerActivity.class);
         startActivityForResult(intent, GET_SCANNED_ISBN);
     }
 
+    /**
+     * called upon returning from the ScannerActivity
+     * @param requestCode the request code that starts the activity
+     * @param resultCode the result code sent from the activity
+     * @param data the intent data that contains the isbn scanned
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

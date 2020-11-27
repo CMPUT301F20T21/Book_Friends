@@ -18,7 +18,15 @@ import com.cmput301f20t21.bookfriends.enums.BOOK_ACTION;
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 
+/**
+ * Detail Activity for owner books with "REQUESTED" status
+ */
 public class RequestedOwnedDetailActivity extends BaseDetailActivity {
+
+    /**
+     * Called when creating the activity view
+     * @param savedInstanceState the saved objects, should contain nothing for this activity
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,12 +34,23 @@ public class RequestedOwnedDetailActivity extends BaseDetailActivity {
         button.setOnClickListener(this::onViewRequests);
     }
 
+    /**
+     * onClickListener when the "View All Requests" button is clicked
+     * Starts the RequestActivity
+     * @param view the button view
+     */
     public void onViewRequests(View view) {
         Intent intent = new Intent(this, RequestActivity.class);
         intent.putExtra(OwnedListFragment.VIEW_REQUEST_KEY, book.getId());
         startActivityForResult(intent, BOOK_ACTION.VIEW_REQUESTS.getCode());
     }
 
+    /**
+     * called when returning from RequestActivity
+     * @param requestCode the request code that started the activity
+     * @param resultCode the request code obtained from the called activity
+     * @param data the obtained intent data from the called activity
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

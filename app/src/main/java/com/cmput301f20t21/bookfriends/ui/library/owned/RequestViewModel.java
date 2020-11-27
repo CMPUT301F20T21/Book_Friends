@@ -30,6 +30,7 @@ import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -39,7 +40,7 @@ import java.util.stream.IntStream;
 public class RequestViewModel extends ViewModel {
     private final MutableLiveData<Book> book = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<Request>> requests = new MutableLiveData<>(new ArrayList<>());
-    private final ArrayList<Request> requestsData = requests.getValue();
+    private final ArrayList<Request> requestsData = Objects.requireNonNull(requests.getValue());
 
     private final RequestRepository requestRepository;
     private final BookRepository bookRepository;
@@ -58,9 +59,7 @@ public class RequestViewModel extends ViewModel {
      * @param bookId we will query the book information based on the bookID
      */
     private void fetchBook(String bookId) {
-        bookRepository.getBookById(bookId).addOnSuccessListener(b -> {
-            book.setValue(b);
-        });
+        bookRepository.getBookById(bookId).addOnSuccessListener(book::setValue);
     }
 
     /**
@@ -114,7 +113,7 @@ public class RequestViewModel extends ViewModel {
                 Book bookData = book.getValue();
                 if (bookData != null) {
                     bookRepository.updateBookStatus(bookData, BOOK_STATUS.AVAILABLE)
-                            .addOnSuccessListener(updatedBook -> book.setValue(updatedBook));
+                            .addOnSuccessListener(book::setValue);
                 }
             }
         });
@@ -148,7 +147,7 @@ public class RequestViewModel extends ViewModel {
                 Book bookData = book.getValue();
                 if (bookData != null) {
                     bookRepository.updateBookStatus(bookData, BOOK_STATUS.ACCEPTED)
-                            .addOnSuccessListener(updatedBook -> book.setValue(updatedBook));
+                            .addOnSuccessListener(book::setValue);
                 }
             }).addOnFailureListener(err -> {
                 err.printStackTrace();

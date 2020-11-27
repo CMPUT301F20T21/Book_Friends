@@ -1,3 +1,12 @@
+/*
+ * RequestActivity.java
+ * Version: 1.0
+ * Date: November 4, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.ui.library.owned;
 
 import android.content.DialogInterface;
@@ -25,6 +34,9 @@ import com.cmput301f20t21.bookfriends.utils.ImagePainter;
 
 import java.util.ArrayList;
 
+/**
+ * An activity to view all requests for a requested book
+ */
 public class RequestActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
@@ -39,6 +51,10 @@ public class RequestActivity extends AppCompatActivity {
 
     private RequestViewModel vm;
 
+    /**
+     * Called when creating the activity view
+     * @param savedInstanceState the saved objects, should contain nothing for this activity
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,8 +116,8 @@ public class RequestActivity extends AppCompatActivity {
     /**
      * setup the back button on the title
      *
-     * @param item
-     * @return
+     * @param item the item that is clicked
+     * @return false to allow normal menu processing to proceed, true to consume it here
      */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
