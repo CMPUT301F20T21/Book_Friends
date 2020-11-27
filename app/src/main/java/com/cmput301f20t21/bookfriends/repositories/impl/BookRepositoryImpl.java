@@ -3,6 +3,8 @@ package com.cmput301f20t21.bookfriends.repositories.impl;
 import android.net.Uri;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.exceptions.UnexpectedException;
@@ -122,7 +124,7 @@ public class BookRepositoryImpl implements BookRepository {
         return bookCollection.document(id).delete();
     }
 
-    public Task<Void> deleteImage(String url) {
+    public Task<Void> deleteImage(@NonNull String url) {
         String path = getPathStorageFromUrl(url);
         StorageReference fileReference = imageStorageReference.child(path);
         return fileReference.delete();

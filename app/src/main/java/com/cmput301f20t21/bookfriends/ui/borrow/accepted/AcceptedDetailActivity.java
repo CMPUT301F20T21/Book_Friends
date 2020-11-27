@@ -39,6 +39,7 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
         actionButton = findViewById(R.id.detail_action_button);
 
         vm.getRequest(book).observe(this, request -> {
+            loadingOverlay.hide();
             this.request = request;
             if (request.getStatus().equals(REQUEST_STATUS.ACCEPTED)) {
                 actionButton.setText(getString(R.string.scan_wait_for_hand_over, book.getOwner()));
@@ -56,6 +57,7 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
         });
 
         vm.getErrorMessage().observe(this, error -> {
+            loadingOverlay.hide();
             if (error.equals(SCAN_ERROR.INVALID_ISBN)) {
                 Toast.makeText(this, getString(R.string.scan_invalid_isbn_error), Toast.LENGTH_SHORT).show();
             } else {
@@ -158,6 +160,7 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == GET_SCANNED_ISBN) {
                 String scannedIsbn = data.getStringExtra(ScannerActivity.ISBN_KEY);
+                loadingOverlay.show();
                 vm.handleScannedIsbn(book, scannedIsbn, this::onScannedSuccess);
             }
         }

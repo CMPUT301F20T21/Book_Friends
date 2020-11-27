@@ -124,7 +124,9 @@ public class OwnedViewModel extends ViewModel {
         bookRepository.delete(book.getId())
                 .addOnSuccessListener(
                         res -> {
-                            bookRepository.deleteImage(book.getImageUrl());
+                            if (book.getImageUrl() != null) {
+                                bookRepository.deleteImage(book.getImageUrl());
+                            }
                             bookData.remove(book);
                             books.setValue(bookData);
                         })

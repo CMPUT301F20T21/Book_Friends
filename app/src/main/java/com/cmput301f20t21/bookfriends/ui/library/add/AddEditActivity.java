@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -30,6 +29,7 @@ import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.enums.SCAN_ERROR;
 import com.cmput301f20t21.bookfriends.services.GoogleBookService;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
+import com.cmput301f20t21.bookfriends.ui.component.LoadingOverlay;
 import com.cmput301f20t21.bookfriends.ui.scanner.ScannerActivity;
 import com.cmput301f20t21.bookfriends.utils.ImagePainter;
 import com.google.android.material.textfield.TextInputLayout;
@@ -52,7 +52,7 @@ public class AddEditActivity extends AppCompatActivity {
     private EditText titleEditText;
     private EditText authorEditText;
 
-    private FrameLayout loadingOverlay;
+    private LoadingOverlay loadingOverlay;
 
     private BOOK_ACTION action;
     private AddEditViewModel vm;
@@ -99,7 +99,7 @@ public class AddEditActivity extends AppCompatActivity {
         titleEditText = titleLayout.getEditText();
         authorEditText = authorLayout.getEditText();
         scanButton = findViewById(R.id.scanner_button);
-        loadingOverlay = findViewById(R.id.autofill_loading_overlay);
+        loadingOverlay = new LoadingOverlay(this, findViewById(R.id.loading_overlay));
     }
 
     /**
@@ -193,11 +193,13 @@ public class AddEditActivity extends AppCompatActivity {
         if (validateFields()) {
             if (action == BOOK_ACTION.ADD) {
                 // if no image is attached, bookImageUri will be passed as null
+                loadingOverlay.show();
                 vm.handleAddBook(
                         this::onAddSuccess,
                         this::onFailure
                 );
             } else if (action == BOOK_ACTION.EDIT) {
+                loadingOverlay.show();
                 vm.handleEditBook(
                         this::onEditSuccess,
                         this::onFailure
@@ -238,6 +240,7 @@ public class AddEditActivity extends AppCompatActivity {
         Intent resultIntent = new Intent();
         resultIntent.putExtra(NEW_BOOK_INTENT_KEY, book);
         setResult(RESULT_OK, resultIntent);
+        loadingOverlay.hide();
         finish();
     }
 
@@ -246,6 +249,7 @@ public class AddEditActivity extends AppCompatActivity {
         resultIntent.putExtra(OLD_BOOK_INTENT_KEY, vm.getOldBook());
         resultIntent.putExtra(UPDATED_BOOK_INTENT_KEY, updatedBook);
         setResult(RESULT_OK, resultIntent);
+        loadingOverlay.hide();
         finish();
     }
 
@@ -323,7 +327,7 @@ public class AddEditActivity extends AppCompatActivity {
         } else if (resultCode == RESULT_OK && requestCode == REQUEST_GET_SCANNED_ISBN) {
             String scannedIsbn = data.getStringExtra(ScannerActivity.ISBN_KEY);
             isbnEditText.setText(scannedIsbn); // this sets the vm.bookIsbn too!
-            loadingOverlay.setVisibility(View.VISIBLE);
+            loadingOverlay.show();
             GoogleBookService.getInstance()
                     .getBookInfoByIsbn(
                             scannedIsbn,
@@ -334,7 +338,7 @@ public class AddEditActivity extends AppCompatActivity {
 
     private void onFetchBookDataSuccess(GoogleBookData data) {
         runOnUiThread(() -> {
-            loadingOverlay.setVisibility(View.GONE);
+            loadingOverlay.hide();
             titleEditText.setText(data.getTitle());
             authorEditText.setText(String.join(", ", data.getAuthors()));
         });
@@ -348,7 +352,7 @@ public class AddEditActivity extends AppCompatActivity {
             message = getString(R.string.unexpected_error);
         }
         runOnUiThread(() -> {
-            loadingOverlay.setVisibility(View.GONE);
+            loadingOverlay.hide();
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         });
     }
