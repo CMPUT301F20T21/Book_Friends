@@ -17,6 +17,7 @@ import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 import com.cmput301f20t21.bookfriends.enums.SCAN_ERROR;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
+import com.cmput301f20t21.bookfriends.ui.component.MeetLocationDialog;
 import com.cmput301f20t21.bookfriends.ui.scanner.ScannerActivity;
 import com.cmput301f20t21.bookfriends.ui.component.detailButtons.DetailButtonModel;
 import com.cmput301f20t21.bookfriends.ui.component.detailButtons.DetailButtonsFragment;
@@ -66,36 +67,6 @@ public class AcceptedDetailActivity extends BaseDetailActivity {
         });
     }
 
-    /**
-     * parse the request geo location and returns a string of the address
-     *
-     * @param request the request.
-     * @return the address string
-     */
-    private String getMeetingAddress(Request request) {
-        if (request == null) {
-            return "";
-        }
-
-        GeoPoint geoPoint = request.getMeetingLocation();
-        Geocoder geocoder = new Geocoder(this);
-        try {
-            List<Address> addresses = geocoder.getFromLocation(geoPoint.getLatitude(), geoPoint.getLongitude(), 1);
-            if (addresses == null) {
-                return getString(R.string.geocoder_failure);
-            }
-            Address addr = addresses.get(0);
-            // https://stackoverflow.com/a/19927013/7358099
-            StringBuilder addressString = new StringBuilder("");
-            for (int i = 0; i <= addr.getMaxAddressLineIndex(); i++) {
-                addressString.append(addr.getAddressLine(i));
-            }
-            return addressString.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return getString(R.string.get_meeting_address_failure);
-        }
-    }
 
     /**
      * create all the accepted detail-specific buttons and define their onclick behaviours
