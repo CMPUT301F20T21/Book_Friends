@@ -1,3 +1,12 @@
+/*
+ * MainActivity.java
+ * Version: 1.0
+ * Date: October 6, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends;
 
 import android.content.Context;
@@ -11,12 +20,13 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.cmput301f20t21.bookfriends.repositories.factories.AuthRepositoryFactory;
-import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
 import com.cmput301f20t21.bookfriends.utils.NotificationSender;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
 
-
+/**
+ * Main Activity for the app
+ */
 public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {

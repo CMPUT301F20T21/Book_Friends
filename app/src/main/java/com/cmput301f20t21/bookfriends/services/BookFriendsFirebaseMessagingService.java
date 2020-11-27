@@ -1,3 +1,12 @@
+/*
+ * BookFriendsFirebaseMessagingService.java
+ * Version: 1.0
+ * Date: November 20, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.services;
 
 import android.app.NotificationChannel;
@@ -27,6 +36,9 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * a {@link FirebaseMessagingService} class that manages notifications
+ */
 public class BookFriendsFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "bfriends_messaging";
     private final AtomicInteger onetimeId = new AtomicInteger();

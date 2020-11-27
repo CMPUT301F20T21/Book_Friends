@@ -1,3 +1,12 @@
+/*
+ * BookRepositoryImpl.java
+ * Version: 1.0
+ * Date: October 16, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.repositories.impl;
 
 import android.net.Uri;
@@ -18,11 +27,16 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * implementation of {@link BookRepository}, contains methods that directly interact
+ * with Firebase Firestore and Firebase Cloud Storage
+ */
 public class BookRepositoryImpl implements BookRepository {
 
     private static final BookRepositoryImpl instance = new BookRepositoryImpl();
@@ -40,12 +54,12 @@ public class BookRepositoryImpl implements BookRepository {
     /**
      * add a new book to firestore and upload image file and return the book with the downloadable
      * uri in the book entity
-     * @param isbn
-     * @param title
-     * @param author
-     * @param owner
-     * @param imageUrl
-     * @return
+     * @param isbn the ISBN of the book
+     * @param title the title of the book
+     * @param author the author of the book
+     * @param owner the owner of the book(i.e. current user)
+     * @param imageUrl the image URL of the book (if there's a image)
+     * @return {@link Task} returning {@link Book}
      */
     public Task<Book> add(String isbn, String title, String author, String owner, String imageUrl) {
         HashMap<String, Object> data = new HashMap<>();
@@ -73,7 +87,7 @@ public class BookRepositoryImpl implements BookRepository {
      *
      * @param username the image name key
      * @param imageUri  the uri FILE to upload
-     * @return Task returning the String of the downloadable url
+     * @return {@link Task} returning the {@link String} of the downloadable url
      */
     public Task<String> addImage(String username, Uri imageUri) {
         String uniqueID = UUID.randomUUID().toString();
@@ -97,12 +111,12 @@ public class BookRepositoryImpl implements BookRepository {
     /**
      * edit a book. replace image with a new image file and update the downloadable link
      * or, set the link to null, but the image is not yet deleted, and we don't have to
-     * @param oldBook
-     * @param isbn
-     * @param title
-     * @param author
-     * @param imageUrl
-     * @return
+     * @param oldBook the old book before edit
+     * @param isbn the ISBN of the edited book
+     * @param title the title of the edited book
+     * @param author the author of the edited book
+     * @param imageUrl the image URL of the edited book (if there's a image)
+     * @return {@link Task} returning {@link Book}
      */
     public Task<Book> editBook(Book oldBook, String isbn, String title, String author, String imageUrl) {
         HashMap<String, Object> data = new HashMap<>();
@@ -120,16 +134,31 @@ public class BookRepositoryImpl implements BookRepository {
         });
     }
 
+    /**
+     * deleting a book
+     * @param id the book id of the book to delete
+     * @return {@link Task} returning {@link Void}
+     */
     public Task<Void> delete(String id) {
         return bookCollection.document(id).delete();
     }
 
+    /**
+     * deleting an image of a book
+     * @param url the url of the book image
+     * @return a {@link Void} task
+     */
     public Task<Void> deleteImage(@NonNull String url) {
         String path = getPathStorageFromUrl(url);
         StorageReference fileReference = imageStorageReference.child(path);
         return fileReference.delete();
     }
 
+    /**
+     * get the path storage in FireBase cloud storage from the provided url
+     * @param url the url of the book image
+     * @return a {@link String} that contains the storage path
+     */
     private String getPathStorageFromUrl(String url) {
         String baseUrl = "https://firebasestorage.googleapis.com/v0/b/cmput301bookfriends.appspot.com/o/";
         String imagePath = url.replace(baseUrl, "");
@@ -139,6 +168,11 @@ public class BookRepositoryImpl implements BookRepository {
         return imagePath;
     }
 
+    /**
+     * the all the books belongs to a specific user
+     * @param username the user's username to query for books
+     * @return {@link Task} returning a {@link List} of {@link Book} belongs to the provided user
+     */
     public Task<List<Book>> getBooksOfOwnerId(String username) {
         return bookCollection.whereEqualTo("owner", username).get().continueWith(task -> {
             if (task.isSuccessful()) {
@@ -156,6 +190,11 @@ public class BookRepositoryImpl implements BookRepository {
         });
     }
 
+    /**
+     * get the book from the provided book id
+     * @param bookId the book id of the book
+     * @return {@link Task} returning the required {@link Book}
+     */
     public Task<Book> getBookById(String bookId) {
         return bookCollection.document(bookId).get().continueWith(task -> {
             if (task.isSuccessful()) {
@@ -170,6 +209,11 @@ public class BookRepositoryImpl implements BookRepository {
         });
     }
 
+    /**
+     * get all the books from the list of book ids
+     * @param bookIds a {@link List} of book ids
+     * @return {@link Task} returning a {@link List} of {@link Book} from the provided book ids
+     */
     public Task<List<Book>> batchGetBooks(List<String> bookIds) {
         return bookCollection.whereIn(FieldPath.documentId(), bookIds).get()
                 .continueWith(task -> {
@@ -183,6 +227,12 @@ public class BookRepositoryImpl implements BookRepository {
                 });
     }
 
+    /**
+     * get all the available books that the user can request for
+     * excluding all the books from this user
+     * @param username the username of the logged in user
+     * @return {@link Task} returning a {@link List} of {@link Book} from the provided book ids
+     */
     public Task<List<Book>> getAvailableBooksForUser(String username) {
         return bookCollection
                 .whereNotEqualTo("owner", username)
@@ -203,6 +253,12 @@ public class BookRepositoryImpl implements BookRepository {
         return bookCollection.whereEqualTo("isbn", isbn).whereEqualTo("title", title).whereEqualTo("author", author).get();
     }
 
+    /**
+     * update the status of a book
+     * @param book the book to update
+     * @param newStatus the new status to update
+     * @return {@link Task} returning the updated {@link Book}
+     */
     public Task<Book> updateBookStatus(Book book, BOOK_STATUS newStatus) {
         return bookCollection
                 .document(book.getId())

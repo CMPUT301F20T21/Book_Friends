@@ -1,3 +1,12 @@
+/*
+ * RequestRepositoryImpl.java
+ * Version: 1.0
+ * Date: October 16, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.repositories.impl;
 
 import android.util.Log;
@@ -5,6 +14,7 @@ import android.util.Log;
 import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 import com.cmput301f20t21.bookfriends.exceptions.UnexpectedException;
+import com.cmput301f20t21.bookfriends.repositories.api.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -20,6 +30,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * implementation of {@link RequestRepository}, contains methods that directly interact
+ * with Firebase Firestore
+ */
 public class RequestRepositoryImpl implements RequestRepository {
     private final CollectionReference requestCollection;
 
@@ -49,6 +63,12 @@ public class RequestRepositoryImpl implements RequestRepository {
                 .get();
     }
 
+    /**
+     * get a list of requests by bookId and request statuses
+     * @param bookId the book's id
+     * @param statusList a list of {@link REQUEST_STATUS}
+     * @return {@link Task} returning a {@link List} of {@link Request}
+     */
     public Task<List<Request>> getRequestsByBookIdAndStatus(String bookId, List<REQUEST_STATUS> statusList) {
         return requestCollection
                 .whereEqualTo("bookId", bookId)
@@ -67,6 +87,12 @@ public class RequestRepositoryImpl implements RequestRepository {
                 });
     }
 
+    /**
+     * get a list of requests by username and request statuses
+     * @param username the requester
+     * @param statusList a list of {@link REQUEST_STATUS}
+     * @return {@link Task} returning a {@link List} of {@link Request}
+     */
     public Task<List<Request>> getRequestsByUsernameAndStatus(String username, List<REQUEST_STATUS> statusList) {
         return requestCollection.whereEqualTo("requester", username)
                 .whereIn("status", statusList).get()
@@ -104,8 +130,8 @@ public class RequestRepositoryImpl implements RequestRepository {
 
     /**
      * accept a request
-     * @param id
-     * @return Task Void
+     * @param id the request id
+     * @return {@link Task} returning {@link Void}
      */
     public Task<Void> accept(String id) {
         return requestCollection.document(id).update("status", REQUEST_STATUS.ACCEPTED.toString());
@@ -113,8 +139,8 @@ public class RequestRepositoryImpl implements RequestRepository {
 
     /**
      * deny a request
-     * @param id
-     * @return Task Void
+     * @param id the request id
+     * @return {@link Task} returning {@link Void}
      */
     public Task<Void> deny(String id) {
         return requestCollection.document(id).update("status", REQUEST_STATUS.DENIED.toString());
@@ -122,8 +148,8 @@ public class RequestRepositoryImpl implements RequestRepository {
 
     /**
      * batch deny requests
-     * @param ids
-     * @return Task Void
+     * @param ids a {@link List} of request ids
+     * @return {@link Task} returning {@link Void}
      */
     public Task<Void> batchDeny(List<String> ids) {
         WriteBatch batch = FirebaseFirestore.getInstance().batch();
@@ -146,6 +172,12 @@ public class RequestRepositoryImpl implements RequestRepository {
         return (String) documentSnapshot.get("requester");
     }
 
+    /**
+     * Send a request and record it in firestore
+     * @param requester the requester username
+     * @param bookId the id of the book to request
+     * @return {@link Task} contains the request id {@link String}
+     */
     public Task<String> sendRequest(String requester, String bookId) {
         HashMap<String, String> data = new HashMap<>();
         data.put("requester", requester);
@@ -159,6 +191,12 @@ public class RequestRepositoryImpl implements RequestRepository {
         });
     }
 
+    /**
+     * updates the status of a request
+     * @param request the request to update
+     * @param newStatus the new status to update to
+     * @return {@link Task} returning the updated {@link Request}
+     */
     public Task<Request> updateRequestStatus(Request request, REQUEST_STATUS newStatus) {
         return requestCollection
                 .document(request.getId())
@@ -171,7 +209,13 @@ public class RequestRepositoryImpl implements RequestRepository {
                 });
     }
 
-    public Task<Void> addMeetingLocation (String id, GeoPoint geoPoint) {
+    /**
+     * add a meeting location detail to the request
+     * @param id the request id
+     * @param geoPoint the {@link GeoPoint} object contains the meeting location
+     * @return {@link Task} returning {@link Void}
+     */
+    public Task<Void> addMeetingLocation(String id, GeoPoint geoPoint) {
             return requestCollection.document(id).update("meetingLocation", geoPoint);
     }
 }
