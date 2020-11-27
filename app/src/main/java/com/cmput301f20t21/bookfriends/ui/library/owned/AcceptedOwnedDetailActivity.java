@@ -25,6 +25,7 @@ public class AcceptedOwnedDetailActivity extends BaseDetailActivity {
         vm = new ViewModelProvider(this).get(AcceptedOwnedDetailViewModel.class);
 
         vm.getRequest(book).observe(this, request -> {
+            loadingOverlay.hide();
             if (request.getStatus().equals(REQUEST_STATUS.ACCEPTED)) {
                 button.setText(R.string.scan_hand_over);
                 button.setOnClickListener(this::openScanner);
@@ -35,6 +36,7 @@ public class AcceptedOwnedDetailActivity extends BaseDetailActivity {
         });
 
         vm.getErrorMessage().observe(this, error -> {
+            loadingOverlay.hide();
             if (error.equals(SCAN_ERROR.INVALID_ISBN)) {
                 Toast.makeText(this, getString(R.string.scan_invalid_isbn_error), Toast.LENGTH_SHORT).show();
             } else {
@@ -55,6 +57,7 @@ public class AcceptedOwnedDetailActivity extends BaseDetailActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == GET_SCANNED_ISBN) {
                 String scannedIsbn = data.getStringExtra(ScannerActivity.ISBN_KEY);
+                loadingOverlay.show();
                 vm.handleScannedIsbn(book.getIsbn(), scannedIsbn);
             }
         }

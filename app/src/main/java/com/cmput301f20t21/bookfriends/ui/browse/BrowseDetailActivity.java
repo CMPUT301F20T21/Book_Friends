@@ -32,6 +32,7 @@ public class BrowseDetailActivity extends BaseDetailActivity {
     }
 
     private void sendRequest(View view) {
+        loadingOverlay.show();
         vm.sendRequest(book, this::onSendRequestSuccess, this::onSendRequestFailure);
     }
 
@@ -39,10 +40,11 @@ public class BrowseDetailActivity extends BaseDetailActivity {
         Intent intent = new Intent();
         intent.putExtra(REQUESTED_BOOK_INTENT_KEY, book);
         setResult(RESULT_OK, intent);
+        loadingOverlay.hide();
         finish();
     }
 
     private void onSendRequestFailure() {
-
+        loadingOverlay.hide();
     }
 }

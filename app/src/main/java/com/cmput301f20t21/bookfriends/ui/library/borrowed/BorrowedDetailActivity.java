@@ -28,6 +28,7 @@ public class BorrowedDetailActivity extends BaseDetailActivity {
         vm = new ViewModelProvider(this).get(BorrowedDetailViewModel.class);
 
         vm.getRequest(book).observe(this, request -> {
+            loadingOverlay.hide();
             if (request.getStatus().equals(REQUEST_STATUS.BORROWED)) {
                 button.setText(R.string.scan_to_return);
                 button.setOnClickListener(this::openScanner);
@@ -39,6 +40,7 @@ public class BorrowedDetailActivity extends BaseDetailActivity {
         });
 
         vm.getErrorMessage().observe(this, error -> {
+            loadingOverlay.hide();
             if (error.equals(SCAN_ERROR.INVALID_ISBN)) {
                 Toast.makeText(this, getString(R.string.scan_invalid_isbn_error), Toast.LENGTH_SHORT).show();
             } else {
@@ -72,6 +74,7 @@ public class BorrowedDetailActivity extends BaseDetailActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == GET_SCANNED_ISBN) {
                 String scannedIsbn = data.getStringExtra(ScannerActivity.ISBN_KEY);
+                loadingOverlay.show();
                 vm.handleScannedIsbn(book, scannedIsbn, this::onScannedSuccess);
             }
         }

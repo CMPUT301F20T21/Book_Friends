@@ -27,6 +27,7 @@ public class BaseDetailActivity extends AppCompatActivity {
 
     protected Book book;
     protected Button button;
+    protected LoadingOverlay loadingOverlay;
     private ImageView bookImage;
     private TextView title;
     private TextView isbn;
@@ -43,6 +44,7 @@ public class BaseDetailActivity extends AppCompatActivity {
         title = findViewById(R.id.detail_title);
         author = findViewById(R.id.detail_author);
         button = findViewById(R.id.detail_action_button);
+        loadingOverlay = new LoadingOverlay(this, findViewById(R.id.loading_overlay));
 
         Intent getIntent = getIntent();
         book = getIntent.getParcelableExtra(BOOK_DATA_KEY);
