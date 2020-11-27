@@ -44,7 +44,7 @@ public class BorrowedOwnedDetailViewModel extends ViewModel {
 
     private void fetchRequest(String bookId) {
         requestRepository
-                .getRequestsByBookIdAndStatus(bookId, Arrays.asList(REQUEST_STATUS.RETURNING,REQUEST_STATUS.CLOSED))
+                .getRequestsByBookIdAndStatus(bookId, Arrays.asList(REQUEST_STATUS.RETURNING, REQUEST_STATUS.CLOSED, REQUEST_STATUS.BORROWED))
                 .addOnSuccessListener(requests -> request.setValue(requests.get(0)))
                 .addOnFailureListener(e -> errorMessage.setValue(SCAN_ERROR.UNEXPECTED));
     }
