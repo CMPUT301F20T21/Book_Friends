@@ -103,11 +103,6 @@ public class FakeBookRepository implements BookRepository {
     }
 
     @Override
-    public Task<QuerySnapshot> getDocumentBy(String isbn, String title, String author) {
-        return null;
-    }
-
-    @Override
     public Task<Book> updateBookStatus(Book book, BOOK_STATUS newStatus) {
         int i = books.indexOf(book);
         if (i != -1) {

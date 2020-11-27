@@ -236,7 +236,7 @@ public class BookRepositoryImpl implements BookRepository {
     public Task<List<Book>> getAvailableBooksForUser(String username) {
         return bookCollection
                 .whereNotEqualTo("owner", username)
-                .whereEqualTo("status", BOOK_STATUS.AVAILABLE.toString())
+                .whereIn("status", Arrays.asList(BOOK_STATUS.AVAILABLE, BOOK_STATUS.REQUESTED))
                 .get()
                 .continueWith(task -> {
                     if (task.isSuccessful()) {
@@ -247,10 +247,6 @@ public class BookRepositoryImpl implements BookRepository {
                     }
                     throw new UnexpectedException();
                 });
-    }
-
-    public Task<QuerySnapshot> getDocumentBy(String isbn, String title, String author) {
-        return bookCollection.whereEqualTo("isbn", isbn).whereEqualTo("title", title).whereEqualTo("author", author).get();
     }
 
     /**

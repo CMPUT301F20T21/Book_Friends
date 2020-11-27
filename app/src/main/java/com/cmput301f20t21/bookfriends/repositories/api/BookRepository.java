@@ -20,6 +20,5 @@ public interface BookRepository {
     Task<Book> getBookById(String bookId);
     Task<List<Book>> batchGetBooks( List<String> bookIds);
     Task<List<Book>> getAvailableBooksForUser(String username);
-    Task<QuerySnapshot> getDocumentBy(String isbn, String title, String author);
     Task<Book> updateBookStatus(Book book, BOOK_STATUS newStatus);
 }
