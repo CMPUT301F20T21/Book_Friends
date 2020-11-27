@@ -1,3 +1,12 @@
+/*
+ * BorrowFragment.java
+ * Version: 1.0
+ * Date: October 20, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.ui.borrow;
 
 import android.os.Bundle;
@@ -15,6 +24,9 @@ import com.cmput301f20t21.bookfriends.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+/**
+ * Fragment for books that the current user requested to borrow
+ */
 public class BorrowFragment extends Fragment {
 
     private BorrowTabCollectionAdapter tabsAdapter;

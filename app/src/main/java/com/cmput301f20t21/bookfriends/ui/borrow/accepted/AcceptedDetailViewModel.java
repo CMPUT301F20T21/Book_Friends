@@ -1,3 +1,12 @@
+/*
+ * AcceptedDetailViewModel.java
+ * Version: 1.0
+ * Date: November 10, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.ui.borrow.accepted;
 
 import android.util.Log;
@@ -26,9 +35,12 @@ import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.Arrays;
 
+/**
+ * ViewModel for {@link AcceptedDetailActivity}
+ */
 public class AcceptedDetailViewModel extends ViewModel {
-    private RequestRepository requestRepository;
-    private BookRepository bookRepository;
+    private final RequestRepository requestRepository;
+    private final BookRepository bookRepository;
 
     private final MutableLiveData<Request> request = new MutableLiveData<>();
     private final MutableLiveData<SCAN_ERROR> errorMessage = new MutableLiveData<>();
@@ -44,15 +56,28 @@ public class AcceptedDetailViewModel extends ViewModel {
         this.bookRepository = bookRepository;
     }
 
+    /**
+     * get the request on the selected book
+     * @param book the selected book
+     * @return a {@link Request} entity object
+     */
     public LiveData<Request> getRequest(Book book) {
         fetchRequest(book.getId());
         return request;
     }
 
+    /**
+     * get the error message
+     * @return a {@link MutableLiveData} that contains {@link SCAN_ERROR} error message
+     */
     public MutableLiveData<SCAN_ERROR> getErrorMessage() {
         return errorMessage;
     }
 
+    /**
+     * fetch the request from the provided book id
+     * @param bookId the book id to fetch the request for
+     */
     private void fetchRequest(String bookId) {
         requestRepository
                 .getRequestsByBookIdAndStatus(bookId, Arrays.asList(REQUEST_STATUS.ACCEPTED, REQUEST_STATUS.HANDING))
@@ -63,6 +88,11 @@ public class AcceptedDetailViewModel extends ViewModel {
                 .addOnFailureListener(e -> errorMessage.setValue(SCAN_ERROR.UNEXPECTED));
     }
 
+    /**
+     * check if the ISBN scanned from user matches the selected book's ISBN
+     * @param currentBook the selected book
+     * @param scannedIsbn the ISBN that the user scanned
+     */
     public void handleScannedIsbn(Book currentBook, String scannedIsbn, OnSuccessCallbackWithMessage<Book> successCallback) {
         if (currentBook.getIsbn().equals(scannedIsbn)) {
             requestRepository.updateRequestStatus(request.getValue(), REQUEST_STATUS.BORROWED)

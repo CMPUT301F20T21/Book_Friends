@@ -1,3 +1,12 @@
+/*
+ * RequestedListFragment.java
+ * Version: 1.0
+ * Date: November 3, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.ui.borrow.requested;
 
 import android.content.Intent;
@@ -21,10 +30,13 @@ import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 
 import java.util.List;
 
+/**
+ * Fragment for borrower to view a list of requested books
+ */
 public class RequestedListFragment extends Fragment {
     private RequestedViewModel vm;
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+    private RequestedListAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
 

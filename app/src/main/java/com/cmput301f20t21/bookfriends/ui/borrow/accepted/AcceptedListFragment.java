@@ -1,5 +1,13 @@
-package com.cmput301f20t21.bookfriends.ui.borrow.accepted;
+/*
+ * AcceptedListFragment.java
+ * Version: 1.0
+ * Date: November 10, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
 
+package com.cmput301f20t21.bookfriends.ui.borrow.accepted;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,7 +30,9 @@ import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 
 import java.util.List;
 
-
+/**
+ * Fragment for borrower to view a list of requested books that are accepted
+ */
 public class AcceptedListFragment extends Fragment {
     private AcceptedListViewModel mViewModel;
 
@@ -63,7 +73,7 @@ public class AcceptedListFragment extends Fragment {
         });
     }
 
-    private void openDetailActivity(Book book){
+    private void openDetailActivity(Book book) {
         Intent intent = new Intent(this.getActivity(), AcceptedDetailActivity.class);
         intent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, book);
         startActivity(intent);
