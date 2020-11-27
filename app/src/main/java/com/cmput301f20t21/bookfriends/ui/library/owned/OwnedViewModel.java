@@ -19,17 +19,14 @@ import androidx.lifecycle.ViewModel;
 import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
-import com.cmput301f20t21.bookfriends.repositories.factories.AuthRepositoryFactory;
-import com.cmput301f20t21.bookfriends.repositories.factories.BookRepositoryFactory;
-import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
-import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.api.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.BookRepository;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.cmput301f20t21.bookfriends.repositories.factories.AuthRepositoryFactory;
+import com.cmput301f20t21.bookfriends.repositories.factories.BookRepositoryFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 /**
  * The ViewModel for OwnedListFragment
@@ -40,11 +37,11 @@ public class OwnedViewModel extends ViewModel {
     private final BookRepository bookRepository;
 
     private final MutableLiveData<List<Book>> books = new MutableLiveData<>(new ArrayList<>());
-    private final List<Book> bookData = books.getValue();
+    private final List<Book> bookData = Objects.requireNonNull(books.getValue());
     private final MediatorLiveData<List<Book>> filteredBooks = new MediatorLiveData<>();
     private final List<Book> filteredBookData = new ArrayList<>();
-    private MutableLiveData<Integer> updatedPosition = new MutableLiveData<>(0);
-    private MutableLiveData<BOOK_ERROR> errorMessageObserver = new MutableLiveData<>();
+    private final MutableLiveData<Integer> updatedPosition = new MutableLiveData<>(0);
+    private final MutableLiveData<BOOK_ERROR> errorMessageObserver = new MutableLiveData<>();
 
     public OwnedViewModel() {
         this(AuthRepositoryFactory.getRepository(), BookRepositoryFactory.getRepository());
@@ -107,7 +104,7 @@ public class OwnedViewModel extends ViewModel {
      * @param updatedBook the new book to update
      */
     public void updateBook(Book oldBook, Book updatedBook) {
-        Integer indexToUpdate = bookData.indexOf(oldBook);
+        int indexToUpdate = bookData.indexOf(oldBook);
         if (indexToUpdate != -1) {
             bookData.set(indexToUpdate, updatedBook);
             books.setValue(bookData);
@@ -137,9 +134,6 @@ public class OwnedViewModel extends ViewModel {
             boolean includeAvailable, boolean includeRequested,
             boolean includeAccepted, boolean includeBorrowed
     ) {
-        if (bookData == null) {
-            return;
-        }
         filteredBookData.clear();
         for (Book book : bookData) {
             BOOK_STATUS status = book.getStatus();

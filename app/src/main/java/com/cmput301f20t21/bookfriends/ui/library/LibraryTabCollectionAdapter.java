@@ -1,3 +1,12 @@
+/*
+ * LibraryTabCollectionAdapter.java
+ * Version: 1.0
+ * Date: October 20, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.ui.library;
 
 import androidx.annotation.NonNull;
@@ -7,6 +16,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.cmput301f20t21.bookfriends.ui.library.borrowed.BorrowedListFragment;
 import com.cmput301f20t21.bookfriends.ui.library.owned.OwnedListFragment;
 
+/**
+ * {@link FragmentStateAdapter} for {@link LibraryFragment}
+ */
 public class LibraryTabCollectionAdapter extends FragmentStateAdapter {
     public enum TabType {
         MY_BOOKS,

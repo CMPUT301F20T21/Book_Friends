@@ -1,3 +1,12 @@
+/*
+ * MapDialog.java
+ * Version: 1.0
+ * Date: November 20, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.ui.library.owned;
 
 import android.Manifest;
@@ -40,6 +49,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Dialog for displaying the Google Map
+ */
 public class MapDialog extends DialogFragment implements OnMapReadyCallback {
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -78,7 +90,7 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
     /**
      * function to get location permission from user
      *
-     * @param dialog
+     * @param dialog the dialog to get permission from user
      */
     private void getLocationPermission(Dialog dialog) {
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
