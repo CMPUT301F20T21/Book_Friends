@@ -1,3 +1,12 @@
+/*
+ * BaseDetailActivity.java
+ * Version: 1.0
+ * Date: November 10, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.ui.component;
 
 import android.content.Intent;
@@ -26,6 +35,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A simple detail activity that shows the book details
+ * can be extended to include more components
+ */
 public class BaseDetailActivity extends AppCompatActivity {
     public static final String BOOK_ACTION_KEY = "com.cmput301f20t21.bookfriends.BOOK_ACTION";
     public static final String BOOK_DATA_KEY = "com.cmput301f20t21.bookfriends.BOOK_DATA";

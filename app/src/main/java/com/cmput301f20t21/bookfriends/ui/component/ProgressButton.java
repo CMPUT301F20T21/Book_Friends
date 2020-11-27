@@ -1,3 +1,12 @@
+/*
+ * ProgressButton.java
+ * Version: 1.0
+ * Date: October 20, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.ui.component;
 
 import android.content.Context;
@@ -17,6 +26,9 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import com.cmput301f20t21.bookfriends.R;
 
+/**
+ * Progress button used to login button in {@link com.cmput301f20t21.bookfriends.ui.login.LoginActivity}
+ */
 public class ProgressButton {
     private View view;
     private CardView cardView;

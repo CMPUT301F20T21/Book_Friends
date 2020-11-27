@@ -1,3 +1,12 @@
+/*
+ * BrowseFragment.java
+ * Version: 1.0
+ * Date: October 26, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.ui.browse;
 
 import android.content.Intent;
@@ -30,20 +39,20 @@ import java.util.List;
 import static android.app.Activity.RESULT_OK;
 
 /**
- * User can see the list of all of the books and search what they need
+ * Fragment where user can see the list of all of the available books
  */
 public class BrowseFragment extends Fragment {
     private BrowseViewModel vm;
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+    private AvailableBookListAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private SearchView searchView;
 
     /**
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
+     * @param inflater a {@link LayoutInflater} object
+     * @param container a {@link ViewGroup} object
+     * @param savedInstanceState saved objects, should be nothing for this fragment
+     * @return the {@link View} created
      */
     @Nullable
     @Override

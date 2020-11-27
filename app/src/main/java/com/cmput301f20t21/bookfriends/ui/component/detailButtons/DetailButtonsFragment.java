@@ -1,3 +1,12 @@
+/*
+ * DetailButtonFragment.java
+ * Version: 1.0
+ * Date: November 15, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.ui.component.detailButtons;
 
 import android.os.Bundle;
