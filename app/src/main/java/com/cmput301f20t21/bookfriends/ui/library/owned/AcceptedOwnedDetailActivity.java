@@ -18,11 +18,18 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.cmput301f20t21.bookfriends.R;
+import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
 import com.cmput301f20t21.bookfriends.enums.BOOK_STATUS;
 import com.cmput301f20t21.bookfriends.enums.SCAN_ERROR;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
+import com.cmput301f20t21.bookfriends.ui.component.MeetLocationDialog;
+import com.cmput301f20t21.bookfriends.ui.component.detailButtons.DetailButtonModel;
+import com.cmput301f20t21.bookfriends.ui.component.detailButtons.DetailButtonsFragment;
 import com.cmput301f20t21.bookfriends.ui.scanner.ScannerActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Detail Activity for owner books with "ACCEPTED" {@link BOOK_STATUS}
@@ -30,6 +37,7 @@ import com.cmput301f20t21.bookfriends.ui.scanner.ScannerActivity;
 public class AcceptedOwnedDetailActivity extends BaseDetailActivity {
     public static final int GET_SCANNED_ISBN = 2001;
     private AcceptedOwnedDetailViewModel vm;
+    private Request request;
 
     /**
      * Called when creating the activity view
@@ -41,6 +49,7 @@ public class AcceptedOwnedDetailActivity extends BaseDetailActivity {
         vm = new ViewModelProvider(this).get(AcceptedOwnedDetailViewModel.class);
 
         vm.getRequest(book).observe(this, request -> {
+            this.request = request;
             loadingOverlay.hide();
             if (request.getStatus().equals(REQUEST_STATUS.ACCEPTED)) {
                 button.setText(R.string.scan_hand_over);
@@ -49,6 +58,7 @@ public class AcceptedOwnedDetailActivity extends BaseDetailActivity {
                 button.setText(getString(R.string.scan_hand_over_success, request.getRequester()));
                 button.setClickable(false);
             }
+            inflateDetailButtons();
         });
 
         vm.getErrorMessage().observe(this, error -> {
@@ -60,6 +70,46 @@ public class AcceptedOwnedDetailActivity extends BaseDetailActivity {
             }
         });
 
+    }
+
+    /**
+     * create all the accepted detail-specific buttons and define their onclick behaviours
+     * for how button models work in the buttons recycler, refer to components/detailButtons
+     *
+     * @return the list of button models
+     */
+    @Override
+    protected List<DetailButtonModel> getDetailButtonModels() {
+        List<DetailButtonModel> buttonModels = new ArrayList<>();
+        if (request.getMeetingLocation() != null) {
+            buttonModels.add(
+                    new DetailButtonModel(
+                            getString(R.string.detail_button_meetup_title),
+                            getMeetingAddress(request),
+                            (view) -> {
+                                // onclick
+                                MeetLocationDialog meetLocationDialog = new MeetLocationDialog(request.getMeetingLocation());
+                                meetLocationDialog.show(getSupportFragmentManager(), "locationMap");
+                            },
+                            null
+                    ));
+        }
+        return buttonModels;
+    }
+
+    /**
+     * create and inflate and show the list of buttons
+     * <p>
+     * we need request because buttons might change content based on request data.
+     * and the request comes from vm which means it changes on vm fetch completes
+     */
+    @Override
+    protected void inflateDetailButtons() {
+        DetailButtonsFragment buttonsFragment = new DetailButtonsFragment(getDetailButtonModels());
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.detail_buttons_container, buttonsFragment)
+                .commit();
     }
 
     /**

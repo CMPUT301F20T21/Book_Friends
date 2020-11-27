@@ -1,6 +1,8 @@
 package com.cmput301f20t21.bookfriends.ui.component;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,11 +15,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
+import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.ui.component.detailButtons.DetailButtonModel;
 import com.cmput301f20t21.bookfriends.ui.component.detailButtons.DetailButtonsFragment;
 import com.cmput301f20t21.bookfriends.ui.profile.ProfileViewUserActivity;
 import com.cmput301f20t21.bookfriends.utils.ImagePainter;
+import com.google.firebase.firestore.GeoPoint;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,6 +83,39 @@ public class BaseDetailActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+    /**
+     * parse the request geo location and returns a string of the address
+     *
+     * @param request the request.
+     * @return the address string
+     */
+    protected String getMeetingAddress(Request request) {
+        if (request == null) {
+            return "";
+        }
+
+        GeoPoint geoPoint = request.getMeetingLocation();
+        Geocoder geocoder = new Geocoder(this);
+        try {
+            List<Address> addresses = geocoder.getFromLocation(geoPoint.getLatitude(), geoPoint.getLongitude(), 1);
+            if (addresses == null) {
+                return getString(R.string.geocoder_failure);
+            }
+            Address addr = addresses.get(0);
+            // https://stackoverflow.com/a/19927013/7358099
+            StringBuilder addressString = new StringBuilder("");
+            for (int i = 0; i <= addr.getMaxAddressLineIndex(); i++) {
+                addressString.append(addr.getAddressLine(i));
+            }
+            return addressString.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return getString(R.string.get_meeting_address_failure);
+        }
+    }
+
 
     protected List<DetailButtonModel> getDetailButtonModels() {
         ArrayList<DetailButtonModel> buttonModels = new ArrayList<>();
