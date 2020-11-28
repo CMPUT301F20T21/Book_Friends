@@ -30,7 +30,7 @@ import com.google.android.gms.tasks.Task;
 import java.util.ArrayList;
 
 /**
- * The ViewModel for ProfileFragment, ProfileSearchFragment, and ProfileViewUserActivity
+ * The ViewModel for {@link ProfileFragment}, {@link ProfileSearchFragment}, and {@link ProfileViewUserActivity}
  */
 public class ProfileViewModel extends ViewModel {
     private final UserRepository userRepository;
@@ -48,7 +48,7 @@ public class ProfileViewModel extends ViewModel {
 
     /**
      * get a list of users that is matches the keyword during search
-     * @return a list of matching users
+     * @return a list of matching {@link User}
      */
     public LiveData<ArrayList<User>> getSearchedUsers() {
         return searchedUsers;

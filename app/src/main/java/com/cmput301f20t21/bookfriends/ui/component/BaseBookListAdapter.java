@@ -1,3 +1,12 @@
+/*
+ * BaseBookListAdapter.java
+ * Version: 1.0
+ * Date: October 16, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.ui.component;
 
 import android.view.LayoutInflater;
@@ -15,22 +24,25 @@ import com.cmput301f20t21.bookfriends.utils.ImagePainter;
 
 import java.util.List;
 
-public abstract class BaseBookListAdapter<T extends Book> extends RecyclerView.Adapter<BaseBookListAdapter.ViewHolder<T>> {
-    protected List<T> books;
+/**
+ * A abstract adapter used for all book lists
+ */
+public abstract class BaseBookListAdapter extends RecyclerView.Adapter<BaseBookListAdapter.ViewHolder> {
+    protected List<Book> books;
 
-    public BaseBookListAdapter(List<T> books) {
+    public BaseBookListAdapter(List<Book> books) {
         this.books = books;
     }
 
     @NonNull
     @Override
-    public ViewHolder<T> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_list, parent, false);
-        return new ViewHolder<T>(itemView);
+        return new ViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder<T> holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.onBind(books.get(position));
     }
 
@@ -39,14 +51,14 @@ public abstract class BaseBookListAdapter<T extends Book> extends RecyclerView.A
         return books.size();
     }
 
-    public static class ViewHolder<T extends Book> extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         protected final TextView title;
         protected final TextView author;
         protected final TextView isbn;
         protected final TextView status;
         protected final ImageView bookImage;
         protected View holderView;
-        protected T book;
+        protected Book book;
 
 
         public ViewHolder(View v) {
@@ -59,7 +71,7 @@ public abstract class BaseBookListAdapter<T extends Book> extends RecyclerView.A
             bookImage = v.findViewById(R.id.booklist_image_view);
         }
 
-        public void onBind(T book) {
+        public void onBind(Book book) {
             this.title.setText(book.getTitle());
             this.author.setText(this.itemView.getResources().getString(R.string.book_list_item_author, book.getAuthor()));
             this.isbn.setText(book.getIsbn());

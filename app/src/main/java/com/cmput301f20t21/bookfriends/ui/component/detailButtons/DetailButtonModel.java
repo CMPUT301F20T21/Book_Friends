@@ -1,3 +1,12 @@
+/*
+ * DetailButtonModel.java
+ * Version: 1.0
+ * Date: November 15, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.ui.component.detailButtons;
 
 import android.view.View;
@@ -5,6 +14,9 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+/**
+ * A model used for each of the detail buttons
+ */
 public class DetailButtonModel {
     private String title;
     private String body; // optional

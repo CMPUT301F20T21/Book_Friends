@@ -1,3 +1,12 @@
+/*
+ * SearchedUserListAdapter.java
+ * Version: 1.0
+ * Date: November 4, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.ui.profile;
 
 import android.content.Context;
@@ -15,6 +24,9 @@ import com.cmput301f20t21.bookfriends.entities.User;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter used for {@link ProfileSearchFragment}
+ */
 public class SearchedUserListAdapter extends RecyclerView.Adapter<SearchedUserListAdapter.ViewHolder> {
     private ArrayList<User> users;
     private Context context;

@@ -1,5 +1,13 @@
-package com.cmput301f20t21.bookfriends.ui.browse;
+/*
+ * BrowseViewModel.java
+ * Version: 1.0
+ * Date: October 26, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
 
+package com.cmput301f20t21.bookfriends.ui.browse;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
@@ -10,14 +18,12 @@ import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
-import com.cmput301f20t21.bookfriends.repositories.factories.AuthRepositoryFactory;
-import com.cmput301f20t21.bookfriends.repositories.factories.BookRepositoryFactory;
-import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
-import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
-import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.api.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
+import com.cmput301f20t21.bookfriends.repositories.factories.AuthRepositoryFactory;
+import com.cmput301f20t21.bookfriends.repositories.factories.BookRepositoryFactory;
+import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,11 +31,14 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * ViewModel for {@link BrowseFragment}
+ */
 public class BrowseViewModel extends ViewModel {
     // exposed live data
     private final MutableLiveData<BOOK_ERROR> errorMessage = new MutableLiveData<>();
     private final MutableLiveData<List<Book>> books = new MutableLiveData<>(new ArrayList<>());
-    private MutableLiveData<Integer> updatedPosition = new MutableLiveData<>(0);
+    private final MutableLiveData<Integer> updatedPosition = new MutableLiveData<>(0);
 
     private final MutableLiveData<String> searchQuery = new MutableLiveData<>(""); // the updated search query we are using
     // the updated/filtered/calculated book results based on changed books and/or searchQuery
@@ -74,8 +83,8 @@ public class BrowseViewModel extends ViewModel {
      * filter the original bookData (or the updated bookData) with the keyword (or the updated one)
      * and set that value to searchedBookData and its live data wrapper
      *
-     * @param keyword
-     * @param bookData
+     * @param keyword the keyword user typed to search
+     * @param bookData the books to filter
      */
     private void refreshSearchedBooks(String keyword, List<Book> bookData) {
         Function<String, Boolean> contains = ifNotNullAndContains(keyword);
@@ -92,6 +101,11 @@ public class BrowseViewModel extends ViewModel {
         searchedBooks.setValue(searchedBookData);
     }
 
+    /**
+     * check if the attribute contains the keyword
+     * @param keyword the keyword user typed to search
+     * @return a {@link Function} object
+     */
     private Function<String, Boolean> ifNotNullAndContains(String keyword) {
         return (attribute) -> {
             if (attribute == null || keyword == null) return true;
@@ -99,14 +113,27 @@ public class BrowseViewModel extends ViewModel {
         };
     }
 
+    /**
+     * get a list of books, filtered by keyword
+     * @return {@link LiveData} that contains a {@link List} of {@link Book}
+     */
     public LiveData<List<Book>> getBooks() {
         return searchedBooks;
     }
 
+    /**
+     * get the error message
+     * @return a {@link MutableLiveData} that contains {@link BOOK_ERROR} error message
+     */
     public LiveData<BOOK_ERROR> getErrorMessage() {
         return errorMessage;
     }
 
+    /**
+     * get a {@link Book} from the given index
+     * @param index the index of the book required
+     * @return {@link Book} the book at the given index
+     */
     public Book getBookByIndex(Integer index) {
         return bookData.get(index);
     }
@@ -122,10 +149,18 @@ public class BrowseViewModel extends ViewModel {
         searchQuery.setValue(keyword); // will trigger update routine for searchedBooks
     }
 
+    /**
+     * get the updated position of a book
+     * @return the updated position
+     */
     public MutableLiveData<Integer> getUpdatedPosition() {
         return updatedPosition;
     }
 
+    /**
+     * remove the requested books from the list of browse/available books
+     * @param requestedBook the requested book
+     */
     public void handleRequestedBook(Book requestedBook) {
         if (bookData.indexOf(requestedBook) != -1) {
             bookData.remove(requestedBook);

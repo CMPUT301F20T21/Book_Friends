@@ -1,3 +1,12 @@
+/*
+ * BrowseDetailActivity.java
+ * Version: 1.0
+ * Date: October 26, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.ui.browse;
 
 import android.content.Intent;
@@ -13,6 +22,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
 
+/**
+ * detail activity for a browsing/available book
+ */
 public class BrowseDetailActivity extends BaseDetailActivity {
     public static final String REQUESTED_BOOK_INTENT_KEY = "com.cmput301f20t21.bookfriends.REQUESTED_BOOK";
     private BrowseDetailViewModel vm;
