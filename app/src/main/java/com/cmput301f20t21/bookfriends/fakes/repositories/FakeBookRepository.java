@@ -123,4 +123,13 @@ public class FakeBookRepository implements BookRepository {
     public Book getByIndex(int i) {
         return books.get(i);
     }
+
+
+    public void add(Book book) {
+        books.add(book);
+    }
+
+    public void clear() {
+        books.clear();
+    }
 }
