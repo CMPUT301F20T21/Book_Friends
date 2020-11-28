@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * Adapter for the RecyclerView in OwnedListFragment
  */
-public class OwnedListAdapter extends BaseBookListAdapter<Book> {
+public class OwnedListAdapter extends BaseBookListAdapter {
     private final OnDeleteListener deleteListener;
     private final OnItemClickListener itemClickListener;
 
