@@ -1,3 +1,12 @@
+/*
+ * AcceptedDetailActivity.java
+ * Version: 1.0
+ * Date: November 10, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.ui.borrow.accepted;
 
 import android.content.Intent;
@@ -26,6 +35,9 @@ import com.google.firebase.firestore.GeoPoint;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Detail activity for borrower to view details of a requested book that are accepted
+ */
 public class AcceptedDetailActivity extends BaseDetailActivity {
 
     public static final int GET_SCANNED_ISBN = 2001;

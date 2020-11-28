@@ -1,15 +1,21 @@
+/*
+ * AcceptedListAdapter.java
+ * Version: 1.0
+ * Date: November 10, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.ui.borrow.accepted;
 
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.PopupMenu;
 
 import com.cmput301f20t21.bookfriends.R;
 import com.cmput301f20t21.bookfriends.entities.Book;
@@ -18,8 +24,11 @@ import com.cmput301f20t21.bookfriends.ui.component.BaseBookListAdapter;
 
 import java.util.List;
 
+/**
+ * Adapter for {@link androidx.recyclerview.widget.RecyclerView} in {@link AcceptedListFragment}
+ */
 public class AcceptedListAdapter extends BaseBookListAdapter {
-    private OnItemClickListener itemClickListener;
+    private final OnItemClickListener itemClickListener;
     public interface OnItemClickListener {
         void run(int position);
     }

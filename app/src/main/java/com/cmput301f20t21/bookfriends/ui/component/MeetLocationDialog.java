@@ -1,3 +1,12 @@
+/*
+ * MeetLocationDialog.java
+ * Version: 1.0
+ * Date: November 10, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.ui.component;
 
 import android.app.Dialog;
@@ -18,6 +27,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.firestore.GeoPoint;
 
+/**
+ * Dialog to display the meet location set by the owner
+ */
 public class MeetLocationDialog extends DialogFragment implements OnMapReadyCallback {
     private GoogleMap map;
     private MapView mapView;

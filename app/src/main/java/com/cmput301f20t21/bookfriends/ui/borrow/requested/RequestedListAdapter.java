@@ -1,5 +1,13 @@
-package com.cmput301f20t21.bookfriends.ui.borrow.requested;
+/*
+ * RequestedListAdapter.java
+ * Version: 1.0
+ * Date: November 3, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
 
+package com.cmput301f20t21.bookfriends.ui.borrow.requested;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +23,9 @@ import com.cmput301f20t21.bookfriends.ui.component.BaseBookListAdapter;
 
 import java.util.List;
 
+/**
+ * Adapter for {@link androidx.recyclerview.widget.RecyclerView} in {@link RequestedListFragment}
+ */
 public class RequestedListAdapter extends BaseBookListAdapter {
     private OnItemClickListener itemClickListener;
 

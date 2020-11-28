@@ -1,3 +1,12 @@
+/*
+ * AcceptedListViewModel.java
+ * Version: 1.0
+ * Date: November 10, 2020
+ * Copyright (c) 2020. Book Friends Team
+ * All rights reserved.
+ * github URL: https://github.com/CMPUT301F20T21/Book_Friends
+ */
+
 package com.cmput301f20t21.bookfriends.ui.borrow.accepted;
 
 import androidx.lifecycle.LiveData;
@@ -8,20 +17,21 @@ import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.entities.Request;
 import com.cmput301f20t21.bookfriends.enums.BOOK_ERROR;
 import com.cmput301f20t21.bookfriends.enums.REQUEST_STATUS;
-import com.cmput301f20t21.bookfriends.repositories.factories.AuthRepositoryFactory;
-import com.cmput301f20t21.bookfriends.repositories.factories.BookRepositoryFactory;
-import com.cmput301f20t21.bookfriends.repositories.impl.AuthRepositoryImpl;
-import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
-import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
 import com.cmput301f20t21.bookfriends.repositories.api.AuthRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.BookRepository;
 import com.cmput301f20t21.bookfriends.repositories.api.RequestRepository;
+import com.cmput301f20t21.bookfriends.repositories.factories.AuthRepositoryFactory;
+import com.cmput301f20t21.bookfriends.repositories.factories.BookRepositoryFactory;
+import com.cmput301f20t21.bookfriends.repositories.impl.RequestRepositoryImpl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * ViewModel for {@link AcceptedListFragment}
+ */
 public class AcceptedListViewModel extends ViewModel {
     private final AuthRepository authRepository;
     private final BookRepository bookRepository;
@@ -46,14 +56,27 @@ public class AcceptedListViewModel extends ViewModel {
         fetchBooks();
     }
 
+    /**
+     * get a list of accepted books
+     * @return {@link LiveData} that contains a {@link List} of {@link Book}
+     */
     public LiveData<List<Book>> getBooks() {
         return books;
     }
 
+    /**
+     * get the error message
+     * @return a {@link MutableLiveData} that contains {@link BOOK_ERROR} error message
+     */
     public MutableLiveData<BOOK_ERROR> getErrorMessage() {
         return errorMessage;
     }
 
+    /**
+     * get a {@link Book} from the given index
+     * @param index the index of the book required
+     * @return {@link Book} the book at the given index
+     */
     public Book getBookByIndex(Integer index) {
         return bookData.get(index);
     }
