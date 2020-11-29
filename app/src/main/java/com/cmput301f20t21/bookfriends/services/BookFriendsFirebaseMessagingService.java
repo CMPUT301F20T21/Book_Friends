@@ -22,14 +22,11 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.cmput301f20t21.bookfriends.R;
-import com.cmput301f20t21.bookfriends.entities.Book;
 import com.cmput301f20t21.bookfriends.repositories.factories.BookRepositoryFactory;
-import com.cmput301f20t21.bookfriends.repositories.impl.BookRepositoryImpl;
 import com.cmput301f20t21.bookfriends.ui.borrow.accepted.AcceptedDetailActivity;
-import com.cmput301f20t21.bookfriends.ui.borrow.requested.RequestedDetailActivity;
 import com.cmput301f20t21.bookfriends.ui.component.BaseDetailActivity;
+import com.cmput301f20t21.bookfriends.ui.library.owned.RequestedOwnedDetailActivity;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -98,7 +95,7 @@ public class BookFriendsFirebaseMessagingService extends FirebaseMessagingServic
         }
 
         if (data.get("type").equals("request")) {
-            Intent resultIntent = new Intent(this, RequestedDetailActivity.class);
+            Intent resultIntent = new Intent(this, RequestedOwnedDetailActivity.class);
             return BookRepositoryFactory.getRepository().getBookById(data.get("bookId")).continueWith(task -> {
                 if (task.isSuccessful()) {
                     resultIntent.putExtra(BaseDetailActivity.BOOK_DATA_KEY, task.getResult());

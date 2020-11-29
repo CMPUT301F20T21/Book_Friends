@@ -87,12 +87,12 @@ public class ProfileSearchFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 vm.updateSearchQuery(query);
-                return false;
+                return true;
             }
             @Override
             public boolean onQueryTextChange(String newText) {
                 vm.updateSearchQuery(newText);
-                return false;
+                return true;
             }
         });
     }
