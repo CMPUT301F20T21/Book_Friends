@@ -13,7 +13,9 @@ Here are some shortcuts.
 
 ### Demo
 
-- [Demo Video](https://www.youtube.com/watch?reload=9&v=PQ4g8PBDnDI)
+- Demo Video:
+   * [Original Video(11:27)](https://www.youtube.com/watch?v=PQ4g8PBDnDI&t=4s)
+   * [1.25 Speed Up Video(9:11)](https://www.youtube.com/watch?v=6Qs0QUiF_mc)
 - [Demo Video Slides](https://docs.google.com/presentation/d/1Xheis6xBQrTS7xIGtFPBlaiO9oUiYaDOzplo9Kx-3ew/edit?usp=sharing)
 
 ### Members
