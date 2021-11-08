@@ -8,7 +8,7 @@ Book Friends is a book exchanging app made as a team project for course CMPUT301
 Here are some shortcuts.
 
 ### UI
-Check [this image](https://github.com/CMPUT301F20T21/Book_Friends/blob/master/doc/UI%20Mockups/StoryboardSequences.png?raw=true) for our mock UI
+Check [this image](https://github.com/CMPUT301F20T21/Book_Friends/blob/master/doc/UI%20Mockups/StoryboardSequences.png) for our mock UI
 
 ### Documentation
 
